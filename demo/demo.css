@@ -1,0 +1,47 @@
+* { margin 0; padding: 0; }
+
+body {
+  font: 10px "helvetica neue", helvetica, arial;
+  padding: 90px 130px;
+}
+
+h1 {
+  font: 28px Georgia;
+  padding: 2px 0;
+  margin: 0 0 0 -30px;
+}
+
+h1 a {
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  background-color: #DEE7F8;
+  border-radius: 6px;
+  border: 1px solid #CAD8F3;
+  padding: 2px 8px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 15px 0 1em;
+  padding-top: 15px;
+}
+
+button {
+  margin: 1em 0;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 500px;
+}
+
+.value {
+  color: green;
+  font-weight: bold;
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: 1.5em;
+}
