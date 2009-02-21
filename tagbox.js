@@ -17,8 +17,10 @@ var TagBox = Class.create( {
         separator: ',' // used to separate 
     } ),
 
-    input: null, // the primary text input element
-    tags: null,  // a Hash of TagBox.Tag objects
+    element: null,  // the original text input element
+    input: null,    // the primary text input element
+    tags: null,     // a Hash of TagBox.Tag objects
+    tagbox: null,   // the tagbox (<ul/>) element
 
     /**
      * TagBox constructor
@@ -26,8 +28,14 @@ var TagBox = Class.create( {
      * @param Element the original input element
      */
     initialize: function( element ) {
-        this.input = $( element ).hide();
+        this.element = $( element ).hide();
         this.tags = new Hash();
+        this.input = this.createInput();
+
+        // create the tagbox list and insert it into the document
+        this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
+        this.tagbox.insert( this.input );
+        this.element.insert( { before: this.tagbox } );
     },
 
     /**
