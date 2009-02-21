@@ -29,7 +29,7 @@ var TagBox = Class.create( {
      */
     initialize: function( element ) {
         this.element = $( element ).hide();
-        this.tags = new Hash();
+        this.tags = [];
         this.input = this.createInput();
 
         // create the tagbox list and insert it into the document
@@ -39,13 +39,37 @@ var TagBox = Class.create( {
     },
 
     /**
+     * Add a Tag to the list
+     */
+    addTag: function( value ) {
+        var tag = new TagBox.Tag( { value: value } );
+        this.tags.push( tag );
+
+        this.input.insert( { before: tag.getElement() } );
+    },
+
+    /**
      * Create a new text <input/> element, complete with appropriate
      * event handlers
      *
      * @return Element a text <input/> element
      */
     createInput: function() {
-        return new Element( 'li' ).update( new Element( 'input', { type: 'text' } ) );
+        var input = new Element( 'input', { type: 'text' } );
+
+        input.observe( 'keydown', function( e ) {
+            var el = e.element();
+
+            switch( e.keyCode ) {
+                case Event.KEY_RETURN:
+                    e.stop();
+                    this.addTag( el.value );
+                    el.value = '';
+                    break;
+            }
+        }.bind( this ) );
+
+        return new Element( 'li', { 'class': 'tagbox-tag' } ).insert( input );
     }
 } );
 
@@ -54,8 +78,7 @@ var TagBox = Class.create( {
  */
 TagBox.Tag = Class.create( {
     properties: $H( {
-        label: null,    // The string displayed in the TagBox
-        value: null     // The value sent to the server when the form is submitted
+        value: null // The string displayed in the TagBox
     } ),
 
     /**
@@ -77,7 +100,7 @@ TagBox.Tag = Class.create( {
     getElement: function( wrapper_tag_name ) {
         var wrapper_tag_name = arguments[0] || 'li';
 
-        return new Element( wrapper_tag_name ).update( this.properties.get( 'label' ) );
+        return new Element( wrapper_tag_name ).update( this.properties.get( 'value' ) );
     }
 } );
 
