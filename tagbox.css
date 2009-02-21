@@ -1,4 +1,10 @@
 ul.tagbox {
   font: 10px "helvetica neue", helvetica, arial;
   border: 1px solid #AAA;
+  padding: 0;
 }
+
+ul.tagbox li {
+  list-style-type: none;
+  margin: 0;
+} 
