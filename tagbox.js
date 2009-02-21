@@ -45,7 +45,7 @@ var TagBox = Class.create( {
      * @return Element a text <input/> element
      */
     createInput: function() {
-        return new Element( 'input', { type: 'text' } );
+        return new Element( 'li' ).update( new Element( 'input', { type: 'text' } ) );
     }
 } );
 
