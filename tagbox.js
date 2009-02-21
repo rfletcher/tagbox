@@ -69,7 +69,7 @@ var TagBox = Class.create( {
             }
         }.bind( this ) );
 
-        return new Element( 'li', { 'class': 'tagbox-tag' } ).insert( input );
+        return new Element( 'li' ).insert( input );
     }
 } );
 
@@ -93,14 +93,11 @@ TagBox.Tag = Class.create( {
     /**
      * Create the tag's html element
      *
-     * @param String (optional) The wrapper tag name. default: "li"
-     *
      * @return Element
      */
-    getElement: function( wrapper_tag_name ) {
-        var wrapper_tag_name = arguments[0] || 'li';
-
-        return new Element( wrapper_tag_name ).update( this.properties.get( 'value' ) );
+    getElement: function() {
+        var li = new Element( 'li', { 'class': 'tagbox-tag' } );
+        return li.update( this.properties.get( 'value' ) );
     }
 } );
 

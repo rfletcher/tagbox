@@ -1,10 +1,40 @@
 ul.tagbox {
-  font: 10px "helvetica neue", helvetica, arial;
+  background-color: #fff;
   border: 1px solid #AAA;
+  padding: 0 0 2px 2px;
+}
+
+ul.tagbox li input {
+  font: inherit;
   padding: 0;
+  vertical-align: baseline;
+  border: none;
+  background-color: #CCC;
 }
 
 ul.tagbox li {
+  display: inline-block;
   list-style-type: none;
-  margin: 0;
-} 
+  margin: 2px 2px 0 0;
+}
+
+ul.tagbox li.tagbox-tag {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  line-height: 15px;
+  background-color: #dee7f8;
+  border-radius: 5px;
+  border: 1px solid #a4bdec;
+}
+
+ul.tagbox li.tagbox-tag {
+  padding: 1px 5px 2px;
+}
+ul.tagbox li input {
+  padding: 2px 0 3px;
+}
+
+ul.tagbox li.tagbox-tag.selected {
+  background-color: #598bec;
+  border-color: #598bec;
+}
