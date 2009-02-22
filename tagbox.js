@@ -73,8 +73,13 @@ var TagBox = Class.create( {
      * @param Element
      */
     blur: function() {
-        this.current && this.current.removeClassName( 'tagbox-selected' );
-        this.current = null;
+        if( this.current ) {
+            if( this.current.down( 'input' ) ) {
+                this.current.down( 'input' ).blur();
+            }
+            this.current.removeClassName( 'tagbox-selected' );
+            this.current = null;
+        }
     },
 
     /**
