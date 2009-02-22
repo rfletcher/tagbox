@@ -13,9 +13,10 @@
  * for more information.
  */
 var TagBox = Class.create( {
-    options: $H( {
-        separator: ',' // used to separate
-    } ),
+    options: {
+        allow_duplicates: false,    // allow duplicate tags?
+        case_sensitive: true        // case sensitivity matching when searching for duplicate tags
+    },
 
     current: null,          // the <li/> with the focus
     has_focus: false,       // 
@@ -29,8 +30,8 @@ var TagBox = Class.create( {
      * @param Element the original input element
      */
     initialize: function( original_input ) {
+        this.options = new Hash( this.options );
         this.tags = [];
-
 
         // create the tagbox list and insert it into the document
         this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
@@ -179,9 +180,9 @@ TagBox.values = function( el ) {
  * TagBox Tag
  */
 TagBox.Tag = Class.create( {
-    properties: $H( {
-        value: null // The string displayed in the TagBox
-    } ),
+    properties: {
+        value: null    // The string displayed in the TagBox
+    },
 
     tagbox: null,   // the parent TagBox
 
@@ -191,6 +192,7 @@ TagBox.Tag = Class.create( {
      * @param Hash a hash of tag properties.
      */
     initialize: function( properties ) {
+        this.properties = new Hash( this.properties );
         this.properties.update( properties );
     },
 
