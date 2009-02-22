@@ -46,6 +46,8 @@ var TagBox = Class.create( {
      * Add a Tag to the list
      */
     addTag: function( value ) {
+        value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
+
         var tag = new TagBox.Tag( { value: value } );
         tag.tagbox = this;
 
