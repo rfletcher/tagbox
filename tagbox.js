@@ -19,7 +19,6 @@ var TagBox = Class.create( {
     },
 
     current: null,          // the <li/> with the focus
-    has_focus: false,       // 
     original_input: null,   // the original text input element that we've replaced
     tags: null,             // a Hash of TagBox.Tag objects
     tagbox: null,           // the tagbox (<ul/>) element
