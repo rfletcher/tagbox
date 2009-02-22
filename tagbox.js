@@ -59,8 +59,8 @@ var TagBox = Class.create( {
         }.bind( this ) );
 
         // when 
-        document.observe( 'keyup', function( e ) {
-            e.stop();
+        document.observe( 'keydown', function( e ) {
+            // e.stop();
             if( ! this.current ) {
                 return;
             }
@@ -68,6 +68,7 @@ var TagBox = Class.create( {
                 case Event.KEY_LEFT:
                 case Event.KEY_RIGHT:
                     this.move( e.keyCode );
+                    break;
             }
         }.bind( this ) );
 
@@ -102,6 +103,7 @@ var TagBox = Class.create( {
      */
     blur: function() {
         this.current && this.current.removeClassName( 'tagbox-selected' );
+        this.current = null;
     },
 
     /**
