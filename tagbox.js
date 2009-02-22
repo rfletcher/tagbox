@@ -12,10 +12,23 @@
  * was written from scratch without use of their work.  See the CREDITS file
  * for more information.
  */
+
+// Add a few KEY_* constants to prototype's Event object
+Object.extend( Event, {
+    KEY_COMMA: 188,
+    KEY_SEMICOLON: 59,
+    KEY_SPACE: 32
+} );
+
+/**
+ * TagBox
+ */
 var TagBox = Class.create( {
     options: {
         allow_duplicates: false,    // allow duplicate tags?
-        case_sensitive: true        // case sensitivity matching when searching for duplicate tags
+        case_sensitive: true,       // case sensitivity matching when searching for duplicate tags
+        triggers:                   // array of keyCodes which trigger addition to the list of tags
+            [ Event.KEY_RETURN ]
     },
 
     current: null,          // the <li/> with the focus
@@ -191,14 +204,13 @@ var TagBox = Class.create( {
      * @param Element an <input/> element
      */
     registerInputEventHandlers: function( input ) {
-        input.observe( 'keypress', function( e ) {
+        input.observe( 'keydown', function( e ) {
             var el = e.element();
 
-            switch( e.keyCode ) {
-                case Event.KEY_RETURN:
-                    e.stop();
-                    this.addTag( el.value );
-                    el.value = '';
+            if( this.options.get( 'triggers' ).include( e.keyCode ) ) {
+                e.stop();
+                this.addTag( el.value );
+                el.value = '';
             }
         }.bind( this ) );
     },
