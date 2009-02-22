@@ -211,7 +211,7 @@ TagBox.Tag = Class.create( {
      * @return Element
      */
     getElement: function() {
-        var value = this.properties.get( 'value' );
+        var value = this.getValue();;
 
         var li = new Element( 'li', { 'class': 'tagbox-tag' } );
 
@@ -223,6 +223,15 @@ TagBox.Tag = Class.create( {
         } );
 
         return li.insert( value ).insert( input );
+    },
+
+    /**
+     * Get the Tag's value
+     *
+     * @return String value
+     */
+    getValue: function() {
+        return this.properties.get( 'value' );
     }
 } );
 
