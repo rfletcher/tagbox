@@ -132,8 +132,8 @@ var TagBox = Class.create( {
      * @param Element
      */
     focus: function( el ) {
-        this.blur();
         el.addClassName( 'tagbox-selected' );
+        this.blur();
         this.current = el;
 
         if( this.current.select( 'input' ) ) {
@@ -168,14 +168,8 @@ var TagBox = Class.create( {
             this.focus( this.tagbox.childElements().last() );
         }.bind( this ) );
 
-        document.observe( Prototype.Browser.IE ? 'keypress' : 'keydown', function( e ) {
-            if( this.current && this.current.hasClassName( 'tagbox-tag' ) && e.keyCode == Event.KEY_BACKSPACE ) {
-                e.stop();
-            }
-        }.bind( this ) );
-
-        // when 
-        document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
+        // monitor keypresses for tag navigation/deletion
+        document.observe( ( Prototype.Browser.IE || Prototype.Browser.Gecko ) ? 'keypress' : 'keydown', function( e ) {
             // e.stop();
             if( ! this.current ) {
                 return;
@@ -187,11 +181,14 @@ var TagBox = Class.create( {
                     break;
                 case Event.KEY_BACKSPACE:
                 case Event.KEY_DELETE:
+                    if( this.current.hasClassName( 'tagbox-tag' ) ) {
+                        e.stop();
+                    }
                     this.remove();
             }
         }.bind( this ) );
 
-        // When another part of the document is clicked, blur the tagbox
+        // remove focus from the tagbox when another part of the document is clicked
         document.observe( 'click', function( e ) {
             this.blur();
         }.bind( this ) );
