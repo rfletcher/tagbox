@@ -20,8 +20,8 @@ var TagBox = Class.create( {
 
     current: null,          // the <li/> with the focus
     original_input: null,   // the original text input element that we've replaced
-    tags: null,             // a Hash of TagBox.Tag objects
     tagbox: null,           // the tagbox (<ul/>) element
+    tags: null,             // a Hash of TagBox.Tag objects
 
     /**
      * TagBox constructor
@@ -171,7 +171,7 @@ var TagBox = Class.create( {
  */
 TagBox.values = function( el ) {
     return $( el ).select( 'li.tagbox-tag input[type=hidden]' ).collect( function( el ) {
-        return el.value; 
+        return el.value;
     } );
 }
 
