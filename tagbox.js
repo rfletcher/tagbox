@@ -86,7 +86,13 @@ var TagBox = Class.create( {
 
         this.tags.push( tag );
 
-        this.current.insert( { before: tag.getElement() } );
+        var tag_el = tag.getElement();
+        tag_el.observe( 'click', function( e ) {
+            e.stop();
+            this.focus( tag_el );
+        }.bind( this ) );
+
+        this.current.insert( { before: tag_el } );
     },
 
     /**
