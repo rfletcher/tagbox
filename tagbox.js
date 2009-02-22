@@ -17,8 +17,9 @@ var TagBox = Class.create( {
         separator: ',' // used to separate
     } ),
 
+    current: null,          // the <li/> with the focus
+    has_focus: false,       // 
     original_input: null,   // the original text input element that we've replaced
-    input: null,            // the primary text input element
     tags: null,             // a Hash of TagBox.Tag objects
     tagbox: null,           // the tagbox (<ul/>) element
 
@@ -29,12 +30,51 @@ var TagBox = Class.create( {
      */
     initialize: function( original_input ) {
         this.tags = [];
-        this.input = this.createInput();
+
 
         // create the tagbox list and insert it into the document
         this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
-        this.tagbox.insert( this.input );
+        this.tagbox.insert( this.createInput() );
         this.original_input = $( original_input ).replace( this.tagbox );
+
+        this.focus( this.tagbox.select( 'li' ).last() );
+
+        this.registerEventHandlers();
+    },
+
+    /**
+     * Register event handlers
+     */
+    registerEventHandlers: function( object ) {
+        // set the focus when the tagbox is clicked
+        this.tagbox.observe( 'click', function( e ) {
+            e.stop();
+            this.focus( this.tagbox.childElements().last() );
+        }.bind( this ) );
+
+        document.observe( Prototype.Browser.IE ? 'keypress' : 'keydown', function( e ) {
+            if( this.current && this.current.hasClassName( 'tagbox-tag' ) && e.keyCode == Event.KEY_BACKSPACE ) {
+                e.stop();
+            }
+        }.bind( this ) );
+
+        // when 
+        document.observe( 'keyup', function( e ) {
+            e.stop();
+            if( ! this.current ) {
+                return;
+            }
+            switch( e.keyCode ) {
+                case Event.KEY_LEFT:
+                case Event.KEY_RIGHT:
+                    this.move( e.keyCode );
+            }
+        }.bind( this ) );
+
+        // When another part of the document is clicked, blur the tagbox
+        document.observe( 'click', function( e ) {
+            this.blur();
+        }.bind( this ) );
     },
 
     /**
@@ -46,7 +86,16 @@ var TagBox = Class.create( {
 
         this.tags.push( tag );
 
-        this.input.insert( { before: tag.getElement() } );
+        this.current.insert( { before: tag.getElement() } );
+    },
+
+    /**
+     * Remove the focus from a tag or input <li/>
+     *
+     * @param Element
+     */
+    blur: function() {
+        this.current && this.current.removeClassName( 'tagbox-selected' );
     },
 
     /**
@@ -56,9 +105,9 @@ var TagBox = Class.create( {
      * @return Element a text <input/> element
      */
     createInput: function( attributes ) {
-        var input = new Element( 'input', Object.extend( $H( attributes ), { type: 'text' } ) );
+        var input = new Element( 'input', $H( attributes ).update( { type: 'text' } ).toObject() );
 
-        input.observe( 'keydown', function( e ) {
+        input.observe( 'keypress', function( e ) {
             var el = e.element();
 
             switch( e.keyCode ) {
@@ -66,12 +115,43 @@ var TagBox = Class.create( {
                     e.stop();
                     this.addTag( el.value );
                     el.value = '';
-                    break;
             }
         }.bind( this ) );
 
         return new Element( 'li' ).insert( input );
-    }
+    },
+
+    /**
+     * Set the focus on a tag or input <li/>
+     *
+     * @param Element
+     */
+    focus: function( el ) {
+        this.blur();
+        el.addClassName( 'tagbox-selected' );
+        this.current = el;
+
+        if( this.current.select( 'input' ) ) {
+            this.current.select( 'input' ).first().focus();
+        }
+    },
+
+    /**
+     * Move the focus around the TagBox
+     */
+    move: function( direction ) {
+        // check and see if the cursor is at the beginning/end of a textbox
+
+        if( direction == Event.KEY_LEFT ) {
+            var new_el = this.current.previous( 'li' );
+        } else if ( direction == Event.KEY_RIGHT ) {
+            var new_el = this.current.next( 'li' );
+        }
+
+        if( new_el ) {
+            this.focus( new_el );
+        }
+    },
 } );
 
 /**
