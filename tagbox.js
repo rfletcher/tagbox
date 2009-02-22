@@ -14,28 +14,27 @@
  */
 var TagBox = Class.create( {
     options: $H( {
-        separator: ',' // used to separate 
+        separator: ',' // used to separate
     } ),
 
-    element: null,  // the original text input element
-    input: null,    // the primary text input element
-    tags: null,     // a Hash of TagBox.Tag objects
-    tagbox: null,   // the tagbox (<ul/>) element
+    original_input: null,   // the original text input element that we've replaced
+    input: null,            // the primary text input element
+    tags: null,             // a Hash of TagBox.Tag objects
+    tagbox: null,           // the tagbox (<ul/>) element
 
     /**
      * TagBox constructor
      *
      * @param Element the original input element
      */
-    initialize: function( element ) {
-        this.element = $( element ).hide();
+    initialize: function( original_input ) {
         this.tags = [];
         this.input = this.createInput();
 
         // create the tagbox list and insert it into the document
         this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
         this.tagbox.insert( this.input );
-        this.element.insert( { before: this.tagbox } );
+        this.original_input = $( original_input ).replace( this.tagbox );
     },
 
     /**
@@ -43,6 +42,8 @@ var TagBox = Class.create( {
      */
     addTag: function( value ) {
         var tag = new TagBox.Tag( { value: value } );
+        tag.tagbox = this;
+
         this.tags.push( tag );
 
         this.input.insert( { before: tag.getElement() } );
@@ -54,8 +55,8 @@ var TagBox = Class.create( {
      *
      * @return Element a text <input/> element
      */
-    createInput: function() {
-        var input = new Element( 'input', { type: 'text' } );
+    createInput: function( attributes ) {
+        var input = new Element( 'input', Object.extend( $H( attributes ), { type: 'text' } ) );
 
         input.observe( 'keydown', function( e ) {
             var el = e.element();
@@ -74,12 +75,27 @@ var TagBox = Class.create( {
 } );
 
 /**
+ * Get an array of tag values
+ *
+ * @param Element an ancestor element of the TagBox
+ *
+ * @return Array an array of values
+ */
+TagBox.values = function( el ) {
+    return $( el ).select( 'li.tagbox-tag input[type=hidden]' ).collect( function( el ) {
+        return el.value; 
+    } );
+}
+
+/**
  * TagBox Tag
  */
 TagBox.Tag = Class.create( {
     properties: $H( {
         value: null // The string displayed in the TagBox
     } ),
+
+    tagbox: null,   // the parent TagBox
 
     /**
      * Tag constructor
@@ -96,8 +112,18 @@ TagBox.Tag = Class.create( {
      * @return Element
      */
     getElement: function() {
+        var value = this.properties.get( 'value' );
+
         var li = new Element( 'li', { 'class': 'tagbox-tag' } );
-        return li.update( this.properties.get( 'value' ) );
+
+        // the hidden input which represents this tag in the form
+        var input = new Element( 'input', {
+            type: 'hidden',
+            name: this.tagbox.original_input.getAttribute( 'name' ) + '[]',
+            value: value
+        } );
+
+        return li.insert( value ).insert( input );
     }
 } );
 
