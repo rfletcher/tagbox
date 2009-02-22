@@ -94,6 +94,27 @@ var TagBox = Class.create( {
     },
 
     /**
+     * Find a Tag object by value
+     *
+     * @param String the tag value
+     *
+     * @return Tag
+     */
+    findTagByValue: function( value ) {
+        return this.tags.find( function( tag ) {
+            var val1 = tag.getValue();
+            var val2 = value;
+
+            if( ! this.options.get( 'case_sensitive' ) ) {
+                val1 = val1.toLowerCase();
+                val2 = val2.toLowerCase();
+            }
+
+            return val1 == val2;
+        }.bind( this ) );
+    },
+
+    /**
      * Set the focus on a tag or input <li/>
      *
      * @param Element
