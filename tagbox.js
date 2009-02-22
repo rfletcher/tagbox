@@ -296,6 +296,28 @@ TagBox.Tag = Class.create( {
     }
 } );
 
+// Add methods to form input elements
+Object.extend( Form.Element.Methods, {
+    /**
+     * Get the current caret position
+     *
+     * @param Element the form element on which this method is called
+     */
+    getCaretPosition: function( element ) {
+        if( element.createTextRange ) {
+            var r = document.selection.createRange().duplicate();
+            r.moveEnd( 'character', element.value.length );
+            if( r.text === '' ) {
+                return element.value.length;
+            }
+            return element.value.lastIndexOf(r.text);
+        } else {
+            return element.selectionStart;
+        }
+    }
+} );
+Element.addMethods();
+
 /**
  * Initialize the tagboxes when the DOM is ready
  */
