@@ -91,16 +91,7 @@ var TagBox = Class.create( {
     createInput: function( attributes ) {
         var input = new Element( 'input', $H( attributes ).update( { type: 'text' } ).toObject() );
 
-        input.observe( 'keypress', function( e ) {
-            var el = e.element();
-
-            switch( e.keyCode ) {
-                case Event.KEY_RETURN:
-                    e.stop();
-                    this.addTag( el.value );
-                    el.value = '';
-            }
-        }.bind( this ) );
+        this.registerInputEventHandlers( input );
 
         return new Element( 'li' ).insert( input );
     },
@@ -195,7 +186,25 @@ var TagBox = Class.create( {
     },
 
     /**
-     * Remove the selected tag
+     * Register <input/> element event handlers
+     *
+     * @param Element an <input/> element
+     */
+    registerInputEventHandlers: function( input ) {
+        input.observe( 'keypress', function( e ) {
+            var el = e.element();
+
+            switch( e.keyCode ) {
+                case Event.KEY_RETURN:
+                    e.stop();
+                    this.addTag( el.value );
+                    el.value = '';
+            }
+        }.bind( this ) );
+    },
+
+    /**
+     * Remove the focused tag
      */
     remove: function() {
         if( ! this.current || ! this.current.hasClassName( 'tagbox-tag' ) ) {
