@@ -5,13 +5,13 @@ ul.tagbox {
 }
 
 ul.tagbox li input {
-  font: inherit;
-  padding: 0;
-  vertical-align: baseline;
-  height: auto;
-  width: auto;
-  border: none;
   background-color: #CCC;
+  border: none;
+  font: inherit;
+  height: auto;
+  outline: none;
+  padding: 0;
+  width: auto;
 }
 
 ul.tagbox li {
