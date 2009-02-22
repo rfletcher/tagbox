@@ -18,23 +18,17 @@
   <h1><a href="http://github.com/rfletcher/tagbox/">TagBox</a> Demo</h1>
 
   <div class="input-wrapper">
-    <div class="tagbox-wrapper" id="tagbox-demo">
-      <label>HTML Textbox</label>
-      <input type="text" value=""/>
-    </div>
-
-    <button onclick="$('tagbox-demo-value').update( 'Value: ' + ( $F('tagbox-demo') || '(none)' ) ); return false;">Get Value</button>
-
-    <div class="value" id="tagbox-demo-value"></div>
+    <label>HTML Textbox</label>
+    <input type="text" name="somedata" value=""/>
   </div>
 
   <div class="input-wrapper">
     <div class="tagbox-wrapper" id="tagbox-demo">
       <label>TagBox</label>
-      <input type="text" value="" class="tagbox"/>
+      <input type="text" name="mytags" value="" class="tagbox"/>
     </div>
 
-    <button onclick="$('tagbox-demo-value').update( 'Value: ' + ( $F('tagbox-demo') || '(none)' ) ); return false;">Get Value</button>
+    <button onclick="$('tagbox-demo-value').update( 'Value: ' + ( TagBox.values( 'tagbox-demo' ).join( ', ' ) || '(none)' ) ); return false;">Get Value</button>
 
     <div class="value" id="tagbox-demo-value"></div>
   </div>

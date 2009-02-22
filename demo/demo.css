@@ -13,12 +13,17 @@ h1 {
 }
 
 h1 a {
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
   background-color: #DEE7F8;
-  border-radius: 4px;
+  border-radius: 8px;
   border: 1px solid #CAD8F3;
   padding: 2px 8px;
+  text-decoration: none;
+}
+
+h1 a:hover {
+  text-decoration: underline;
 }
 
 label {
@@ -31,6 +36,14 @@ label {
 
 button {
   margin: 1em 0;
+  float: left;
+}
+
+input {
+  height: 26px;
+  border: 1px solid #aaa;
+  padding: 5px 2px;
+  width: 500px;
 }
 
 .input-wrapper {
@@ -41,8 +54,6 @@ button {
 .value {
   color: green;
   font-weight: bold;
-  position: absolute;
-  z-index: -1;
-  right: 0;
-  bottom: 1.5em;
+  margin: 2em 0 0 80px;
+  text-align: right;
 }
