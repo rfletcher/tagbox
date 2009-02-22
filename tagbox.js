@@ -43,42 +43,6 @@ var TagBox = Class.create( {
     },
 
     /**
-     * Register event handlers
-     */
-    registerEventHandlers: function( object ) {
-        // set the focus when the tagbox is clicked
-        this.tagbox.observe( 'click', function( e ) {
-            e.stop();
-            this.focus( this.tagbox.childElements().last() );
-        }.bind( this ) );
-
-        document.observe( Prototype.Browser.IE ? 'keypress' : 'keydown', function( e ) {
-            if( this.current && this.current.hasClassName( 'tagbox-tag' ) && e.keyCode == Event.KEY_BACKSPACE ) {
-                e.stop();
-            }
-        }.bind( this ) );
-
-        // when 
-        document.observe( 'keydown', function( e ) {
-            // e.stop();
-            if( ! this.current ) {
-                return;
-            }
-            switch( e.keyCode ) {
-                case Event.KEY_LEFT:
-                case Event.KEY_RIGHT:
-                    this.move( e.keyCode );
-                    break;
-            }
-        }.bind( this ) );
-
-        // When another part of the document is clicked, blur the tagbox
-        document.observe( 'click', function( e ) {
-            this.blur();
-        }.bind( this ) );
-    },
-
-    /**
      * Add a Tag to the list
      */
     addTag: function( value ) {
@@ -160,6 +124,52 @@ var TagBox = Class.create( {
             this.focus( new_el );
         }
     },
+
+    /**
+     * Register event handlers
+     */
+    registerEventHandlers: function() {
+        // set the focus when the tagbox is clicked
+        this.tagbox.observe( 'click', function( e ) {
+            e.stop();
+            this.focus( this.tagbox.childElements().last() );
+        }.bind( this ) );
+
+        document.observe( Prototype.Browser.IE ? 'keypress' : 'keydown', function( e ) {
+            if( this.current && this.current.hasClassName( 'tagbox-tag' ) && e.keyCode == Event.KEY_BACKSPACE ) {
+                e.stop();
+            }
+        }.bind( this ) );
+
+        // when 
+        document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
+            // e.stop();
+            if( ! this.current ) {
+                return;
+            }
+            switch( e.keyCode ) {
+                case Event.KEY_LEFT:
+                case Event.KEY_RIGHT:
+                    this.move( e.keyCode );
+                    break;
+                case Event.KEY_BACKSPACE:
+                case Event.KEY_DELETE:
+                    this.remove();
+            }
+        }.bind( this ) );
+
+        // When another part of the document is clicked, blur the tagbox
+        document.observe( 'click', function( e ) {
+            this.blur();
+        }.bind( this ) );
+    },
+
+    /**
+     * Remove the selected tag
+     */
+    remove: function( el ) {
+        return;
+    }
 } );
 
 /**
