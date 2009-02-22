@@ -48,12 +48,17 @@ var TagBox = Class.create( {
     addTag: function( value ) {
         value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
 
+        if( ! value || ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) {
+            return;
+        }
+
         var tag = new TagBox.Tag( { value: value } );
         tag.tagbox = this;
 
         this.tags.push( tag );
 
         var tag_el = tag.getElement();
+
         tag_el.observe( 'click', function( e ) {
             e.stop();
             this.focus( tag_el );
