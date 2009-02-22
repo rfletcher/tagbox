@@ -87,7 +87,7 @@ var TagBox = Class.create( {
      */
     blur: function() {
         if( this.current ) {
-            if( this.current.down( 'input' ) ) {
+            if( this.currentIsInput() ) {
                 this.current.down( 'input' ).blur();
             }
             this.current.removeClassName( 'tagbox-selected' );
@@ -108,6 +108,20 @@ var TagBox = Class.create( {
 
         return new Element( 'li' ).insert( input );
     },
+
+    /**
+     * Test whether the current node is an input node
+     */
+     currentIsInput: function() {
+         return this.current && ! this.current.hasClassName( 'tagbox-tag' ) && this.current.down( 'input' );
+     },
+
+     /**
+      * Test whether the current node is a tag node
+      */
+      currentIsTag: function() {
+          return this.current && this.current.hasClassName( 'tagbox-tag' );
+      },
 
     /**
      * Find a Tag object by value
@@ -140,8 +154,8 @@ var TagBox = Class.create( {
         this.blur();
         this.current = el;
 
-        if( this.current.select( 'input' ) ) {
-            this.current.select( 'input' ).first().focus();
+        if( this.currentIsInput() ) {
+            this.current.down( 'input' ).focus();
         }
     },
 
@@ -174,21 +188,26 @@ var TagBox = Class.create( {
 
         // monitor keypresses for tag navigation/deletion
         document.observe( ( Prototype.Browser.IE || Prototype.Browser.Gecko ) ? 'keypress' : 'keydown', function( e ) {
-            // e.stop();
             if( ! this.current ) {
                 return;
             }
+
             switch( e.keyCode ) {
                 case Event.KEY_LEFT:
+                    if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() !== 0 ) {
+                        break;
+                    }
                 case Event.KEY_RIGHT:
                     this.move( e.keyCode );
                     break;
+
                 case Event.KEY_BACKSPACE:
-                case Event.KEY_DELETE:
-                    if( this.current.hasClassName( 'tagbox-tag' ) ) {
+                    if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === 0 ) {
+                        this.move( Event.KEY_LEFT );
+                    } else if( this.currentIsTag() ) {
+                        this.remove();
                         e.stop();
                     }
-                    this.remove();
             }
         }.bind( this ) );
 
@@ -219,7 +238,7 @@ var TagBox = Class.create( {
      * Remove the focused tag
      */
     remove: function() {
-        if( ! this.current || ! this.current.hasClassName( 'tagbox-tag' ) ) {
+        if( ! this.currentIsTag() ) {
             return;
         }
 
@@ -310,9 +329,9 @@ Object.extend( Form.Element.Methods, {
             if( r.text === '' ) {
                 return element.value.length;
             }
-            return element.value.lastIndexOf(r.text);
+            return element.value.lastIndexOf( r.text );
         } else {
-            return element.selectionStart;
+            return element.selectionEnd ? element.selectionEnd : element.selectionStart;
         }
     }
 } );
