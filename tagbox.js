@@ -148,9 +148,9 @@ var TagBox = Class.create( {
         // check and see if the cursor is at the beginning/end of a textbox
 
         if( direction == Event.KEY_LEFT ) {
-            var new_el = this.current.previous( 'li' );
+            var new_el = this.current.previous();
         } else if ( direction == Event.KEY_RIGHT ) {
-            var new_el = this.current.next( 'li' );
+            var new_el = this.current.next();
         }
 
         if( new_el ) {
@@ -200,8 +200,18 @@ var TagBox = Class.create( {
     /**
      * Remove the selected tag
      */
-    remove: function( el ) {
-        return;
+    remove: function() {
+        if( ! this.current || ! this.current.hasClassName( 'tagbox-tag' ) ) {
+            return;
+        }
+
+        // remove the Tag object from the array of tags
+        this.tags = this.tags.without( this.findTagByValue( this.current.down( 'input' ).value ) );
+
+        // remove the element from the list
+        var tag_el = this.current;
+        this.focus( this.current.next() );
+        tag_el.remove();
     }
 } );
 
