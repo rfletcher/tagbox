@@ -36,7 +36,8 @@ ul.tagbox li input {
   padding: 2px 0 3px;
 }
 
-ul.tagbox li.tagbox-tag.selected {
+ul.tagbox li.tagbox-tag.tagbox-selected {
   background-color: #598bec;
   border-color: #598bec;
+  color: #fff;
 }
