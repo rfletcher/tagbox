@@ -324,7 +324,6 @@ TagBox.Tag = Class.create( {
 var ElasticTextBox = Class.create( {
     options: {
         minWidth: 50,
-        maxWidth: null,
         pad: 10
     },
 
@@ -354,7 +353,7 @@ var ElasticTextBox = Class.create( {
             whiteSpace: 'pre'
         } );
 
-        this.input.insert( { 
+        this.input.insert( {
             after: new Element( 'div' ).setStyle( {
                 position: 'absolute',
                 overflow: 'hidden',
