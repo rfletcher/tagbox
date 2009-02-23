@@ -8,6 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * TagBox was heavily inspired Guillermo Rauch's TextboxList.
+ * Portions retain his copyright.
  */
 
 // Add a few KEY_* constants to prototype's Event object
