@@ -26,7 +26,7 @@ Object.extend( Event, {
 var TagBox = Class.create( {
     options: {
         allow_duplicates: false,    // allow duplicate tags?
-        case_sensitive: true,       // case sensitivity matching when searching for duplicate tags
+        case_sensitive: false,      // case sensitivity matching when searching for duplicate tags
         triggers:                   // array of keyCodes which trigger addition to the list of tags
             [ Event.KEY_RETURN ]
     },
