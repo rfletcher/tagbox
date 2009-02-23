@@ -103,10 +103,12 @@ var TagBox = Class.create( {
      */
     createInput: function( attributes ) {
         var input = new Element( 'input', $H( attributes ).update( { type: 'text' } ).toObject() );
-
         this.registerInputEventHandlers( input );
 
-        return new Element( 'li' ).insert( input );
+        var li = new Element( 'li' ).insert( input );
+        new ElasticTextBox( input );
+
+        return li;
     },
 
     /**
@@ -313,6 +315,73 @@ TagBox.Tag = Class.create( {
      */
     getValue: function() {
         return this.properties.get( 'value' );
+    }
+} );
+
+/**
+ * ElasticTextBox
+ */
+var ElasticTextBox = Class.create( {
+    options: {
+        minWidth: 50,
+        maxWidth: null,
+        pad: 10
+    },
+
+    input: null,    // the <input/> element
+    proxy: null,    // the proxy <div/>
+
+    /**
+     * ResizableTextBox constructor
+     */
+    initialize: function( input ) {
+        this.options = new Hash( this.options );
+        this.input = $( input );
+
+        this.registerEventHandlers( this.input );
+        this.createProxy();
+        this.updateWidth();
+    },
+
+    /**
+     * Create the proxy node and insert it into the DOM
+     */
+    createProxy: function() {
+        this.proxy = new Element( 'span' ).setStyle( {
+            display: 'inline-block',
+            position: 'absolute',
+            visibility: 'hidden',
+            whiteSpace: 'pre'
+        } );
+
+        this.input.insert( { 
+            after: new Element( 'div' ).setStyle( {
+                position: 'absolute',
+                overflow: 'hidden',
+                width: '1px',
+                height: '1px',
+                visibility: 'hidden'
+            } ).update( this.proxy )
+        } );
+    },
+
+    /**
+    * Register event handlers
+     */
+    registerEventHandlers: function() {
+        this.input.observe( 'keypress', this.updateWidth.bind( this ) );
+        this.input.observe( 'keyup', this.updateWidth.bind( this ) );
+    },
+
+    /**
+     * Update the width of the text box
+     */
+    updateWidth: function() {
+        this.proxy.innerHTML = this.input.value.escapeHTML();
+        this.input.setStyle( {
+            width: parseFloat( this.proxy.getStyle( 'width' ) || 0 ) +
+                   this.options.get( 'pad' ) + 'px'
+        } );
     }
 } );
 
