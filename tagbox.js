@@ -49,8 +49,7 @@ var TagBox = Class.create( {
         this.tagbox.insert( this.createInput() );
         this.original_input = $( original_input ).replace( this.tagbox );
 
-        this.focus( this.tagbox.select( 'li' ).last() );
-
+        // register event handlers for descendent elements
         this.registerEventHandlers();
     },
 
