@@ -163,16 +163,24 @@ var TagBox = Class.create( {
      * Move the focus around the TagBox
      */
     move: function( direction ) {
-        // check and see if the cursor is at the beginning/end of a textbox
-
-        if( direction == Event.KEY_LEFT ) {
-            var new_el = this.current.previous();
-        } else if ( direction == Event.KEY_RIGHT ) {
-            var new_el = this.current.next();
+        switch( direction ) {
+            case 'first':
+            case 'last':
+                var new_el = this.tagbox.select( 'li' )[direction]();
+                break;
+            case 'previous':
+            case 'next':
+                var new_el = this.current[direction](); break;
+            default:
+                return;
         }
 
         if( new_el ) {
             this.focus( new_el );
+
+            if( direction == 'last' ) {
+                new_el.down( 'input' ).value = new_el.down( 'input' ).value;
+            }
         }
     },
 
@@ -193,18 +201,27 @@ var TagBox = Class.create( {
             }
 
             switch( e.keyCode ) {
+                case Event.KEY_HOME:
+                    this.move( 'first' );
+                    break;
+                case Event.KEY_END:
+                    this.move( 'last' );
+                    break;
+
                 case Event.KEY_LEFT:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() !== 0 ) {
                         break;
                     }
+                    this.move( 'previous' );
+                    break;
                 case Event.KEY_RIGHT:
-                    this.move( e.keyCode );
+                    this.move( 'next' );
                     break;
 
                 case Event.KEY_BACKSPACE:
                 case Event.KEY_DELETE:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === 0 ) {
-                        this.move( Event.KEY_LEFT );
+                        this.move( 'previous' );
                         e.stop();
                     } else if( this.currentIsTag() ) {
                         this.remove();
