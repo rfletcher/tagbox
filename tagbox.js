@@ -187,7 +187,7 @@ var TagBox = Class.create( {
         }.bind( this ) );
 
         // monitor keypresses for tag navigation/deletion
-        document.observe( ( Prototype.Browser.IE || Prototype.Browser.Gecko ) ? 'keypress' : 'keydown', function( e ) {
+        document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
             if( ! this.current ) {
                 return;
             }
@@ -204,6 +204,7 @@ var TagBox = Class.create( {
                 case Event.KEY_BACKSPACE:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === 0 ) {
                         this.move( Event.KEY_LEFT );
+                        e.stop();
                     } else if( this.currentIsTag() ) {
                         this.remove();
                         e.stop();
