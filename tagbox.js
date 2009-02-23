@@ -37,9 +37,10 @@ var TagBox = Class.create( {
      * TagBox constructor
      *
      * @param Element the original input element
+     * @param Object  TagBox options
      */
-    initialize: function( original_input ) {
-        this.options = new Hash( this.options );
+    initialize: function( original_input, options ) {
+        this.options = new Hash( this.options ).update( options );
         this.tags = [];
 
         // create the tagbox list and insert it into the document
