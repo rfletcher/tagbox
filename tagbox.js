@@ -7,10 +7,7 @@
  * This library is distributed under an MIT license:
  * http://www.opensource.org/licenses/mit-license.php
  *
- * TagBox was heavily inspired by the work of Apple Inc., Facebook Inc.,
- * Guillermo Rauch, Diego Perini, and Ran Grushkowsky/InteRiders Inc., but
- * was written from scratch without use of their work.  See the CREDITS file
- * for more information.
+ * TagBox was heavily inspired Guillermo Rauch's TextboxList.
  */
 
 // Add a few KEY_* constants to prototype's Event object
