@@ -203,6 +203,7 @@ var TagBox = Class.create( {
                     break;
 
                 case Event.KEY_BACKSPACE:
+                case Event.KEY_DELETE:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === 0 ) {
                         this.move( Event.KEY_LEFT );
                         e.stop();
