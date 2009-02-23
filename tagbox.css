@@ -19,6 +19,10 @@ ul.tagbox li {
   list-style-type: none;
   margin: 2px 2px 0 0;
 }
+*+html ul.tagbox li {
+  display: inline;
+  zoom: 1;
+}
 
 ul.tagbox li.tagbox-tag {
   -moz-border-radius: 5px;
