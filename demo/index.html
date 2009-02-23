@@ -28,7 +28,7 @@
       <input type="text" name="mytags" value="" class="tagbox"/>
     </div>
 
-    <button onclick="$('tagbox-demo-value').update( 'Value: ' + ( TagBox.values( 'tagbox-demo' ).join( ', ' ) || '(none)' ) ); return false;">Get Value</button>
+    <button onclick="$('tagbox-demo-value').update( 'Value: ' + ( TagBox.values( 'tagbox-demo' ).join( ', ' ).escapeHTML() || '(none)' ) ); return false;">Get Value</button>
 
     <div class="value" id="tagbox-demo-value"></div>
   </div>

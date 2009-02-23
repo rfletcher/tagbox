@@ -303,7 +303,7 @@ TagBox.Tag = Class.create( {
             value: value
         } );
 
-        return li.insert( value ).insert( input );
+        return li.insert( value.escapeHTML() ).insert( input );
     },
 
     /**
