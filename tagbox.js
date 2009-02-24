@@ -285,6 +285,11 @@ var TagBox = Class.create( {
                         var direction = 'next';
                     }
 
+                    if( this.currentIsInput() && 
+                        this.current.down( 'input' ).selectionStart != this.current.down( 'input' ).selectionEnd ) {
+                        var direction = null;
+                    }
+
                     if( direction ) {
                         this.move( direction );
                         e.stop();
