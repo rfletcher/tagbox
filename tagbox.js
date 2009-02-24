@@ -179,7 +179,9 @@ var TagBox = Class.create( {
             this.current = el;
 
             if( this.currentIsInput() && update_input_focus != false ) {
-                this.current.down( 'input[type=text]' ).focus();
+                ( function() {
+                    this.current.down( 'input[type=text]' ).focus();
+                }.bind( this ) ).defer();
             }
         }
 
