@@ -274,7 +274,7 @@ var TagBox = Class.create( {
                         var direction = 'previous';
                     }
                 case Event.KEY_DELETE:
-                    if( ! direction && this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === this.current.down( 'input' ).value.length ) {
+                    if( e.keyCode == Event.KEY_DELETE && this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === this.current.down( 'input' ).value.length ) {
                         var direction = 'next';
                     }
 
