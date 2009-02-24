@@ -268,9 +268,16 @@ var TagBox = Class.create( {
                     break;
 
                 case Event.KEY_BACKSPACE:
-                case Event.KEY_DELETE:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === 0 ) {
-                        this.move( 'previous' );
+                        var direction = 'previous';
+                    }
+                case Event.KEY_DELETE:
+                    if( ! direction && this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === this.current.down( 'input' ).value.length ) {
+                        var direction = 'next';
+                    }
+
+                    if( direction ) {
+                        this.move( direction );
                         e.stop();
                     } else if( this.currentIsTag() ) {
                         this.remove();
