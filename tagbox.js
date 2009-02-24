@@ -29,7 +29,7 @@ var TagBox = Class.create( {
         allow_duplicates: false,    // allow duplicate tags?
         case_sensitive: false,      // case sensitivity matching when searching for duplicate tags
         triggers:                   // array of keyCodes which trigger addition to the list of tags
-            [ Event.KEY_RETURN ]
+            [ Event.KEY_COMMA, Event.KEY_RETURN ]
     },
 
     current: null,          // the <li/> with the focus
