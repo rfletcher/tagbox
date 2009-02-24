@@ -328,6 +328,13 @@ var TagBox = Class.create( {
         var tag_el = this.current;
         this.focus( this.current.next() );
         tag_el.remove();
+    },
+
+    /**
+     * Get an arry of tag values
+     */
+    values: function() {
+        return TagBox.values( this.tagbox );
     }
 } );
 
