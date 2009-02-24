@@ -29,17 +29,9 @@ h1 a:hover {
   text-decoration: underline;
 }
 
-label {
-  display: block;
-  font-size: 12px;
-  font-weight: bold;
-  margin: 15px 0 1em;
-  padding-top: 15px;
-}
-
 button {
   float: left;
-  margin: 2em 0;
+  margin: 2em 0 15px;
   padding: 2px 6px 4px;
 }
 
@@ -50,9 +42,29 @@ input[type=text] {
   width: 500px;
 }
 
+kbd {
+  font-family: monospace;
+}
+kbd:before { content: "<"; }
+kbd:after { content: ">"; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 15px 0 1em;
+  padding-top: 15px;
+}
+
 .input-wrapper {
+  clear: both;
   position: relative;
   width: 500px;
+}
+
+.input-wrapper p {
+  font-size: 9px;
+  color: #777;
 }
 
 .value {
