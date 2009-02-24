@@ -20,6 +20,9 @@ Object.extend( Event, {
 
 /**
  * TagBox
+ *
+ * @event tagbox:blur
+ * @event tagbox:focus
  */
 var TagBox = Class.create( {
     options: {
@@ -44,7 +47,7 @@ var TagBox = Class.create( {
         this.options = new Hash( this.options ).update( options );
         this.tags = [];
 
-        // create the tagbox list and insert it into the document
+        // create the tagbox list and replace the original text input with it
         this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
         this.tagbox.insert( this.createInput() );
         this.original_input = $( original_input ).replace( this.tagbox );
@@ -52,6 +55,14 @@ var TagBox = Class.create( {
         // register event handlers for descendent elements
         this.registerEventHandlers();
     },
+
+    /**
+     * Event methods
+     * See prototype's Event docs for usage
+     */
+    fire:          function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
+    observe:       function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
+    stopObserving: function() { return this.tagbox.stopObserving.apply( this.tagbox, arguments ); },
 
     /**
      * Add a Tag to the list
@@ -70,7 +81,7 @@ var TagBox = Class.create( {
 
         var tag_el = tag.getElement();
 
-        tag_el.observe( 'click', function( e ) {
+        tag_el.observe( 'mousedown', function( e ) {
             e.stop();
             this.focus( tag_el );
         }.bind( this ) );
@@ -79,16 +90,16 @@ var TagBox = Class.create( {
     },
 
     /**
-     * Remove the focus from a tag or input <li/>
+     * Remove the focus from the current tag or input <li/>
      *
-     * @param Element
+     * @param Bool call the descendent input's native blur() method (default: true)
      */
-    blur: function() {
+    blur: function( update_input_focus ) {
         if( this.current ) {
-            if( this.currentIsInput() ) {
-                this.current.down( 'input' ).blur();
-            }
             this.current.removeClassName( 'tagbox-selected' );
+            if( update_input_focus !== false && this.currentIsInput() ) {
+                this.current.down( 'input[type=text]' ).blur();
+            }
             this.current = null;
         }
     },
@@ -149,14 +160,44 @@ var TagBox = Class.create( {
      *
      * @param Element
      */
-    focus: function( el ) {
-        el.addClassName( 'tagbox-selected' );
-        this.blur();
-        this.current = el;
-
-        if( this.currentIsInput() ) {
-            this.current.down( 'input' ).focus();
+    focus: function( el, update_input_focus ) {
+        if( el && el.hasClassName( 'tagbox-selected' ) ) {
+            return;
         }
+
+        var had_focus = this.hasFocus();
+
+        // remove focus from any selected, individual tag or input
+        this.blur( false );
+
+        // set focus on the specified element
+        if( ! el ) {
+            this.tagbox.removeClassName( 'tagbox-selected' );
+        } else if( el.parentNode == this.tagbox ) {
+            [ this.tagbox, el ].invoke( 'addClassName', 'tagbox-selected' );
+
+            this.current = el;
+
+            if( this.currentIsInput() && update_input_focus != false ) {
+                this.current.down( 'input[type=text]' ).focus();
+            }
+        }
+
+        // fire events if the tagbox focus has changed
+        if( had_focus && ! this.hasFocus() ) {
+            this.fire( 'tagbox:blur' );
+        } else if( ! had_focus && this.hasFocus() ) {
+            this.fire( 'tagbox:focus' );
+        }
+    },
+
+    /**
+     * Test whether the TagBox has the focus
+     *
+     * @return Bool
+     */
+    hasFocus: function() {
+        return this.tagbox.hasClassName( 'tagbox-selected' );
     },
 
     /**
@@ -171,8 +212,6 @@ var TagBox = Class.create( {
             case 'previous':
             case 'next':
                 var new_el = this.current[direction](); break;
-            default:
-                return;
         }
 
         if( new_el ) {
@@ -189,18 +228,25 @@ var TagBox = Class.create( {
      */
     registerEventHandlers: function() {
         // set the focus when the tagbox is clicked
-        this.tagbox.observe( 'click', function( e ) {
+        this.tagbox.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
             e.stop();
-            this.focus( this.tagbox.childElements().last() );
+            this.tagbox.select( 'li' ).last().down( 'input' ).focus();
         }.bind( this ) );
 
         // monitor keypresses for tag navigation/deletion
         document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
-            if( ! this.current ) {
+            if( ! this.hasFocus() ) {
                 return;
             }
 
             switch( e.keyCode ) {
+                case Event.KEY_TAB:
+                    if( this.currentIsTag() ) {
+                        this.tagbox.select( 'li' ).last().down( 'input' ).focus();
+                    }
+                    this.focus( false, false );
+                    break;
+
                 case Event.KEY_HOME:
                     this.move( 'first' );
                     break;
@@ -231,8 +277,8 @@ var TagBox = Class.create( {
         }.bind( this ) );
 
         // remove focus from the tagbox when another part of the document is clicked
-        document.observe( 'click', function( e ) {
-            this.blur();
+        document.observe( 'mousedown', function( e ) {
+            this.focus( false );
         }.bind( this ) );
     },
 
@@ -250,6 +296,8 @@ var TagBox = Class.create( {
                 this.addTag( el.value );
                 el.value = '';
             }
+        }.bind( this ) ).observe( 'focus', function( e ) {
+            this.focus( Event.element( e ).up( 'li' ) );
         }.bind( this ) );
     },
 
