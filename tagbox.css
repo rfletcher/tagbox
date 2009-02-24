@@ -18,10 +18,8 @@ ul.tagbox li.tagbox-tag {
   background-color: #dee7f8;
   border-radius: 5px;
   border: 1px solid #a4bdec;
-}
-
-ul.tagbox li.tagbox-tag {
   padding: 1px 5px 2px;
+  white-space: pre;
 }
 
 ul.tagbox li input[type=text] {
