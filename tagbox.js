@@ -81,7 +81,7 @@ var TagBox = Class.create( {
 
         var tag_el = tag.getElement();
 
-        tag_el.observe( 'mousedown', function( e ) {
+        tag_el.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
             e.stop();
             this.focus( tag_el );
         }.bind( this ) );
@@ -168,7 +168,7 @@ var TagBox = Class.create( {
         var had_focus = this.hasFocus();
 
         // remove focus from any selected, individual tag or input
-        this.blur( false );
+        this.blur( update_input_focus );
 
         // set focus on the specified element
         if( ! el ) {
@@ -218,7 +218,10 @@ var TagBox = Class.create( {
             this.focus( new_el );
 
             if( direction == 'last' ) {
-                new_el.down( 'input' ).value = new_el.down( 'input' ).value;
+                // tricky way to move the mouse cursor to the end of the text
+                var i = new_el.down( 'input' ), v = i.value;
+                i.value += ' ';
+                i.value = v;
             }
         }
     },
