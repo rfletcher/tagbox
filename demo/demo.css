@@ -1,9 +1,12 @@
 * { margin: 0; padding: 0; }
 
 body {
-  font-size: 11px;
-  font-family: verdana, arial, helvetica;
   padding: 90px 130px 0;
+}
+
+body, input {
+  font-size: 11px;
+  font-family: verdana, arial, helvetica; 
 }
 
 h1 {
@@ -35,13 +38,14 @@ label {
 }
 
 button {
-  margin: 2em 0;
   float: left;
+  margin: 2em 0;
+  padding: 2px 6px 4px;
 }
 
-input {
-  height: 26px;
+input[type=text] {
   border: 1px solid #aaa;
+  height: 26px;
   padding: 5px 2px;
   width: 500px;
 }
@@ -56,4 +60,12 @@ input {
   font-weight: bold;
   margin: 2em 0 0 80px;
   text-align: right;
+}
+
+* + html button {
+  padding: 0;
+}
+* + html input[type=text] {
+  height: 14px;
+  width: 494px;
 }

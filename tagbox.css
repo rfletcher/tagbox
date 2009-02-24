@@ -1,6 +1,7 @@
 ul.tagbox {
   background-color: #fff;
   border: 1px solid #AAA;
+  cursor: text;
   padding: 0 0 2px 2px;
 }
 
@@ -8,11 +9,6 @@ ul.tagbox li {
   display: inline-block;
   list-style-type: none;
   margin: 2px 2px 0 0;
-}
-
-* + html ul.tagbox li {
-  display: inline;
-  zoom: 1;
 }
 
 ul.tagbox li.tagbox-tag {
@@ -28,14 +24,15 @@ ul.tagbox li.tagbox-tag {
   padding: 1px 5px 2px;
 }
 
-ul.tagbox li input {
-  background-color: #CCC;
+ul.tagbox li input[type=text] {
+  background-color: transparent;
   border: none;
   display: inline-block;
   font: inherit;
-  height: auto;
+  height: 15px;
+  margin: 2px 0 3px;
   outline: none;
-  padding: 2px 0 3px;
+  padding: 0;
   width: auto;
 }
 
@@ -43,4 +40,18 @@ ul.tagbox li.tagbox-tag.tagbox-selected {
   background-color: #598bec;
   border-color: #598bec;
   color: #fff;
+}
+
+ul.tagbox-selected {
+  outline: auto 5px -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+/* for IE7 */
+* + html ul.tagbox {
+  padding-bottom: 0;
+}
+* + html ul.tagbox li {
+  display: inline;
+  zoom: 1;
 }
