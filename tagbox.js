@@ -232,10 +232,17 @@ var TagBox = Class.create( {
      * Register event handlers
      */
     registerEventHandlers: function() {
-        // set the focus when the tagbox is clicked
-        this.tagbox.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
-            e.stop();
-            this.tagbox.select( 'li' ).last().down( 'input' ).focus();
+        document.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
+            var el = Event.element( e );
+
+            // set the focus when the tagbox is clicked
+            if( el == this.tagbox || el.descendantOf( this.tagbox ) ) {
+                this.tagbox.select( 'li' ).last().down( 'input' ).focus();
+
+            // remove focus from the tagbox when another part of the document is clicked
+            } else {
+                this.focus( false );
+            }
         }.bind( this ) );
 
         // monitor keypresses for tag navigation/deletion
@@ -286,11 +293,6 @@ var TagBox = Class.create( {
                         e.stop();
                     }
             }
-        }.bind( this ) );
-
-        // remove focus from the tagbox when another part of the document is clicked
-        document.observe( 'mousedown', function( e ) {
-            this.focus( false );
         }.bind( this ) );
     },
 
