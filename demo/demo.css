@@ -60,7 +60,15 @@ label {
   width: 500px;
 }
 
-.input-wrapper p {
+label + p {
+  position: absolute;
+  right: 0;
+  text-align: right;
+  top: 17px;
+}
+
+input + p,
+.input-wrapper .tagbox + p {
   font-size: 9px;
   color: #777;
 }

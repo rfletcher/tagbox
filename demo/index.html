@@ -26,32 +26,12 @@
 
   <div class="input-wrapper">
     <label>Tag Box</label>
+    <p>Type something and hit <kbd>enter</kbd>.</p>
+
     <input type="text" name="demotags1" id="demotags1" value="" class="tagbox"/>
-    <p>no duplicates, case insensitve, triggers on <kbd>comma</kbd> or <kbd>enter</kbd></p>
-    <p>This is the default behavior.</p>
+    <p>A tag is created when you press <kbd>comma</kbd> or <kbd>enter</kbd>. Duplicates aren't allowed.  Dupe checking is case-insensitive.</p>
 
     <button>Get Value</button>
-
-    <script type="text/javascript">
-      // Instantiate a new TagBox with default behavior
-      new TagBox( 'demotags1' );
-    </script>
-  </div>
-
-  <div class="input-wrapper">
-    <label>Tag Box</label>
-    <input type="text" name="demotags2" id="demotags2" value="" class="tagbox"/>
-    <p>duplicates allowed, triggers on <kbd>comma</kbd> or <kbd>space</kbd></p>
-
-    <button>Get Value</button>
-
-    <script type="text/javascript">
-      // Instantiate a new TagBox with some custom configuration
-      new TagBox( 'demotags2', {
-        allow_duplicates: true,
-        triggers: [ Event.KEY_SPACE, Event.KEY_COMMA ]
-      } );
-    </script>
   </div>
 </body>
 </html>
