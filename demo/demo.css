@@ -43,10 +43,8 @@ input[type=text] {
 }
 
 kbd {
-  font-family: monospace;
+  font: 106% profont, inconsolata, "lucida console", monospace;
 }
-kbd:before { content: "<"; }
-kbd:after { content: ">"; }
 
 label {
   display: block;

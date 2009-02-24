@@ -11,22 +11,9 @@
   <link rel="stylesheet" href="../tagbox.css" type="text/css" media="screen"/>
   <script src="../tagbox.js" type="text/javascript"></script>
 
-  <!-- extra styling for the demo page -->
+  <!-- demo-specific css and javascript -->
   <link rel="stylesheet" href="demo.css" type="text/css" media="screen"/>
-
-  <script type="text/javascript">
-    // hook up the "get value" buttons
-    document.observe( 'dom:loaded', function() {
-      $$( 'button' ).invoke( 'observe', 'click', function( e ) {
-        var wrapper_el = Event.element( e ).up( '.input-wrapper' );
-        var value_el = wrapper_el.down( '.value' );
-
-        value_el.update(
-          TagBox.values( wrapper_el.down( '.tagbox' ) ).join( ', ' ).escapeHTML() || '(no value)'
-        );
-      } );
-    } );
-  </script>
+  <script src="demo.js" type="text/javascript"></script>
 </head>
 <body>
   <h1><a href="http://github.com/rfletcher/tagbox/">Tag Box</a> Demo</h1>
@@ -34,16 +21,39 @@
   <div class="input-wrapper">
     <label>HTML Text Box</label>
     <input type="text" name="somedata" value=""/>
-    <p>for comparison</p>
+    <p>&hellip;for comparison</p>
   </div>
 
   <div class="input-wrapper">
     <label>Tag Box</label>
-    <input type="text" name="mytags" value="" class="tagbox"/>
-    <p>no duplicates, case insensitve, triggers on <kbd>enter</kbd></p>
+    <input type="text" name="demotags1" id="demotags1" value="" class="tagbox"/>
+    <p>no duplicates, case insensitve, triggers on <kbd>comma</kbd> or <kbd>enter</kbd></p>
+    <p>This is the default behavior.</p>
 
     <button>Get Value</button>
     <div class="value"></div>
+
+    <script type="text/javascript">
+      // Instantiate a new TagBox with default behavior
+      new TagBox( 'demotags1' );
+    </script>
+  </div>
+
+  <div class="input-wrapper">
+    <label>Tag Box</label>
+    <input type="text" name="demotags2" id="demotags2" value="" class="tagbox"/>
+    <p>duplicates allowed, triggers on <kbd>comma</kbd> or <kbd>space</kbd></p>
+
+    <button>Get Value</button>
+    <div class="value"></div>
+
+    <script type="text/javascript">
+      // Instantiate a new TagBox with some custom configuration
+      new TagBox( 'demotags2', {
+        allow_duplicates: true,
+        triggers: [ Event.KEY_SPACE, Event.KEY_COMMA ]
+      } );
+    </script>
   </div>
 </body>
 </html>
