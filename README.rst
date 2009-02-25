@@ -30,11 +30,15 @@ allow_duplicates : boolean, default: false
 
 case_sensitive : boolean, default: false
   Pay attention to case when checking for duplicates. This option has no
-  effect when allow_duplicates is `true`
+  effect when allow_duplicates is `true`.
+
+show_remove_links : boolean, default: false
+  Add small 'x' links to each tag which, when clicked, remove that tag from
+  the list.
 
 triggers : array, default: [ Event.KEY_COMMA, Event.KEY_RETURN ]
   An array of key codes which trigger the creation of a new tag from typed
-  text
+  text.
 
 Requirements
 ============

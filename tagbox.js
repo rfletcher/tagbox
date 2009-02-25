@@ -90,7 +90,7 @@ var TagBox = Class.create( {
             this.focus( tag_el );
         }.bind( this ) );
 
-        this.current.insert( { before: tag_el } );
+        ( this.current || this.tagbox.select( 'li' ).last() ).insert( { before: tag_el } );
     },
 
     /**
