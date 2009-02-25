@@ -415,8 +415,7 @@ TagBox.Tag = Class.create( {
 var ElasticTextBox = Class.create( {
     options: {
         max_width: null,    // maximum allowed width
-        min_width: 50,      // miniumum allowed width
-        pad: 10
+        min_width: 20       // miniumum allowed width
     },
 
     input: null,    // the <input/> element
@@ -440,8 +439,6 @@ var ElasticTextBox = Class.create( {
     createProxy: function() {
         this.proxy = new Element( 'span' ).setStyle( {
             display: 'inline-block',
-            position: 'absolute',
-            visibility: 'hidden',
             whiteSpace: 'pre'
         } );
 
@@ -470,18 +467,17 @@ var ElasticTextBox = Class.create( {
     updateWidth: function() {
         this.proxy.innerHTML = this.input.value.escapeHTML();
 
-        var pad = this.options.get( 'pad' );
+        var pad = parseFloat( this.input.getStyle( 'height' ) );
         var width = parseFloat( this.proxy.getStyle( 'width' ) || 0 ) + pad;
 
-        var max_width = this.options.get( 'max_width' );
-        var min_width = this.options.get( 'min_width' );
+        // constrain the size with the min_ and max_width options
+        [ 'max', 'min' ].each( function( m ) {
+            var v = this.options.get( m + '_width' );
 
-        if( typeof min_width == 'number' && isFinite( min_width ) ) {
-            width = Math.max( width, min_width );
-        }
-        if( typeof max_width == 'number' && isFinite( max_width ) ) {
-            width = Math.min( width, max_width );
-        }
+            if( typeof v == 'number' && isFinite( v ) ) {
+                width = Math[ m == 'max' ? 'min' : 'max' ]( v, width );
+            }
+        }.bind( this ) );
 
         this.input.setStyle( { width: width + 'px' } );
     }
