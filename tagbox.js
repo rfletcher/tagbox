@@ -410,10 +410,12 @@ TagBox.Tag = Class.create( {
 
 /**
  * ElasticTextBox
+ * Make a text input element automatically resize to match the width of its value
  */
 var ElasticTextBox = Class.create( {
     options: {
-        min_width: 50,
+        max_width: null,    // maximum allowed width
+        min_width: 50,      // miniumum allowed width
         pad: 10
     },
 
@@ -467,8 +469,20 @@ var ElasticTextBox = Class.create( {
      */
     updateWidth: function() {
         this.proxy.innerHTML = this.input.value.escapeHTML();
-        var width = parseFloat( this.proxy.getStyle( 'width' ) || 0 ) + this.options.get( 'pad' );
-        width = Math.max( width, this.options.get( 'min_width' ) );
+
+        var pad = this.options.get( 'pad' );
+        var width = parseFloat( this.proxy.getStyle( 'width' ) || 0 ) + pad;
+
+        var max_width = this.options.get( 'max_width' );
+        var min_width = this.options.get( 'min_width' );
+
+        if( typeof min_width == 'number' && isFinite( min_width ) ) {
+            width = Math.max( width, min_width );
+        }
+        if( typeof max_width == 'number' && isFinite( max_width ) ) {
+            width = Math.min( width, max_width );
+        }
+
         this.input.setStyle( { width: width + 'px' } );
     }
 } );
