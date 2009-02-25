@@ -28,14 +28,15 @@ var TagBox = Class.create( {
     options: {
         allow_duplicates: false,    // allow duplicate tags?
         case_sensitive: false,      // case sensitivity matching when searching for duplicate tags
+        show_remove_links: false,   // add an 'x' link to each tag
         triggers:                   // array of keyCodes which trigger addition to the list of tags
             [ Event.KEY_COMMA, Event.KEY_RETURN ]
     },
 
-    current: null,          // the <li/> with the focus
-    original_input: null,   // the original text input element that we've replaced
-    tagbox: null,           // the tagbox (<ul/>) element
-    tags: null,             // a Hash of TagBox.Tag objects
+    current: null,  // the <li/> with the focus
+    name: null,     // the form field name, taken from the original input
+    tagbox: null,   // the tagbox (<ul/>) element
+    tags: null,     // a Hash of TagBox.Tag objects
 
     /**
      * TagBox constructor
@@ -46,11 +47,14 @@ var TagBox = Class.create( {
     initialize: function( original_input, options ) {
         this.options = new Hash( this.options ).update( options );
         this.tags = [];
+        this.name = $( original_input ).getAttribute( 'name' );
 
-        // create the tagbox list and replace the original text input with it
+        // create the tag box
         this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
         this.tagbox.insert( this.createInput() );
-        this.original_input = $( original_input ).replace( this.tagbox );
+
+        // replace the original input with the tag box
+        $( original_input ).replace( this.tagbox );
 
         // register event handlers for descendent elements
         this.registerEventHandlers();
@@ -384,18 +388,26 @@ TagBox.Tag = Class.create( {
      * @return Element
      */
     getElement: function() {
-        var value = this.getValue();;
+        var value = this.getValue();
 
         var li = new Element( 'li', { 'class': 'tagbox-tag' } );
 
         // the hidden input which represents this tag in the form
         var input = new Element( 'input', {
             type: 'hidden',
-            name: this.tagbox.original_input.getAttribute( 'name' ) + '[]',
+            name: this.tagbox.name + '[]',
             value: value
         } );
 
-        return li.insert( value.escapeHTML() ).insert( input );
+        li.insert( value.escapeHTML() ).insert( input );
+
+        if( this.tagbox.options.get( 'show_remove_links' ) ) {
+            var a = new Element( 'a', { 'class': 'tagbox-remove' } ).update( 'Remove' );
+            a.observe( 'click', this.tagbox.remove.bind( this.tagbox ) );
+            li.insert( a );
+        }
+
+        return li;
     },
 
     /**
