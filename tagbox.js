@@ -413,7 +413,7 @@ TagBox.Tag = Class.create( {
  */
 var ElasticTextBox = Class.create( {
     options: {
-        minWidth: 50,
+        min_width: 50,
         pad: 10
     },
 
@@ -455,7 +455,7 @@ var ElasticTextBox = Class.create( {
     },
 
     /**
-    * Register event handlers
+     * Register event handlers
      */
     registerEventHandlers: function() {
         this.input.observe( 'keypress', this.updateWidth.bind( this ) );
@@ -467,10 +467,9 @@ var ElasticTextBox = Class.create( {
      */
     updateWidth: function() {
         this.proxy.innerHTML = this.input.value.escapeHTML();
-        this.input.setStyle( {
-            width: parseFloat( this.proxy.getStyle( 'width' ) || 0 ) +
-                   this.options.get( 'pad' ) + 'px'
-        } );
+        var width = parseFloat( this.proxy.getStyle( 'width' ) || 0 ) + this.options.get( 'pad' );
+        width = Math.max( width, this.options.get( 'min_width' ) );
+        this.input.setStyle( { width: width + 'px' } );
     }
 } );
 
