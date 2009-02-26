@@ -53,6 +53,14 @@ var TagBox = Class.create( {
         this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
         this.tagbox.insert( this.createInput() );
 
+        // populate the tag box with tags from the original input
+        var delimiters = this.options.get( 'delimiters' ).collect( function( v ) {
+            var hex = v.toString( 16 );
+            return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
+        } ).join();
+
+        $( original_input ).value.split( new RegExp( '[' + delimiters + ']' ) ).each( this.addTag.bind( this ) );
+
         // replace the original input with the tag box
         $( original_input ).replace( this.tagbox );
 
