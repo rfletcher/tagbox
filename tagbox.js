@@ -13,7 +13,7 @@
 
 // Add a few KEY_* constants to prototype's Event object
 Object.extend( Event, {
-    KEY_COMMA: 188,
+    KEY_COMMA: 44,
     KEY_SEMICOLON: 59,
     KEY_SPACE: 32
 } );
@@ -249,13 +249,16 @@ var TagBox = Class.create( {
             }
         }.bind( this ) );
 
+
         // monitor keypresses for tag navigation/deletion
         document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
             if( ! this.hasFocus() ) {
                 return;
             }
 
-            switch( e.keyCode ) {
+            var key = e.which ? e.which : e.keyCode;
+
+            switch( key ) {
                 case Event.KEY_TAB:
                     if( this.currentIsTag() ) {
                         this.tagbox.select( 'li' ).last().down( 'input' ).focus();
@@ -311,10 +314,11 @@ var TagBox = Class.create( {
      * @param Element an <input/> element
      */
     registerInputEventHandlers: function( input ) {
-        input.observe( 'keydown', function( e ) {
+        input.observe( 'keypress', function( e ) {
             var el = e.element();
+            var key = e.which ? e.which : e.keyCode;
 
-            if( this.options.get( 'triggers' ).include( e.keyCode ) ) {
+            if( this.options.get( 'triggers' ).include( key ) ) {
                 e.stop();
                 this.addTag( el.value );
                 el.value = '';
