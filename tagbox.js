@@ -127,16 +127,16 @@ var TagBox = Class.create( {
     /**
      * Test whether the current node is an input node
      */
-     currentIsInput: function() {
-         return this.current && ! this.current.hasClassName( 'tagbox-tag' ) && this.current.down( 'input' );
-     },
+    currentIsInput: function() {
+        return this.current && ! this.current.hasClassName( 'tagbox-tag' ) && this.current.down( 'input' );
+    },
 
      /**
       * Test whether the current node is a tag node
       */
-      currentIsTag: function() {
-          return this.current && this.current.hasClassName( 'tagbox-tag' );
-      },
+    currentIsTag: function() {
+        return this.current && this.current.hasClassName( 'tagbox-tag' );
+    },
 
     /**
      * Find a Tag object by value
