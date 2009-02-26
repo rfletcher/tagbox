@@ -191,9 +191,7 @@ var TagBox = Class.create( {
             this.current = el;
 
             if( this.currentIsInput() && update_input_focus != false ) {
-                ( function() {
-                    this.current.down( 'input[type=text]' ).focus();
-                }.bind( this ) ).defer();
+                this.focusInput();
             }
         }
 
@@ -203,6 +201,15 @@ var TagBox = Class.create( {
         } else if( ! had_focus && this.hasFocus() ) {
             this.fire( 'tagbox:focus' );
         }
+    },
+
+    /**
+     * Set the focus on the main tagbox text input
+     */
+    focusInput: function() {
+        ( function() {
+            this.tagbox.select( 'li' ).last().down( 'input[type=text]' ).focus();
+        }.bind( this ) ).defer();
     },
 
     /**
@@ -244,19 +251,19 @@ var TagBox = Class.create( {
      * Register event handlers
      */
     registerEventHandlers: function() {
+        // monitor for clicks, to set or remove focus
         document.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
             var el = Event.element( e );
 
             // set the focus when the tagbox is clicked
             if( el == this.tagbox || el.descendantOf( this.tagbox ) ) {
-                this.tagbox.select( 'li' ).last().down( 'input' ).focus();
+                this.focusInput();
 
             // remove focus from the tagbox when another part of the document is clicked
             } else {
                 this.focus( false );
             }
         }.bind( this ) );
-
 
         // monitor keypresses for tag navigation/deletion
         document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
