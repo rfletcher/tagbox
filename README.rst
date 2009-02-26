@@ -32,13 +32,13 @@ case_sensitive : boolean, default: false
   Pay attention to case when checking for duplicates. This option has no
   effect when allow_duplicates is `true`.
 
+delimiters : array, default: [ Event.KEY_COMMA, Event.KEY_RETURN ]
+  An array of key codes which trigger the creation of a new tag from typed
+  text.
+
 show_remove_links : boolean, default: false
   Add small 'x' links to each tag which, when clicked, remove that tag from
   the list.
-
-triggers : array, default: [ Event.KEY_COMMA, Event.KEY_RETURN ]
-  An array of key codes which trigger the creation of a new tag from typed
-  text.
 
 Requirements
 ============

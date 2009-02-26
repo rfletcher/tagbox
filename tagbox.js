@@ -28,9 +28,9 @@ var TagBox = Class.create( {
     options: {
         allow_duplicates: false,    // allow duplicate tags?
         case_sensitive: false,      // case sensitivity matching when searching for duplicate tags
-        show_remove_links: false,   // add an 'x' link to each tag
-        triggers:                   // array of keyCodes which trigger addition to the list of tags
-            [ Event.KEY_COMMA, Event.KEY_RETURN ]
+        delimiters:                 // array of keyCodes which trigger addition to the list of tags
+            [ Event.KEY_COMMA, Event.KEY_RETURN ],
+        show_remove_links: false    // add an 'x' link to each tag
     },
 
     current: null,  // the <li/> with the focus
@@ -318,7 +318,7 @@ var TagBox = Class.create( {
             var el = e.element();
             var key = e.which ? e.which : e.keyCode;
 
-            if( this.options.get( 'triggers' ).include( key ) ) {
+            if( this.options.get( 'delimiters' ).include( key ) ) {
                 e.stop();
                 this.addTag( el.value );
                 el.value = '';
