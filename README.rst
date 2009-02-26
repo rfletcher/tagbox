@@ -5,8 +5,9 @@ Tag Box
 `Tag Box`_ is an unobtrusive javascript library which provides a
 multi-value text input.
 
+-----
 Usage
-=====
+-----
 
 Include the Tag Box assets::
 
@@ -15,10 +16,10 @@ Include the Tag Box assets::
 
 Add a text input to your page, with the `tagbox` class::
 
-    <input type="text" name="tags" class="tagbox"/>
+    <input type="text" name="tags" class="tagbox" value="these, are, tags"/>
 
-As soon as the browser is ready Tag Box will find those inputs and convert
-them to tag boxes.
+As soon as the browser is ready Tag Box will convert those inputs from text boxes
+to tag boxes, automatically converting any value into tags.
 
 Options
 -------
@@ -40,13 +41,15 @@ show_remove_links : boolean, default: false
   Add small 'x' links to each tag which, when clicked, remove that tag from
   the list.
 
+------------
 Requirements
-============
+------------
 
 Tag Box requires `Prototype.js`_ 1.6+
 
+-------
 Credits
-=======
+-------
 
 TagBox was heavily inspired by `Guillermo Rauch's TextboxList`_ for MooTools.
 
