@@ -28,11 +28,10 @@ ul.tagbox li.tagbox-tag a.tagbox-remove {
   display: inline-block;
   height: 12px;
   line-height: 100px;
+  margin: -2px -2px  0 4px;
   overflow: hidden;
-  width: 12px;
-  margin: 0 -2px  0 4px;
-  margin-top: -1px;
   vertical-align: middle;
+  width: 12px;
 }
 ul.tagbox li.tagbox-tag.tagbox-selected a.tagbox-remove {
   background-position: 2px -8px;
