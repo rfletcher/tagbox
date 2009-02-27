@@ -39,12 +39,17 @@ var TagBox = Class.create( {
      *      Array of keyCodes which trigger addition to the list of tags.
      *  show_remove_links (Boolean) = false:
      *      Add an 'x' link to each tag.
+     *  validation_function (Function | null) = null:
+     *      A function which validates new input before adding it as a tag.
+     *      It will be passed the String value as the only parameter, and 
+     *      should return a Boolean.
      **/
     options: {
         allow_duplicates: false,
         case_sensitive: false,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
-        show_remove_links: false
+        show_remove_links: false,
+        validation_function: null,
     },
 
     /**
@@ -128,7 +133,9 @@ var TagBox = Class.create( {
     addTag: function( value ) {
         value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
 
-        if( ! value || ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) {
+        if( ! value || 
+            ( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) ||
+            ( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) ) {
             return;
         }
 

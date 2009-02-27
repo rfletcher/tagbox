@@ -41,6 +41,10 @@ show_remove_links : boolean, default: false
   Add small 'x' links to each tag which, when clicked, remove that tag from
   the list.
 
+validation_function : Function, default = null
+  A function which validates new input before adding it as a tag. It will be
+  passed the String value as the only parameter, and should return a Boolean.
+
 ------------
 Requirements
 ------------
