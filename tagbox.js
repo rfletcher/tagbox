@@ -72,11 +72,11 @@ var TagBox = Class.create( {
     tags: null,
 
     /**
-     * new TagBox( original_input[, options ] )
-     *   - original_input (Element | String): The original text input, or a
+     * new TagBox( originalinput[, options ] )
+     *   - originalinput (Element | String): The original text input, or a
      *     string that references the input's ID.
      *   - options (Object): Options for this TagBox.
-     */
+     **/
     initialize: function( original_input, options ) {
         this.options = new Hash( this.options ).update( options );
         this.tags = [];
@@ -102,25 +102,25 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#fire()
+     * TagBox#fire() -> undefined
      * See: Prototype.js Element#fire()
      **/
     fire:          function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
 
     /**
-     * TagBox#observe()
+     * TagBox#observe() -> undefined
      * See: Prototype.js Element#observe()
      **/
     observe:       function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
 
     /**
-     * TagBox#stopObserving()
+     * TagBox#stopObserving() -> undefined
      * See: Prototype.js Element#stopObserving()
      **/
     stopObserving: function() { return this.tagbox.stopObserving.apply( this.tagbox, arguments ); },
 
     /**
-     * TagBox#addTag( value )
+     * TagBox#addTag( value ) -> undefined
      *   - value (String): Displayed value of the new tag
      *
      * Add a tag to the list, and select that tag.
@@ -148,8 +148,8 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#blur( [ update_input_focus = true ])
-     *   - update_input_focus (Boolean): Call the descendent input's native
+     * TagBox#blur( [ updateinputfocus = true ] ) -> undefined
+     *   - updateinputfocus (Boolean): Call the descendent input's native
      *     blur() method.
      *
      * Remove the focus from the current tag or input <li/>.
@@ -221,7 +221,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#focus( [ element[, update_input_focus ] ] )
+     * TagBox#focus( [ element[, updateinputfocus ]] ) -> undefined
      *   - element (Element): The <li/> element to select.
      *   - update_input_focus (Boolean): Call the descendent input's native
      *     blur() method.
@@ -260,7 +260,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#focusInput()
+     * TagBox#focusInput() -> undefined
      *
      * Set the focus on the main tagbox text input.
      **/
@@ -280,7 +280,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#move( target )
+     * TagBox#move( target ) -> undefined
      *   - target ('first' | 'last' | 'previous' | 'next'): The direction to
      *     move the focus.
      *
@@ -310,7 +310,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#registerEventHandlers()
+     * TagBox#registerEventHandlers() -> undefined
      *
      * Register document and tag box element event handlers.
      **/
@@ -388,7 +388,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#registerInputEventHandlers( input )
+     * TagBox#registerInputEventHandlers( input ) -> undefined
      *   - input (Element): A tag box input element.
      *
      * Register <input/>-specific event handlers.
@@ -409,7 +409,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#remove()
+     * TagBox#remove() -> undefined
      *
      * Remove the focused tag from the list.
      **/
@@ -514,7 +514,7 @@ TagBox.Tag = Class.create( {
      * TagBox.Tag#getValue() -> String
      *
      * Get the Tag's value.
-     */
+     **/
     getValue: function() {
         return this.properties.get( 'value' );
     }
@@ -525,7 +525,7 @@ TagBox.Tag = Class.create( {
  *
  * Extends text <input/> elements to automatically resize based on the width
  * of their value.
- */
+ **/
 var ElasticTextBox = Class.create( {
     /**
      * ElasticTextBox#options -> Hash
@@ -569,10 +569,10 @@ var ElasticTextBox = Class.create( {
     },
 
     /**
-     * ElasticTextBox#createProxy()
+     * ElasticTextBox#createProxy() -> undefined
      *
      * Create the proxy element and insert it into the DOM.
-     */
+     **/
     createProxy: function() {
         this.proxy = new Element( 'span' ).setStyle( {
             display: 'inline-block',
@@ -591,7 +591,7 @@ var ElasticTextBox = Class.create( {
     },
 
     /**
-     * ElasticTextBox#registerEventHandlers()
+     * ElasticTextBox#registerEventHandlers() -> undefined
      *
      * Register input element event handlers.
      **/
@@ -601,7 +601,7 @@ var ElasticTextBox = Class.create( {
     },
 
     /**
-     * ElasticTextBox#updateWidth()
+     * ElasticTextBox#updateWidth() -> undefined
      *
      * Update the width of the input element.
      **/
@@ -647,7 +647,7 @@ Object.extend( Form.Element.Methods, {
 } );
 Element.addMethods();
 
-/**
+/*
  * Initialize the tagboxes when the DOM is ready
  */
 document.observe( 'dom:loaded', function() {
