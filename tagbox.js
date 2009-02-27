@@ -49,7 +49,7 @@ var TagBox = Class.create( {
         case_sensitive: false,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         show_remove_links: false,
-        validation_function: null,
+        validation_function: null
     },
 
     /**
