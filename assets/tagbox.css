@@ -6,19 +6,22 @@ ul.tagbox {
 }
 
 ul.tagbox li {
+  border: 1px solid transparent;
   display: inline-block;
   list-style-type: none;
+  padding: 1px 0 2px;
   margin: 2px 2px 0 0;
 }
 
 ul.tagbox li.tagbox-tag {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  line-height: 15px;
+  line-height: inherit;
   background-color: #dee7f8;
   border-radius: 5px;
-  border: 1px solid #a4bdec;
-  padding: 1px 5px 2px;
+  border-color: #a4bdec;
+  padding-left: 5px;
+  padding-right: 5px;
   white-space: pre;
 }
 
@@ -40,11 +43,10 @@ ul.tagbox li.tagbox-tag.tagbox-selected a.tagbox-remove {
 ul.tagbox li input[type=text] {
   background-color: transparent;
   border: none;
-  display: inline-block;
   font: inherit;
-  height: 15px;
-  margin: 2px 0 3px;
+  display: inline;
   outline: none;
+  margin: 0;
   padding: 0;
   width: auto;
 }
@@ -61,10 +63,10 @@ ul.tagbox-selected {
 }
 
 /* for IE7 */
-* + html ul.tagbox {
-  padding-bottom: 0;
-}
 * + html ul.tagbox li {
   display: inline;
   zoom: 1;
+}
+* + html ul.tagbox li input[type=text] {
+  vertical-align: middle;
 }

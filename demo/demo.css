@@ -6,7 +6,8 @@ body {
 
 body, input {
   font-size: 11px;
-  font-family: verdana, arial, helvetica; 
+  font-family: verdana, arial, helvetica;
+  line-height: 15px;
 }
 
 h1 {
@@ -35,10 +36,10 @@ button {
   padding: 2px 6px 4px;
 }
 
-input[type=text] {
+#comparison {
   border: 1px solid #aaa;
   height: 26px;
-  padding: 5px 2px;
+  padding: 4px 2px 6px;
   width: 500px;
 }
 
@@ -82,7 +83,7 @@ input + p,
 * + html button {
   padding: 0;
 }
-* + html input[type=text] {
+* + html #comparison {
   height: 14px;
   width: 494px;
 }
