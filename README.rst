@@ -13,8 +13,8 @@ Using Tag Box
 
 Include the Tag Box assets::
 
-    <link rel="stylesheet" href="tagbox/tagbox.css" type="text/css" media="screen"/>
-    <script src="tagbox/tagbox.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="tagbox/assets/tagbox.css" type="text/css" media="screen"/>
+    <script src="tagbox/dist/tagbox.js" type="text/javascript"></script>
 
 Add a text input to your page, with the `tagbox` class::
 
