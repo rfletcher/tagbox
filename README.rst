@@ -1,4 +1,3 @@
-======
 Tagbox
 ======
 
@@ -8,7 +7,7 @@ multi-value text input.
 Try the demo: http://rfletcher.github.com/tagbox/demo/
 
 Supported Browsers
-==================
+------------------
 
 Tagbox currently supports the following browsers:
 
@@ -16,7 +15,6 @@ Tagbox currently supports the following browsers:
 - Mozilla Firefox 3.0 and higher
 - Apple Safari 3.1 and higher
 
-============
 Using Tagbox
 ============
 
@@ -33,12 +31,12 @@ As soon as the browser is ready Tagbox will convert those inputs from text boxes
 to tag boxes, automatically converting any value into tags.
 
 Requirements
-============
+------------
 
 Tagbox requires `Prototype.js`_ 1.6+
 
 Options
-=======
+-------
 
 Tagbox can be configured with these options:
 
@@ -65,7 +63,7 @@ validation_function : Function, default = null
   passed the String value as the only parameter, and should return a Boolean.
 
 Building Tagbox from source
-===========================
+---------------------------
 
 ``tagbox.js`` is generated from multiple source files in the ``src/`` directory. 
 To build Tagbox, you'll need:
@@ -79,7 +77,6 @@ From the root Tagbox directory, run:
 * ``rake dist`` to generate ``dist/tagbox.js``
 * ``rake package`` to create a distribution tarball in the ``pkg/`` directory
 
-=========
 Changelog
 =========
 
@@ -96,7 +93,6 @@ Changelog
 - new: added the ``show_remove_links`` option
 - new: added the ``validation_function`` option
 
-=======
 Credits
 =======
 
