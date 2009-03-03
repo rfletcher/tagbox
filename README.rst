@@ -23,6 +23,11 @@ Add a text input to your page, with the `tagbox` class::
 As soon as the browser is ready Tag Box will convert those inputs from text boxes
 to tag boxes, automatically converting any value into tags.
 
+Requirements
+------------
+
+Tag Box requires `Prototype.js`_ 1.6+
+
 Options
 -------
 
@@ -46,11 +51,6 @@ show_remove_links : boolean, default: false
 validation_function : Function, default = null
   A function which validates new input before adding it as a tag. It will be
   passed the String value as the only parameter, and should return a Boolean.
-
-Requirements
-------------
-
-Tag Box requires `Prototype.js`_ 1.6+
 
 Building Tag Box from source
 ----------------------------
