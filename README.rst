@@ -75,6 +75,7 @@ Changelog
 ---------
 
 0.2
+
 - new: added the ``max_tags`` option
 
 0.1
