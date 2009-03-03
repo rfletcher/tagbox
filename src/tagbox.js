@@ -2,6 +2,7 @@
  * TagBox, a multiple-value text input
  *
  * @author Rick Fletcher <fletch@pobox.com>
+ * @link http://github.com/rfletcher/tagbox
  * @version <%= TAGBOX_VERSION %>
  *
  * This library is distributed under an MIT license:
