@@ -7,7 +7,7 @@ multi-value text input.
 
 Try the demo: http://rfletcher.github.com/tagbox/demo/
 
-Supported Platforms
+Supported Browsers
 -------------------
 `Tagbox`_ currently supports the following browsers:
 
