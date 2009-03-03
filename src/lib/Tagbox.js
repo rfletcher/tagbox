@@ -307,29 +307,27 @@ var Tagbox = Class.create( {
      * Register document and tagbox element event handlers.
      **/
     registerEventHandlers: function() {
-        // monitor for clicks, to set or remove focus
-        document.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
-            var el = Event.element( e );
+        this.registerMouseEventHandlers();
+        this.registerKeyEventHandlers();
+    },
 
-            // set the focus when the tagbox is clicked
-            if( el == this.tagbox || el.descendantOf( this.tagbox ) ) {
-                this.focusInput();
-
-            // remove focus from the tagbox when another part of the document is clicked
-            } else {
-                this.focus( false );
-            }
-        }.bind( this ) );
-
-        // monitor keypresses for tag navigation/deletion
+    /**
+     * Tagbox#registerKeyEventHandlers() -> undefined
+     *
+     * Monitor key events to navigate or remove tags.
+     **/
+    registerKeyEventHandlers: function() {
         document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
+            // if the tagbox doesn't have the focus, disregard all key events
             if( ! this.hasFocus() ) {
                 return;
             }
 
+            // a little cross-browser compatibility
             var key = e.which ? e.which : e.keyCode;
 
             switch( key ) {
+                // let the user tab out of the tagbox to next input
                 case Event.KEY_TAB:
                     if( this.currentIsTag() ) {
                         this.tagbox.select( 'li' ).last().down( 'input' ).focus();
@@ -337,6 +335,7 @@ var Tagbox = Class.create( {
                     this.focus( false, false );
                     break;
 
+                // move to the first or last tag
                 case Event.KEY_HOME:
                     this.move( 'first' );
                     break;
@@ -344,6 +343,7 @@ var Tagbox = Class.create( {
                     this.move( 'last' );
                     break;
 
+                // move to the previous or next tag
                 case Event.KEY_LEFT:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() !== 0 ) {
                         break;
@@ -354,6 +354,7 @@ var Tagbox = Class.create( {
                     this.move( 'next' );
                     break;
 
+                // select the previous or next tag, and/or remove the selected tag
                 case Event.KEY_BACKSPACE:
                     if( this.currentIsInput() && this.current.down( 'input' ).getCaretPosition() === 0 ) {
                         var direction = 'previous';
@@ -375,6 +376,26 @@ var Tagbox = Class.create( {
                         this.remove();
                         e.stop();
                     }
+            }
+        }.bind( this ) );
+    },
+
+    /**
+     * Tagbox#registerMouseEventHandlers() -> undefined
+     *
+     * Monitor for clicks to set or remove focus.
+     **/
+    registerMouseEventHandlers: function() {
+        document.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
+            var el = Event.element( e );
+
+            // set the focus when the tagbox is clicked
+            if( el == this.tagbox || el.descendantOf( this.tagbox ) ) {
+                this.focusInput();
+
+            // remove focus from the tagbox when another part of the document is clicked
+            } else {
+                this.focus( false );
             }
         }.bind( this ) );
     },
