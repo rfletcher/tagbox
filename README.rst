@@ -7,6 +7,14 @@ multi-value text input.
 
 Try the demo: http://rfletcher.github.com/tagbox/demo/
 
+Supported Platforms
+-------------------
+`Tagbox`_ currently supports the following browsers:
+
+- Microsoft Internet Explorer, version 7.0 and higher
+- Mozilla Firefox 3.0 and higher
+- Apple Safari 3.1 and higher
+
 -------------
 Using Tagbox
 -------------
