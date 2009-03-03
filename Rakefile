@@ -54,3 +54,21 @@ task :clean_package_source do
   rm_rf File.join(TAGBOX_PKG_DIR, "tagbox-#{TAGBOX_VERSION}"), :verbose => false
 end
 
+desc 'Push the latest demo to gh-pages'
+task :update_demo => :dist do
+  require "grancher"
+
+  grancher = Grancher.new do |g|
+    g.branch = 'gh-pages'
+    g.push_to = 'origin'
+    g.message = "Updated demo, v#{TAGBOX_VERSION}"
+
+    # Copy the files needed for the demo
+    g.directory 'assets', 'assets'
+    g.directory 'demo', 'demo'
+    g.directory 'dist', 'dist'
+  end
+
+  grancher.commit
+  grancher.push
+end
