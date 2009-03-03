@@ -1,3 +1,4 @@
+======
 Tagbox
 ======
 
@@ -7,7 +8,7 @@ multi-value text input.
 Try the demo: http://rfletcher.github.com/tagbox/demo/
 
 Supported Browsers
-------------------
+==================
 
 Tagbox currently supports the following browsers:
 
@@ -15,6 +16,7 @@ Tagbox currently supports the following browsers:
 - Mozilla Firefox 3.0 and higher
 - Apple Safari 3.1 and higher
 
+============
 Using Tagbox
 ============
 
@@ -31,12 +33,12 @@ As soon as the browser is ready Tagbox will convert those inputs from text boxes
 to tag boxes, automatically converting any value into tags.
 
 Requirements
-------------
+============
 
 Tagbox requires `Prototype.js`_ 1.6+
 
 Options
--------
+=======
 
 Tagbox can be configured with these options:
 
@@ -62,8 +64,27 @@ validation_function : Function, default = null
   A function which validates new input before adding it as a tag. It will be
   passed the String value as the only parameter, and should return a Boolean.
 
+Custom Events
+=============
+
+Tagbox fires custom events, which you may observe::
+
+    var tb = new TagBox( 'mytags' );
+    tb.observe( 'tagbox:focus', mycallbackfunc );
+
+The Tagbox event methods simply wrap Prototype's.  See the `Prototype Event
+docs`_ for detailed information.
+
+Events
+------
+
+tagbox:blur : 
+  fires when the tagbox loses the focus
+tagbox:focus :
+  fires when a tagbox gains the focus (i.e. is clicked on or tabbed into)
+
 Building Tagbox from source
----------------------------
+===========================
 
 ``tagbox.js`` is generated from multiple source files in the ``src/`` directory. 
 To build Tagbox, you'll need:
@@ -77,6 +98,7 @@ From the root Tagbox directory, run:
 * ``rake dist`` to generate ``dist/tagbox.js``
 * ``rake package`` to create a distribution tarball in the ``pkg/`` directory
 
+=========
 Changelog
 =========
 
@@ -92,7 +114,10 @@ Changelog
 - new: added the ``delimiters`` option
 - new: added the ``show_remove_links`` option
 - new: added the ``validation_function`` option
+- new: added the ``tagbox:focus`` event
+- new: added the ``tagbox:blur`` event
 
+=======
 Credits
 =======
 
