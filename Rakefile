@@ -2,6 +2,7 @@
 # http://github.com/sstephenson/prototype/tree/master
 
 require 'rake'
+require 'rake/clean'
 require 'rake/packagetask'
 
 TAGBOX_ROOT          = File.expand_path(File.dirname(__FILE__))
@@ -36,6 +37,8 @@ task :dist do
   sprocketize('src', 'tagbox.js')
 end
 
+CLOBBER.include( TAGBOX_DIST_DIR )
+
 Rake::PackageTask.new('tagbox', TAGBOX_VERSION) do |package|
   package.need_tar_gz = true
   package.package_dir = TAGBOX_PKG_DIR
@@ -48,6 +51,6 @@ Rake::PackageTask.new('tagbox', TAGBOX_VERSION) do |package|
 end
 
 task :clean_package_source do
-  rm_rf File.join(TAGBOX_PKG_DIR, "tagbox-#{TAGBOX_VERSION}")
+  rm_rf File.join(TAGBOX_PKG_DIR, "tagbox-#{TAGBOX_VERSION}"), :verbose => false
 end
 
