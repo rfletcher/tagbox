@@ -1,0 +1,72 @@
+ul.tagbox {
+  background-color: #fff;
+  border: 1px solid #AAA;
+  cursor: text;
+  padding: 0 0 2px 2px;
+}
+
+ul.tagbox li {
+  border: 1px solid transparent;
+  display: inline-block;
+  list-style-type: none;
+  padding: 1px 0 2px;
+  margin: 2px 2px 0 0;
+}
+
+ul.tagbox li.tagbox-tag {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  line-height: inherit;
+  background-color: #dee7f8;
+  border-radius: 5px;
+  border-color: #a4bdec;
+  padding-left: 5px;
+  padding-right: 5px;
+  white-space: pre;
+}
+
+ul.tagbox li.tagbox-tag a.tagbox-remove {
+  background: url(remove.png) no-repeat 2px 2px;
+  cursor: pointer;
+  display: inline-block;
+  height: 12px;
+  line-height: 100px;
+  margin: -2px -2px  0 4px;
+  overflow: hidden;
+  vertical-align: middle;
+  width: 12px;
+}
+ul.tagbox li.tagbox-tag.tagbox-selected a.tagbox-remove {
+  background-position: 2px -8px;
+}
+
+ul.tagbox li input[type=text] {
+  background-color: transparent;
+  border: none;
+  font: inherit;
+  display: inline;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+
+ul.tagbox li.tagbox-tag.tagbox-selected {
+  background-color: #598bec;
+  border-color: #598bec;
+  color: #fff;
+}
+
+ul.tagbox-selected {
+  outline: auto 5px -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+/* for IE7 */
+* + html ul.tagbox li {
+  display: inline;
+  zoom: 1;
+}
+* + html ul.tagbox li input[type=text] {
+  vertical-align: middle;
+}

@@ -1,0 +1,108 @@
+* { margin: 0; padding: 0; }
+
+body {
+  padding: 90px 130px 0;
+}
+
+body, input {
+  font-size: 11px;
+  font-family: verdana, arial, helvetica;
+  line-height: 15px;
+}
+
+h1 {
+  font: 28px Georgia;
+  padding: 2px 0;
+  margin: 0 0 0 -30px;
+}
+
+h1 a {
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  background-color: #DEE7F8;
+  border-radius: 8px;
+  border: 1px solid #CAD8F3;
+  padding: 2px 8px;
+  text-decoration: none;
+}
+
+h1 a:hover {
+  text-decoration: underline;
+}
+
+button {
+  float: left;
+  margin: 2em 0 15px;
+  padding: 2px 6px 4px;
+}
+
+.input-wrapper > input {
+  border: 1px solid #aaa;
+  height: 26px;
+  padding: 4px 2px 6px;
+  width: 500px;
+}
+
+#error {
+  background-color: #FCC;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  border: 1px solid #C99;
+  color: #600;
+  margin: 0 0 30px -30px;
+  padding: 5px 10px 10px;
+  width: 540px;
+}
+#error h1 {
+  font-size: 20px;
+  margin: 0;
+}
+#error p {
+  margin-top: 6px;
+}
+
+kbd {
+  font: 106% profont, inconsolata, "lucida console", monospace;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 15px 0 1em;
+  padding-top: 15px;
+}
+
+.input-wrapper {
+  clear: both;
+  position: relative;
+  width: 500px;
+}
+
+label + p {
+  position: absolute;
+  right: 0;
+  margin-top: -27px;
+}
+
+input + p,
+.input-wrapper .tagbox + p {
+  font-size: 9px;
+  color: #777;
+}
+
+.value {
+  color: green;
+  font-weight: bold;
+  margin: 2em 0 0 80px;
+  text-align: right;
+}
+
+* + html button {
+  padding: 0;
+}
+* + html #comparison {
+  height: 14px;
+  width: 494px;
+}
