@@ -10,16 +10,14 @@ TAGBOX_DIST_DIR      = File.join(TAGBOX_ROOT, 'dist')
 TAGBOX_PKG_DIR       = File.join(TAGBOX_ROOT, 'pkg')
 TAGBOX_VERSION       = YAML.load(IO.read(File.join(TAGBOX_SRC_DIR, 'constants.yml')))['TAGBOX_VERSION']
 
-# $:.unshift File.join(TAGBOX_ROOT, 'vendor', 'sprockets', 'lib')
-
-task :default => [:dist, :package]
+task :default => [:dist, :package, :clean_package_source]
 
 def sprocketize(path, source, destination = source)
   begin
     require "sprockets"
   rescue LoadError => e
     puts "\nYou'll need Sprockets to build Tag Box. Just run:\n\n"
-    puts "  $ rake install sprockets"
+    puts "  $ gem install sprockets"
     puts "\nand you should be all set.\n\n"
   end
 
