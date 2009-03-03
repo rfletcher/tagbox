@@ -36,11 +36,30 @@ button {
   padding: 2px 6px 4px;
 }
 
-#comparison {
+.input-wrapper > input {
   border: 1px solid #aaa;
   height: 26px;
   padding: 4px 2px 6px;
   width: 500px;
+}
+
+#error {
+  background-color: #FCC;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  border: 1px solid #C99;
+  color: #600;
+  margin: 0 0 30px -30px;
+  padding: 5px 10px 10px;
+  width: 540px;
+}
+#error h1 {
+  font-size: 20px;
+  margin: 0;
+}
+#error p {
+  margin-top: 6px;
 }
 
 kbd {
