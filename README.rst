@@ -5,6 +5,8 @@ Tag Box
 `Tag Box`_ is an unobtrusive javascript library which provides a
 multi-value text input.
 
+Try the demo: http://rfletcher.github.com/tagbox/demo/
+
 -------------
 Using Tag Box
 -------------
