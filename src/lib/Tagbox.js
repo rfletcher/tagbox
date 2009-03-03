@@ -73,23 +73,7 @@ var Tagbox = Class.create( {
         this.tags = [];
         this.name = $( original_input ).getAttribute( 'name' );
 
-        // create the tagbox
-        this.tagbox = new Element( 'div', { 'class': 'tagbox' } ).update(
-            new Element( 'ul', { 'class': 'tags' } ).update( this.createInput() )
-        );
-
-        // populate the tagbox with tags from the original input
-        var delimiters = this.options.get( 'delimiters' ).collect( function( v ) {
-            var hex = v.toString( 16 );
-            return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
-        } ).join();
-
-        $( original_input ).value.split( new RegExp( '[' + delimiters + ']' ) ).each( this.addTag.bind( this ) );
-
-        // replace the original input with the tagbox
-        $( original_input ).replace( this.tagbox );
-
-        // register event handlers for descendant elements
+        this.insert( original_input );
         this.registerEventHandlers();
     },
 
@@ -97,13 +81,13 @@ var Tagbox = Class.create( {
      * Tagbox#fire() -> undefined
      * See: Prototype.js Element#fire()
      **/
-    fire:          function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
+    fire: function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
 
     /**
      * Tagbox#observe() -> undefined
      * See: Prototype.js Element#observe()
      **/
-    observe:       function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
+    observe: function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
 
     /**
      * Tagbox#stopObserving() -> undefined
@@ -282,6 +266,31 @@ var Tagbox = Class.create( {
     hideHint: function() {
         el = this.tagbox.down( '.tagbox-hint' );
         el && el.hide();
+    },
+
+    /**
+     * Tagbox#insert( original_input ) -> undefined
+     *   - originalinput (Element | String): The original text input, or a
+     *     string that references the input's ID.
+     *
+     * Replace the original <input/> element with a Tagbox.
+     **/
+    insert: function( original_input ) {
+        // create the tagbox
+        this.tagbox = new Element( 'div', { 'class': 'tagbox' } ).update(
+            new Element( 'ul', { 'class': 'tags' } ).update( this.createInput() )
+        );
+
+        // populate the tagbox with tags from the original input
+        var delimiters = this.options.get( 'delimiters' ).collect( function( v ) {
+            var hex = v.toString( 16 );
+            return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
+        } ).join();
+
+        $( original_input ).value.split( new RegExp( '[' + delimiters + ']' ) ).each( this.addTag.bind( this ) );
+
+        // replace the original input with the tagbox
+        $( original_input ).replace( this.tagbox );
     },
 
     /**
