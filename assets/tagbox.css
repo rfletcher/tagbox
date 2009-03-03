@@ -1,11 +1,11 @@
-ul.tagbox {
+div.tagbox ul {
   background-color: #fff;
   border: 1px solid #AAA;
   cursor: text;
   padding: 0 0 2px 2px;
 }
 
-ul.tagbox li {
+div.tagbox ul li {
   border: 1px solid transparent;
   display: inline-block;
   list-style-type: none;
@@ -13,7 +13,7 @@ ul.tagbox li {
   margin: 2px 2px 0 0;
 }
 
-ul.tagbox li.tagbox-tag {
+div.tagbox ul li.tagbox-tag {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   line-height: inherit;
@@ -25,7 +25,7 @@ ul.tagbox li.tagbox-tag {
   white-space: pre;
 }
 
-ul.tagbox li.tagbox-tag a.tagbox-remove {
+div.tagbox ul li.tagbox-tag a.tagbox-remove {
   background: url(remove.png) no-repeat 2px 2px;
   cursor: pointer;
   display: inline-block;
@@ -36,11 +36,11 @@ ul.tagbox li.tagbox-tag a.tagbox-remove {
   vertical-align: middle;
   width: 12px;
 }
-ul.tagbox li.tagbox-tag.tagbox-selected a.tagbox-remove {
+div.tagbox ul li.tagbox-tag.tagbox-selected a.tagbox-remove {
   background-position: 2px -8px;
 }
 
-ul.tagbox li input[type=text] {
+div.tagbox ul li input[type=text] {
   background-color: transparent;
   border: none;
   font: inherit;
@@ -51,22 +51,22 @@ ul.tagbox li input[type=text] {
   width: auto;
 }
 
-ul.tagbox li.tagbox-tag.tagbox-selected {
+div.tagbox ul li.tagbox-tag.tagbox-selected {
   background-color: #598bec;
   border-color: #598bec;
   color: #fff;
 }
 
-ul.tagbox-selected {
+div.tagbox.tagbox-selected {
   outline: auto 5px -webkit-focus-ring-color;
   outline-offset: -2px;
 }
 
 /* for IE7 */
-* + html ul.tagbox li {
+* + html div.tagbox ul li {
   display: inline;
   zoom: 1;
 }
-* + html ul.tagbox li input[type=text] {
+* + html div.tagbox ul li input[type=text] {
   vertical-align: middle;
 }

@@ -69,7 +69,7 @@ var Tagbox = Class.create( {
 
         // create the tagbox
         this.tagbox = new Element( 'div', { 'class': 'tagbox' } ).update(
-            new Element( 'ul' ).update( this.createInput() )
+            new Element( 'ul', { 'class': 'tags' } ).update( this.createInput() )
         );
 
         // populate the tagbox with tags from the original input
@@ -83,7 +83,7 @@ var Tagbox = Class.create( {
         // replace the original input with the tagbox
         $( original_input ).replace( this.tagbox );
 
-        // register event handlers for descendent elements
+        // register event handlers for descendant elements
         this.registerEventHandlers();
     },
 
@@ -137,7 +137,7 @@ var Tagbox = Class.create( {
 
     /**
      * Tagbox#blur( [ updateinputfocus = true ] ) -> undefined
-     *   - updateinputfocus (Boolean): Call the descendent input's native
+     *   - updateinputfocus (Boolean): Call the descendant input's native
      *     blur() method.
      *
      * Remove the focus from the current tag or input <li/>.
@@ -211,7 +211,7 @@ var Tagbox = Class.create( {
     /**
      * Tagbox#focus( [ element[, updateinputfocus ]] ) -> undefined
      *   - element (Element): The <li/> element to select.
-     *   - update_input_focus (Boolean): Call the descendent input's native
+     *   - update_input_focus (Boolean): Call the descendant input's native
      *     blur() method.
      *
      * Set the focus on a tag or input <li/>, or remove focus from the tagbox.
@@ -229,7 +229,7 @@ var Tagbox = Class.create( {
         // set focus on the specified element
         if( ! element ) {
             this.tagbox.removeClassName( 'tagbox-selected' );
-        } else if( element.parentNode == this.tagbox ) {
+        } else if( element.parentNode == this.tagbox.down( 'ul.tags' ) ) {
             [ this.tagbox, element ].invoke( 'addClassName', 'tagbox-selected' );
 
             this.current = element;
