@@ -1,15 +1,15 @@
 /**
- * class TagBox
+ * class Tagbox
  *
  * An unobtrusive, multi-value text input.
  *
  * fires tagbox:blur, tagbox:focus
  **/
-var TagBox = Class.create( {
+var Tagbox = Class.create( {
     /**
-     * TagBox#options -> Hash
+     * Tagbox#options -> Hash
      *
-     * A Hash of options for this TagBox instance.  Options are:
+     * A Hash of options for this Tagbox instance.  Options are:
      *
      *  allow_duplicates (Boolean) = false:
      *      Allow duplicate tags?
@@ -33,45 +33,46 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#current -> ( null | Element )
+     * Tagbox#current -> ( null | Element )
      * The <li/> with the focus.
      **/
     current: null,
 
     /**
-     * TagBox#name -> String
+     * Tagbox#name -> String
      * The form field name, taken from the original input element.
      **/
     name: null,
 
     /**
-     * TagBox#tagbox -> Element
-     * The tagbox (<ul/>) element.
+     * Tagbox#tagbox -> Element
+     * The tagbox (<div/>) element.
      **/
     tagbox: null,
 
     /**
-     * TagBox#tags -> [ TagBox.Tag... ]
-     * An `Array` of `TagBox.Tag` objects.
+     * Tagbox#tags -> [ Tagbox.Tag... ]
+     * An `Array` of `Tagbox.Tag` objects.
      **/
     tags: null,
 
     /**
-     * new TagBox( originalinput[, options ] )
+     * new Tagbox( originalinput[, options ] )
      *   - originalinput (Element | String): The original text input, or a
      *     string that references the input's ID.
-     *   - options (Object): Options for this TagBox.
+     *   - options (Object): Options for this Tagbox.
      **/
     initialize: function( original_input, options ) {
         this.options = new Hash( this.options ).update( options );
         this.tags = [];
         this.name = $( original_input ).getAttribute( 'name' );
 
-        // create the tag box
-        this.tagbox = new Element( 'ul', { 'class': 'tagbox' } );
-        this.tagbox.insert( this.createInput() );
+        // create the tagbox
+        this.tagbox = new Element( 'div', { 'class': 'tagbox' } ).update(
+            new Element( 'ul' ).update( this.createInput() )
+        );
 
-        // populate the tag box with tags from the original input
+        // populate the tagbox with tags from the original input
         var delimiters = this.options.get( 'delimiters' ).collect( function( v ) {
             var hex = v.toString( 16 );
             return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
@@ -79,7 +80,7 @@ var TagBox = Class.create( {
 
         $( original_input ).value.split( new RegExp( '[' + delimiters + ']' ) ).each( this.addTag.bind( this ) );
 
-        // replace the original input with the tag box
+        // replace the original input with the tagbox
         $( original_input ).replace( this.tagbox );
 
         // register event handlers for descendent elements
@@ -87,25 +88,25 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#fire() -> undefined
+     * Tagbox#fire() -> undefined
      * See: Prototype.js Element#fire()
      **/
     fire:          function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
 
     /**
-     * TagBox#observe() -> undefined
+     * Tagbox#observe() -> undefined
      * See: Prototype.js Element#observe()
      **/
     observe:       function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
 
     /**
-     * TagBox#stopObserving() -> undefined
+     * Tagbox#stopObserving() -> undefined
      * See: Prototype.js Element#stopObserving()
      **/
     stopObserving: function() { return this.tagbox.stopObserving.apply( this.tagbox, arguments ); },
 
     /**
-     * TagBox#addTag( value ) -> undefined
+     * Tagbox#addTag( value ) -> undefined
      *   - value (String): Displayed value of the new tag
      *
      * Add a tag to the list, and select that tag.
@@ -119,7 +120,7 @@ var TagBox = Class.create( {
             return;
         }
 
-        var tag = new TagBox.Tag( { value: value } );
+        var tag = new Tagbox.Tag( { value: value } );
         tag.tagbox = this;
 
         this.tags.push( tag );
@@ -135,7 +136,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#blur( [ updateinputfocus = true ] ) -> undefined
+     * Tagbox#blur( [ updateinputfocus = true ] ) -> undefined
      *   - updateinputfocus (Boolean): Call the descendent input's native
      *     blur() method.
      *
@@ -152,7 +153,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#createInput( [ attributes ] ) -> Element
+     * Tagbox#createInput( [ attributes ] ) -> Element
      *   - attributes (Object): HTML attributes to pass to the `Element`
      *     constructor.
      *
@@ -170,7 +171,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#currentIsInput() -> Boolean
+     * Tagbox#currentIsInput() -> Boolean
      *
      * Test whether the current node is an input node.
      **/
@@ -179,7 +180,7 @@ var TagBox = Class.create( {
     },
 
      /**
-      * TagBox#currentIsTag() -> Boolean
+      * Tagbox#currentIsTag() -> Boolean
       *
       * Test whether the current node is a tag node.
       **/
@@ -188,7 +189,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#findTagByValue( value ) -> TagBox.Tag
+     * Tagbox#findTagByValue( value ) -> Tagbox.Tag
      *      - value (String): A value to find.
      *
      * Find a tag object by value.
@@ -208,12 +209,12 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#focus( [ element[, updateinputfocus ]] ) -> undefined
+     * Tagbox#focus( [ element[, updateinputfocus ]] ) -> undefined
      *   - element (Element): The <li/> element to select.
      *   - update_input_focus (Boolean): Call the descendent input's native
      *     blur() method.
      *
-     * Set the focus on a tag or input <li/>, or remove focus from the tag box.
+     * Set the focus on a tag or input <li/>, or remove focus from the tagbox.
      **/
     focus: function( element, update_input_focus ) {
         if( element && element.hasClassName( 'tagbox-selected' ) ) {
@@ -247,7 +248,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#focusInput() -> undefined
+     * Tagbox#focusInput() -> undefined
      *
      * Set the focus on the main tagbox text input.
      **/
@@ -258,20 +259,20 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#hasFocus() -> Boolean
+     * Tagbox#hasFocus() -> Boolean
      *
-     * Test whether the tag box has the focus.
+     * Test whether the tagbox has the focus.
      **/
     hasFocus: function() {
         return this.tagbox.hasClassName( 'tagbox-selected' );
     },
 
     /**
-     * TagBox#move( target ) -> undefined
+     * Tagbox#move( target ) -> undefined
      *   - target ('first' | 'last' | 'previous' | 'next'): The direction to
      *     move the focus.
      *
-     * Move the focus around the tag box
+     * Move the focus around the tagbox
      **/
     move: function( target ) {
         switch( target ) {
@@ -297,9 +298,9 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#registerEventHandlers() -> undefined
+     * Tagbox#registerEventHandlers() -> undefined
      *
-     * Register document and tag box element event handlers.
+     * Register document and tagbox element event handlers.
      **/
     registerEventHandlers: function() {
         // monitor for clicks, to set or remove focus
@@ -375,8 +376,8 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#registerInputEventHandlers( input ) -> undefined
-     *   - input (Element): A tag box input element.
+     * Tagbox#registerInputEventHandlers( input ) -> undefined
+     *   - input (Element): A tagbox input element.
      *
      * Register <input/>-specific event handlers.
      **/
@@ -396,7 +397,7 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#remove() -> undefined
+     * Tagbox#remove() -> undefined
      *
      * Remove the focused tag from the list.
      **/
@@ -415,23 +416,23 @@ var TagBox = Class.create( {
     },
 
     /**
-     * TagBox#values() -> [ String... ]
+     * Tagbox#values() -> [ String... ]
      *
      * Get an `Array` of tag values.
      **/
     values: function() {
-        return TagBox.values( this.tagbox );
+        return Tagbox.values( this.tagbox );
     }
 } );
 
 /**
- * TagBox.values( element ) -> [ String... ]
- *   - element (Element | String): A DOM ancestor of a tag box, or a string
+ * Tagbox.values( element ) -> [ String... ]
+ *   - element (Element | String): A DOM ancestor of a tagbox, or a string
  *     that references the ancestor's ID.
  *
  * Get an `Array` of tag values.
  **/
-TagBox.values = function( el ) {
+Tagbox.values = function( el ) {
     return $( el ).select( 'li.tagbox-tag input[type=hidden]' ).collect( function( el ) {
         return el.value;
     } );

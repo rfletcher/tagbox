@@ -1,6 +1,6 @@
 document.observe( 'dom:loaded', function() {
 
-    if( window['TagBox'] == undefined ) {
+    if( window['Tagbox'] == undefined ) {
         $$( 'body' ).first().insert( { top: new Element( 'div', { id: 'error' } ).insert(
             new Element( 'h1' ).update( "The demo is broken!" )
         ).insert(
@@ -24,7 +24,7 @@ document.observe( 'dom:loaded', function() {
         var value_el = wrapper_el.down( '.value' );
 
         value_el.update(
-            TagBox.values( wrapper_el.down( '.tagbox' ) ).join( ', ' ).escapeHTML() || '(no value)'
+            Tagbox.values( wrapper_el.down( '.tagbox' ) ).join( ', ' ).escapeHTML() || '(no value)'
         );
     } );
 

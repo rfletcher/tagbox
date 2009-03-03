@@ -1,11 +1,11 @@
 /**
- * class TagBox.Tag
+ * class Tagbox.Tag
  **/
-TagBox.Tag = Class.create( {
+Tagbox.Tag = Class.create( {
     /**
-     * TagBox.Tag#properties -> Hash
+     * Tagbox.Tag#properties -> Hash
      *
-     * A Hash of public properties for this TagBox.Tag instance.  Properties
+     * A Hash of public properties for this Tagbox.Tag instance.  Properties
      * are:
      *
      *  value (String): the tag's displayed value
@@ -15,15 +15,15 @@ TagBox.Tag = Class.create( {
     },
 
     /**
-     * TagBox.Tag#tagbox -> TagBox
+     * Tagbox.Tag#tagbox -> Tagbox
      *
-     * The parent TagBox.
+     * The parent Tagbox.
      **/
     tagbox: null,
 
     /**
-     * new TagBox.Tag( properties )
-     *   - properties (Object): Properties for this TagBox.Tag.
+     * new Tagbox.Tag( properties )
+     *   - properties (Object): Properties for this Tagbox.Tag.
      **/
     initialize: function( properties ) {
         this.properties = new Hash( this.properties );
@@ -31,7 +31,7 @@ TagBox.Tag = Class.create( {
     },
 
     /**
-     * TagBox.Tag#getElement() -> Element
+     * Tagbox.Tag#getElement() -> Element
      *
      * Create the tag's HTML representation.
      **/
@@ -59,7 +59,7 @@ TagBox.Tag = Class.create( {
     },
 
     /**
-     * TagBox.Tag#getValue() -> String
+     * Tagbox.Tag#getValue() -> String
      *
      * Get the Tag's value.
      **/
