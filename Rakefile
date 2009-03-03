@@ -17,7 +17,7 @@ def sprocketize(path, source, destination = source)
   begin
     require "sprockets"
   rescue LoadError => e
-    puts "\nYou'll need Sprockets to build Tag Box. Just run:\n\n"
+    puts "\nYou'll need Sprockets to build Tagbox. Just run:\n\n"
     puts "  $ gem install sprockets"
     puts "\nand you should be all set.\n\n"
   end

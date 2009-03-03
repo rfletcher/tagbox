@@ -1,17 +1,17 @@
 =======
-Tag Box
+Tagbox
 =======
 
-`Tag Box`_ is an unobtrusive javascript library which provides a
+`Tagbox`_ is an unobtrusive javascript library which provides a
 multi-value text input.
 
 Try the demo: http://rfletcher.github.com/tagbox/demo/
 
 -------------
-Using Tag Box
+Using Tagbox
 -------------
 
-Include the Tag Box assets::
+Include the Tagbox assets::
 
     <link rel="stylesheet" href="tagbox/assets/tagbox.css" type="text/css" media="screen"/>
     <script src="tagbox/dist/tagbox.js" type="text/javascript"></script>
@@ -20,18 +20,18 @@ Add a text input to your page, with the `tagbox` class::
 
     <input type="text" name="tags" class="tagbox" value="these, are, tags"/>
 
-As soon as the browser is ready Tag Box will convert those inputs from text boxes
+As soon as the browser is ready Tagbox will convert those inputs from text boxes
 to tag boxes, automatically converting any value into tags.
 
 Requirements
 ------------
 
-Tag Box requires `Prototype.js`_ 1.6+
+Tagbox requires `Prototype.js`_ 1.6+
 
 Options
 -------
 
-Tag Box can be configured with these options:
+Tagbox can be configured with these options:
 
 allow_duplicates : boolean, default: false
   Allow duplicate tags
@@ -52,17 +52,17 @@ validation_function : Function, default = null
   A function which validates new input before adding it as a tag. It will be
   passed the String value as the only parameter, and should return a Boolean.
 
-Building Tag Box from source
+Building Tagbox from source
 ----------------------------
 
 ``tagbox.js`` is generated from multiple source files in the ``src/`` directory. 
-To build Tag Box, you'll need:
+To build Tagbox, you'll need:
 
-* A copy of the Tag Box source tree
+* A copy of the Tagbox source tree
 * Ruby_ & Rake_
 * The Sprockets_ gem
 
-From the root Tag Box directory, run:
+From the root Tagbox directory, run:
 
 * ``rake dist`` to generate ``dist/tagbox.js``
 * ``rake package`` to create a distribution tarball in the ``pkg/`` directory
@@ -83,9 +83,9 @@ Changelog
 Credits
 -------
 
-TagBox was heavily inspired by `Guillermo Rauch's TextboxList`_ for MooTools.
+Tagbox was heavily inspired by `Guillermo Rauch's TextboxList`_ for MooTools.
 
-.. _`Tag Box`: http://rfletcher.github.com/tagbox/
+.. _`Tagbox`: http://rfletcher.github.com/tagbox/
 .. _`Prototype.js`: http://prototypejs.org/
 .. _`Guillermo Rauch's TextboxList`: http://devthought.com/blog/projects-news/2008/01/textboxlist-fancy-facebook-like-dynamic-inputs/
 .. _Ruby: http://www.ruby-lang.org/
