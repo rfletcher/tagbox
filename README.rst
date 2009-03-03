@@ -1,6 +1,6 @@
-=======
+======
 Tagbox
-=======
+======
 
 `Tagbox`_ is an unobtrusive javascript library which provides a
 multi-value text input.
@@ -8,16 +8,17 @@ multi-value text input.
 Try the demo: http://rfletcher.github.com/tagbox/demo/
 
 Supported Browsers
--------------------
-`Tagbox`_ currently supports the following browsers:
+==================
+
+Tagbox currently supports the following browsers:
 
 - Microsoft Internet Explorer, version 7.0 and higher
 - Mozilla Firefox 3.0 and higher
 - Apple Safari 3.1 and higher
 
--------------
+============
 Using Tagbox
--------------
+============
 
 Include the Tagbox assets::
 
@@ -32,12 +33,12 @@ As soon as the browser is ready Tagbox will convert those inputs from text boxes
 to tag boxes, automatically converting any value into tags.
 
 Requirements
-------------
+============
 
 Tagbox requires `Prototype.js`_ 1.6+
 
 Options
--------
+=======
 
 Tagbox can be configured with these options:
 
@@ -64,7 +65,7 @@ validation_function : Function, default = null
   passed the String value as the only parameter, and should return a Boolean.
 
 Building Tagbox from source
-----------------------------
+===========================
 
 ``tagbox.js`` is generated from multiple source files in the ``src/`` directory. 
 To build Tagbox, you'll need:
@@ -78,9 +79,9 @@ From the root Tagbox directory, run:
 * ``rake dist`` to generate ``dist/tagbox.js``
 * ``rake package`` to create a distribution tarball in the ``pkg/`` directory
 
----------
+=========
 Changelog
----------
+=========
 
 0.2
 
@@ -95,14 +96,15 @@ Changelog
 - new: added the ``show_remove_links`` option
 - new: added the ``validation_function`` option
 
--------
+=======
 Credits
--------
+=======
 
 Tagbox was heavily inspired by `Guillermo Rauch's TextboxList`_ for MooTools.
 
 .. _`Tagbox`: http://rfletcher.github.com/tagbox/
 .. _`Prototype.js`: http://prototypejs.org/
+.. _`Prototype Event docs`: http://prototypejs.org/api/event/observe
 .. _`Guillermo Rauch's TextboxList`: http://devthought.com/blog/projects-news/2008/01/textboxlist-fancy-facebook-like-dynamic-inputs/
 .. _Ruby: http://www.ruby-lang.org/
 .. _Rake: http://rake.rubyforge.org/
