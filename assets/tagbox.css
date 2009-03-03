@@ -57,7 +57,18 @@ div.tagbox ul li.tagbox-tag.tagbox-selected {
   color: #fff;
 }
 
-div.tagbox.tagbox-selected {
+div.tagbox .tagbox-hint {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-width: 0 1px 1px;
+  margin-top: -1px;
+  padding: 2px 4px 3px;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+div.tagbox.tagbox-selected ul {
   outline: auto 5px -webkit-focus-ring-color;
   outline-offset: -2px;
 }

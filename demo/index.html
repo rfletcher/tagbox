@@ -26,9 +26,9 @@
 
   <div class="input-wrapper">
     <label>Tagbox</label>
-    <p>Type something and press <kbd>enter</kbd>.</p>
 
     <input type="text" name="demotags1" id="demotags1" value="javascript, demo" class="tagbox"/>
+
     <p>
       A tag is created when you press <kbd>comma</kbd> or <kbd>enter</kbd>.
       Duplicates aren't allowed. Dupe checking is case-insensitive.
@@ -36,5 +36,18 @@
 
     <button>Get Value</button>
   </div>
+
+  <script type="text/javascript">
+    var handler = function( e ) {
+      console.log( e.eventName, e );
+    }
+
+    var tb = new Tagbox( 'demotags1', { hint: "Type something and press <kbd>enter</kbd>." } );
+
+    tb.observe( 'tagbox:blur', handler );
+    tb.observe( 'tagbox:focus', handler );
+    tb.observe( 'tagbox:text:blur', handler );
+    tb.observe( 'tagbox:text:focus', handler );
+  </script>
 </body>
 </html>

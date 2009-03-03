@@ -17,6 +17,8 @@ var Tagbox = Class.create( {
      *      Case sensitive string comparison when checking for duplicate tags?
      *  delimiters (Array) = [ Event.KEY_COMMA, Event.KEY_RETURN ]:
      *      Array of keyCodes which trigger addition to the list of tags.
+     *  hint (String) = null:
+     *      A brief instruction to the user.
      *  max_tags (Number) = null:
      *      The maximum number of tags that can be entered.
      *  show_remove_links (Boolean) = false:
@@ -29,6 +31,7 @@ var Tagbox = Class.create( {
     options: {
         allow_duplicates: false,
         case_sensitive: false,
+        hint: null,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         max_tags: null,
         show_remove_links: true,
@@ -272,6 +275,16 @@ var Tagbox = Class.create( {
     },
 
     /**
+     * Tagbox#hideHint() -> undefined
+     *
+     * Hide the tagbox hint
+     **/
+    hideHint: function() {
+        el = this.tagbox.down( '.tagbox-hint' );
+        el && el.hide();
+    },
+
+    /**
      * Tagbox#move( target ) -> undefined
      *   - target ('first' | 'last' | 'previous' | 'next'): The direction to
      *     move the focus.
@@ -302,6 +315,16 @@ var Tagbox = Class.create( {
     },
 
     /**
+     * Tagbox#registerCustomEventHandlers() -> undefined
+     *
+     * Monitor custom Tagbox events
+     **/
+    registerCustomEventHandlers: function() {
+        this.observe( 'tagbox:text:blur', this.hideHint.bind( this ) );
+        this.observe( 'tagbox:text:focus', this.showHint.bind( this ) );
+    },
+
+    /**
      * Tagbox#registerEventHandlers() -> undefined
      *
      * Register document and tagbox element event handlers.
@@ -309,6 +332,7 @@ var Tagbox = Class.create( {
     registerEventHandlers: function() {
         this.registerMouseEventHandlers();
         this.registerKeyEventHandlers();
+        this.registerCustomEventHandlers();
     },
 
     /**
@@ -438,6 +462,35 @@ var Tagbox = Class.create( {
         var tag_el = this.current;
         this.focus( this.current.next() );
         tag_el.remove();
+    },
+
+    /**
+     * Tagbox#showHint() -> undefined
+     *
+     * Show the tagbox hint to the user
+     **/
+    showHint: function() {
+        var hint = this.options.get( 'hint' );
+
+        if( hint && this.currentIsInput() ) {
+            var hint_el = this.tagbox.down( '.tagbox-hint' );
+
+            if( ! hint_el ) {
+                hint_el = new Element( 'div', { 'class': 'tagbox-hint' } ).update( hint );
+                this.tagbox.insert( { bottom: hint_el } );
+
+                var width = [
+                    'padding-left', 'padding-right',
+                    'border-left-width', 'border-right-width'
+                ].inject( parseInt( hint_el.getStyle( 'width' ) ), function( acc, n ) {
+                    return acc - parseInt( hint_el.getStyle( n ) );
+                } );
+
+                hint_el.setStyle( { width: width + 'px' } );
+            }
+
+            hint_el.show();
+        }
     },
 
     /**

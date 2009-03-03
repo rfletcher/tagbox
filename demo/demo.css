@@ -80,14 +80,7 @@ label {
   width: 500px;
 }
 
-label + p {
-  position: absolute;
-  right: 0;
-  margin-top: -27px;
-}
-
-input + p,
-.input-wrapper .tagbox + p {
+p {
   font-size: 9px;
   color: #777;
 }
