@@ -78,10 +78,10 @@ docs`_ for detailed information.
 Events
 ------
 
-tagbox:blur : 
-  fires when the tagbox loses the focus
-tagbox:focus :
-  fires when a tagbox gains the focus (i.e. is clicked on or tabbed into)
+tagbox:blur
+  fires immediately after the tagbox loses the focus
+tagbox:focus
+  fires immediately after a tagbox gains the focus (i.e. is clicked on or tabbed into)
 
 Building Tagbox from source
 ===========================
