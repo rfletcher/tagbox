@@ -23,6 +23,7 @@ to tag boxes, automatically converting any value into tags.
 
 Options
 -------
+
 Tag Box can be configured with these options:
 
 allow_duplicates : boolean, default: false
@@ -44,14 +45,14 @@ validation_function : Function, default = null
   A function which validates new input before adding it as a tag. It will be
   passed the String value as the only parameter, and should return a Boolean.
 
-
 Requirements
 ------------
-Tag Box requires `Prototype.js`_ 1.6+
 
+Tag Box requires `Prototype.js`_ 1.6+
 
 Building Tag Box from source
 ----------------------------
+
 ``tagbox.js`` is generated from multiple source files in the ``src/`` directory. 
 To build Tag Box, you'll need:
 
@@ -63,7 +64,6 @@ From the root Tag Box directory, run:
 
 * ``rake dist`` to generate ``dist/tagbox.js``
 * ``rake package`` to create a distribution tarball in the ``pkg/`` directory
-
 
 ---------
 Changelog
