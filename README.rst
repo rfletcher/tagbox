@@ -51,6 +51,18 @@ Requirements
 
 Tag Box requires `Prototype.js`_ 1.6+
 
+---------
+Changelog
+---------
+
+* 0.1, initial release
+    - new: original input's value is parsed into tags
+    - new: added the `allow_duplicates` option
+    - new: added the `case_sensitive` option
+    - new: added the `delimiters` option
+    - new: added the `show_remove_links` option
+    - new: added the `validation_function` option
+
 -------
 Credits
 -------
