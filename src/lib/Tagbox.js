@@ -17,6 +17,8 @@ var Tagbox = Class.create( {
      *      Case sensitive string comparison when checking for duplicate tags?
      *  delimiters (Array) = [ Event.KEY_COMMA, Event.KEY_RETURN ]:
      *      Array of keyCodes which trigger addition to the list of tags.
+     *  max_tags (Number) = null:
+     *      The maximum number of tags that can be entered.
      *  show_remove_links (Boolean) = false:
      *      Add an 'x' link to each tag.
      *  validation_function (Function | null) = null:
@@ -28,6 +30,7 @@ var Tagbox = Class.create( {
         allow_duplicates: false,
         case_sensitive: false,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
+        max_tags: null,
         show_remove_links: true,
         validation_function: null
     },
@@ -116,7 +119,8 @@ var Tagbox = Class.create( {
 
         if( ! value || 
             ( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) ||
-            ( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) ) {
+            ( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) ||
+            ( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) ) {
             return;
         }
 

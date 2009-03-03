@@ -44,6 +44,9 @@ delimiters : array, default: [ Event.KEY_COMMA, Event.KEY_RETURN ]
   An array of key codes which trigger the creation of a new tag from typed
   text.
 
+max_tags : number, default: null
+  The maximum number of tags that can be entered.
+
 show_remove_links : boolean, default: false
   Add small 'x' links to each tag which, when clicked, remove that tag from
   the list.
@@ -70,6 +73,9 @@ From the root Tagbox directory, run:
 ---------
 Changelog
 ---------
+
+0.2
+- new: added the ``max_tags`` option
 
 0.1
 
