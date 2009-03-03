@@ -54,6 +54,21 @@ task :clean_package_source do
   rm_rf File.join(TAGBOX_PKG_DIR, "tagbox-#{TAGBOX_VERSION}"), :verbose => false
 end
 
+desc 'Builds the distribution and opens the demo in your default browser.'
+namespace :reload do
+  def reload(browser)
+    `open -a "#{browser}" #{TAGBOX_PKG_DIR}/tagbox-#{TAGBOX_VERSION}/demo/index.html`    
+  end
+
+  [ :firefox, :webkit, :safari ].each do |browser|
+    desc "Rebuild and reload the demo in #{browser}"
+    task browser.to_sym => [ :dist, :package ] do
+      reload( browser )
+    end
+  end
+end
+task :reload => "reload:firefox"
+
 desc 'Push the latest demo to gh-pages'
 task :update_demo => :dist do
   require "grancher"
