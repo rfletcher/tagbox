@@ -19,6 +19,9 @@ var Tagbox = Class.create( {
      *      Array of keyCodes which trigger addition to the list of tags.
      *  hint (String) = null:
      *      A brief instruction to the user.
+     *  hint_delay (Number) = 100:
+     *      The number of milliseconds to wait after tagbox:text:focus before
+     *      showing the hint.
      *  max_tags (Number) = null:
      *      The maximum number of tags that can be entered.
      *  show_remove_links (Boolean) = false:
@@ -32,6 +35,7 @@ var Tagbox = Class.create( {
         allow_duplicates: false,
         case_sensitive: false,
         hint: null,
+        hint_delay: 100,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         max_tags: null,
         show_remove_links: true,
@@ -43,6 +47,12 @@ var Tagbox = Class.create( {
      * The <li/> with the focus.
      **/
     current: null,
+
+    /**
+     * Tagbox#hint_timeout -> Number
+     * A timeout ID from window.setTimeout()
+     **/
+    hint_timeout: null,
 
     /**
      * Tagbox#name -> String
@@ -249,6 +259,7 @@ var Tagbox = Class.create( {
     focusInput: function() {
         ( function() {
             this.tagbox.select( 'li' ).last().down( 'input[type=text]' ).focus();
+            this.fire( 'tagbox:text:focus' );
         }.bind( this ) ).defer();
     },
 
@@ -267,6 +278,7 @@ var Tagbox = Class.create( {
      * Hide the tagbox hint
      **/
     hideHint: function() {
+        clearTimeout( this.hint_timeout );
         el = this.tagbox.down( '.tagbox-hint' );
         el && el.hide();
     },
@@ -498,10 +510,14 @@ var Tagbox = Class.create( {
                     return acc - parseInt( hint_el.getStyle( n ) );
                 } );
 
-                hint_el.setStyle( { width: width + 'px' } );
+                hint_el.setStyle( { display: 'none', width: width + 'px' } );
             }
 
-            hint_el.show();
+            this.hint_timer = setTimeout( function() {
+                if( this.currentIsInput() ) {
+                    hint_el.show();
+                }
+            }.bind( this ), this.options.get( 'hint_delay' ) );
         }
     },
 
