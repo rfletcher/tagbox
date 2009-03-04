@@ -104,7 +104,7 @@ var Tagbox = Class.create( {
     addTag: function( value ) {
         value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
 
-        if( ! value || 
+        if( ! value ||
             ( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) ||
             ( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) ||
             ( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) ) {
@@ -138,6 +138,9 @@ var Tagbox = Class.create( {
             this.current.removeClassName( 'tagbox-selected' );
             if( update_input_focus !== false && this.currentIsInput() ) {
                 this.current.down( 'input[type=text]' ).blur();
+            }
+            if( this.currentIsInput() ) {
+                this.fire( 'tagbox:text:blur' );
             }
             this.current = null;
         }
