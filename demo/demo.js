@@ -28,4 +28,8 @@ document.observe( 'dom:loaded', function() {
         );
     } );
 
+    // display the tagbox version
+    $$( '.version' ).each( function( el ) {
+        el.update( 'v' + Tagbox.version );
+    } );
 } );
