@@ -543,3 +543,9 @@ Tagbox.values = function( el ) {
         return el.value;
     } );
 }
+
+/**
+ * Tagbox#version -> String
+ * The current version, populated by `rake dist`
+ **/
+Tagbox.version = "<%= TAGBOX_VERSION %>";
