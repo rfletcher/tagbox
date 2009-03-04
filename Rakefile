@@ -67,7 +67,7 @@ namespace :reload do
     end
   end
 end
-task :reload => "reload:firefox"
+task :reload => "reload:webkit"
 
 desc 'Push the latest demo to gh-pages'
 task :update_demo => :dist do
