@@ -15,6 +15,8 @@
 //= require "lib/util"
 //= require "lib/Tagbox"
 //= require "lib/Tagbox.Tag"
+//= require "lib/Tagbox.Autocomplete"
+//= require "lib/Tagbox.Autocomplete.Tag"
 //= require "lib/ElasticTextBox"
 
 /* Initialize the tagboxes when the DOM is ready */

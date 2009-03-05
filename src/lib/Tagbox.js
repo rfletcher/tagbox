@@ -43,6 +43,12 @@ var Tagbox = Class.create( {
     },
 
     /**
+     * Tagbox#autocomplete -> Tagbox.Autocomplete
+     * A reference to this Tagbox's Autocomplete object
+     **/
+    autocomplete: null,
+
+    /**
      * Tagbox#current -> ( null | Element )
      * The <li/> with the focus.
      **/
@@ -85,6 +91,12 @@ var Tagbox = Class.create( {
 
         this.insert( original_input );
         this.registerEventHandlers();
+
+        if( this.options.get( 'autocomplete' ) ) {
+            this.autocomplete = new Tagbox.Autocomplete( this,
+                this.options.unset( 'autocomplete' )
+            );
+        }
     },
 
     /**
@@ -121,8 +133,7 @@ var Tagbox = Class.create( {
             return;
         }
 
-        var tag = new Tagbox.Tag( { value: value } );
-        tag.tagbox = this;
+        var tag = new Tagbox.Tag( this, { value: value } );
 
         this.tags.push( tag );
 
@@ -233,7 +244,7 @@ var Tagbox = Class.create( {
         // set focus on the specified element
         if( ! element ) {
             this.tagbox.removeClassName( 'tagbox-selected' );
-        } else if( element.parentNode == this.tagbox.down( 'ul.tags' ) ) {
+        } else if( element.parentNode == this.tagbox.down( 'ul.tagbox-tags' ) ) {
             [ this.tagbox, element ].invoke( 'addClassName', 'tagbox-selected' );
 
             this.current = element;
@@ -258,7 +269,7 @@ var Tagbox = Class.create( {
      **/
     focusInput: function() {
         ( function() {
-            this.tagbox.select( 'li' ).last().down( 'input[type=text]' ).focus();
+            this.tagbox.select( '.tagbox-tags li' ).last().down( 'input[type=text]' ).focus();
             this.fire( 'tagbox:text:focus' );
         }.bind( this ) ).defer();
     },
@@ -293,7 +304,7 @@ var Tagbox = Class.create( {
     insert: function( original_input ) {
         // create the tagbox
         this.tagbox = new Element( 'div', { 'class': 'tagbox' } ).update(
-            new Element( 'ul', { 'class': 'tags' } ).update( this.createInput() )
+            new Element( 'ul', { 'class': 'tagbox-tags' } ).update( this.createInput() )
         );
 
         // populate the tagbox with tags from the original input
@@ -501,16 +512,9 @@ var Tagbox = Class.create( {
 
             if( ! hint_el ) {
                 hint_el = new Element( 'div', { 'class': 'tagbox-hint' } ).update( hint );
-                this.tagbox.insert( { bottom: hint_el } );
-
-                var width = [
-                    'padding-left', 'padding-right',
-                    'border-left-width', 'border-right-width'
-                ].inject( parseInt( hint_el.getStyle( 'width' ) ), function( acc, n ) {
-                    return acc - parseInt( hint_el.getStyle( n ) );
-                } );
-
-                hint_el.setStyle( { display: 'none', width: width + 'px' } );
+                this.tagbox.insert( hint_el );
+                Tagbox.makeFullWidth( hint_el );
+                hint_el.setStyle( { display: 'none' } );
             }
 
             this.hint_timer = setTimeout( function() {
@@ -542,6 +546,23 @@ Tagbox.values = function( el ) {
     return $( el ).select( 'li.tagbox-tag input[type=hidden]' ).collect( function( el ) {
         return el.value;
     } );
+}
+
+/**
+ * Tagbox.makeFullWidth( element ) -> undefined
+ *   - element (Element | String): An element whose width will be set
+ *
+ * Set an element's width to 100%, /including/ padding and border widths.
+ **/
+Tagbox.makeFullWidth = function( element ) {
+    var width = [
+        'padding-left', 'padding-right',
+        'border-left-width', 'border-right-width'
+    ].inject( parseInt( element.getStyle( 'width' ) ), function( acc, n ) {
+        return acc - parseInt( element.getStyle( n ) );
+    } );
+
+    element.setStyle( { width: width + 'px' } );
 }
 
 /**

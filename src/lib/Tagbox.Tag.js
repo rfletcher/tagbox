@@ -23,9 +23,11 @@ Tagbox.Tag = Class.create( {
 
     /**
      * new Tagbox.Tag( properties )
+     *   - tagbox (Tagbox): The parent tagbox.
      *   - properties (Object): Properties for this Tagbox.Tag.
      **/
-    initialize: function( properties ) {
+    initialize: function( tagbox, properties ) {
+        this.tagbox = tagbox;
         this.properties = new Hash( this.properties );
         this.properties.update( properties );
     },
