@@ -113,13 +113,11 @@ var Tagbox = Class.create( {
      * See: Prototype.js Element#fire()
      **/
     fire: function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
-
     /**
      * Tagbox#observe() -> undefined
      * See: Prototype.js Element#observe()
      **/
     observe: function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
-
     /**
      * Tagbox#stopObserving() -> undefined
      * See: Prototype.js Element#stopObserving()
@@ -128,41 +126,45 @@ var Tagbox = Class.create( {
 
     /**
      * Tagbox#addTag( value ) -> undefined
-     *   - value (String): Displayed value of the new tag
+     *   - value (String | Tagbox.Tag): A tag value, or a Tagbox.tag object
      *
      * Add a tag to the list, and select that tag.
      **/
     addTag: function( value ) {
-        value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
+        if( value instanceof Tagbox.Tag ) {
+            var tag = value;
+        } else {
+            value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
 
-        // no value?
-        if( ! value ) {
-            return;
+            // no value?
+            if( ! value ) {
+                return;
 
-        // too many tags?
-        } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
-            return;
+            // too many tags?
+            } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
+                return;
 
-        // duplicate tag when dupes are not allowed?
-        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) {
-            return;
+            // duplicate tag when dupes are not allowed?
+            } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) {
+                return;
 
-        // failed user's validation callback?
-        } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) {
-            return;
-        }
-
-        // if the list of possible values is restricted, search for the entered tag
-        if( this.options.get( 'allowed' ).length ) {
-            var tag = this.options.get( 'allowed' ).find( function( tag ) {
-                return tag.getValue().toLowerCase() == value.toLowerCase();
-            } );
-
-            if( ! tag ) {
+            // failed user's validation callback?
+            } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) {
                 return;
             }
-        } else {
-            var tag = new Tagbox.Tag( this, value );
+
+            // if the list of possible values is restricted, search for the entered tag
+            if( this.options.get( 'allowed' ).length ) {
+                var tag = this.options.get( 'allowed' ).find( function( tag ) {
+                    return tag.getValue().toLowerCase() == value.toLowerCase();
+                } );
+
+                if( ! tag ) {
+                    return;
+                }
+            } else {
+                var tag = new Tagbox.Tag( this, value );
+            }
         }
 
         this.tags.push( tag );
@@ -512,16 +514,20 @@ var Tagbox = Class.create( {
      * Register <input/>-specific event handlers.
      **/
     registerInputEventHandlers: function( input ) {
-        input.observe( 'keypress', function( e ) {
-            var el = e.element();
-            var key = e.which ? e.which : e.keyCode;
+        if( ! this.options.get( 'autocomplete' ) ) {
+            input.observe( 'keypress', function( e ) {
+                var el = e.element();
+                var key = e.which ? e.which : e.keyCode;
 
-            if( this.options.get( 'delimiters' ).include( key ) ) {
-                e.stop();
-                this.addTag( el.value );
-                el.value = '';
-            }
-        }.bind( this ) ).observe( 'focus', function( e ) {
+                if( this.options.get( 'delimiters' ).include( key ) ) {
+                    e.stop();
+                    this.addTag( el.value );
+                    el.value = '';
+                }
+            }.bind( this ) );
+        }
+
+        input.observe( 'focus', function( e ) {
             this.focus( Event.element( e ).up( 'li' ) );
         }.bind( this ) );
     },

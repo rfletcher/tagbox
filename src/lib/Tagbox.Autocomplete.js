@@ -35,6 +35,7 @@ Tagbox.Autocomplete = Class.create( {
 
     query: null,
     regexp: null,
+    results: [],
 
     /**
      * new Tagbox.Autocomplete( tagbox, options )
@@ -57,24 +58,27 @@ Tagbox.Autocomplete = Class.create( {
      * Hide the list.
      **/
     hide: function() {
+        this.results = [];
+        this.query = null;
+        this.regexp = null;
         this.element.hide();
     },
 
     /**
-     * Tagbox.Autocomplete#highlight( tag ) -> undefined
-     *   - tag (Element): A list item to select
+     * Tagbox.Autocomplete#highlight( tag_element ) -> undefined
+     *   - tag_element (Element): A list item to select
      *
-     * Highlight a tag in the list.
+     * Highlight a tag in the results list.
      **/
-    highlight: function( tag ) {
+    highlight: function( tag_element ) {
         var cls = 'tagbox-selected';
         var current = this.element.down( '.' + cls );
 
-        if( current && tag != current ) {
+        if( current && tag_element != current ) {
             current.removeClassName( cls );
         }
-        if( tag && tag != current ) {
-            tag.addClassName( cls );
+        if( tag_element && tag_element != current ) {
+            tag_element.addClassName( cls );
         }
     },
 
@@ -148,6 +152,11 @@ Tagbox.Autocomplete = Class.create( {
                         this.hide();
                     }
                     break;
+                case Event.KEY_RETURN:
+                    if( this.element.visible() ) {
+                        this.select();
+                    }
+                    break;
             }
         }.bind( this ) );
 
@@ -175,13 +184,51 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
-     * Tagbox.Autocomplete#renderTag( tag ) -> Element
-     *   - tag (Tagbox.Tag): 
+     * Tagbox.Autocomplete#registerTagEventHandlers() -> undefined
      *
-     * 
+     * Register event handlers for the rendered tag elements in the drop-down list.
+     **/
+    registerTagEventHandlers: function( tag_element ) {
+        tag_element.observe( 'click', function() {
+            this.select();
+        }.bind( this ) ).observe( 'mouseover', function( e ) {
+            if( e.element().up() == this.element ) {
+                this.highlight( e.element() );
+            }
+        }.bind( this ) );
+    },
+
+    /**
+     * Tagbox.Autocomplete#renderTag( tag, query_regexp ) -> Element
+     *   - tag (Tagbox.Tag): The Tagbox.Tag object to render as HTML.
+     *   - query_regexp (RegExp ): A regular expression representation of the
+     *     user's input string.
+     *
+     * Generate an HTML representation of a Tagbox.Tag object for display
+     * in the results list.
      **/
     renderTag: function( tag, query_regexp ) {
         return tag.getValue().replace( query_regexp, "<em>$1</em>" );
+    },
+
+    /**
+     * Tagbox.Autocomplet#select() -> undefined
+     *
+     * Add a tag to the tagbox and hide the results list.
+     **/
+    select: function() {
+        var index = 0;
+        this.element.select( 'li' ).each( function( li ) {
+            if( li.hasClassName( 'tagbox-selected' ) ) {
+                throw $break;
+            }
+            index++;
+        } );
+
+        this.tagbox.current.down( 'input[type=text]' ).value = '';
+
+        this.tagbox.addTag( this.results[index] );
+        this.hide();
     },
 
     /**
@@ -205,17 +252,22 @@ Tagbox.Autocomplete = Class.create( {
         var counter = 0;
 
         // filter
-        this.tagbox.options.get( 'allowed' ).select( function( tag ) {
+        this.results = this.tagbox.options.get( 'allowed' ).select( function( tag ) {
             if( counter > this.options.get( 'max_displayed_tags' ) ) {
                 throw $break;
             }
 
             return tag.getValue().toLowerCase().match( this.regexp ) && ++counter;
+        }.bind( this ) );
+
         // add to result list
-        }.bind( this ) ).each( function( tag ) {
-            this.element.insert( new Element( 'li', { 'class': 'tagbox-tag' } ).update(
+        this.results.each( function( tag ) {
+            var li = new Element( 'li', { 'class': 'tagbox-tag' } ).update(
                 this.renderTag( tag, this.regexp )
-            ) );
+            );
+
+            this.registerTagEventHandlers( li );
+            this.element.insert( li );
         }.bind( this ) );
     }
 } );
