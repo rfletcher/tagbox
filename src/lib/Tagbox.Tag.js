@@ -37,14 +37,14 @@ Tagbox.Tag = Class.create( {
     },
 
     /**
-     * Tagbox.Tag#getElement() -> Element
+     * Tagbox.Tag#render() -> Element
      *
      * Create the tag's HTML representation.
      **/
-    getElement: function() {
+    render: function() {
         var value = this.getValue();
 
-        var li = new Element( 'li', { 'class': 'tagbox-tag' } );
+        var wrapper = new Element( 'li', { 'class': 'tagbox-tag' } );
 
         // the hidden input which represents this tag in the form
         var input = new Element( 'input', {
@@ -53,15 +53,15 @@ Tagbox.Tag = Class.create( {
             value: value
         } );
 
-        li.insert( value.escapeHTML() ).insert( input );
+        wrapper.insert( value.escapeHTML() ).insert( input );
 
         if( this.tagbox.options.get( 'show_remove_links' ) ) {
             var a = new Element( 'a', { 'class': 'tagbox-remove' } ).update( 'Remove' );
             a.observe( 'click', this.tagbox.remove.bind( this.tagbox ) );
-            li.insert( a );
+            wrapper.insert( a );
         }
 
-        return li;
+        return wrapper;
     },
 
     /**
