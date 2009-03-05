@@ -131,40 +131,44 @@ var Tagbox = Class.create( {
      * Add a tag to the list, and select that tag.
      **/
     addTag: function( value ) {
-        if( value instanceof Tagbox.Tag ) {
+        if( ! ( value instanceof Tagbox.Tag ) ) {
+            value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
+        }
+
+        // no value?
+        if( ! value ) {
+            return;
+
+        // too many tags?
+        } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
+            return;
+
+        // duplicate tag?
+        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value.getValue ? value.getValue() : value ) ) {
+            return;
+
+        // failed user's validation callback?
+        } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value.getValue ? value.getValue() : value ) ) {
+            return;
+        }
+
+        // if the list of possible values is restricted, search for the entered tag
+        if( this.options.get( 'allowed' ).length ) {
+            var tag = this.options.get( 'allowed' ).find( function( tag ) {
+                if( value instanceof Tagbox.Tag ) {
+                    return tag == value;
+                } else {
+                    return tag.getValue().toLowerCase() == value.toLowerCase();
+                }
+            } );
+
+            if( ! tag ) {
+                return;
+            }
+        } else if( value instanceof Tagbox.Tag ) {
             var tag = value;
         } else {
-            value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
-
-            // no value?
-            if( ! value ) {
-                return;
-
-            // too many tags?
-            } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
-                return;
-
-            // duplicate tag when dupes are not allowed?
-            } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) {
-                return;
-
-            // failed user's validation callback?
-            } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) {
-                return;
-            }
-
-            // if the list of possible values is restricted, search for the entered tag
-            if( this.options.get( 'allowed' ).length ) {
-                var tag = this.options.get( 'allowed' ).find( function( tag ) {
-                    return tag.getValue().toLowerCase() == value.toLowerCase();
-                } );
-
-                if( ! tag ) {
-                    return;
-                }
-            } else {
-                var tag = new Tagbox.Tag( this, value );
-            }
+            var tag = new Tagbox.Tag( this, value );
         }
 
         this.tags.push( tag );
