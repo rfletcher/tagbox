@@ -378,7 +378,7 @@ var Tagbox = Class.create( {
         switch( target ) {
             case 'first':
             case 'last':
-                var new_el = this.tagbox.select( 'li' )[target]();
+                var new_el = this.tagbox.select( 'ul.tagbox-tags li' )[target]();
                 break;
             case 'previous':
             case 'next':
