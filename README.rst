@@ -105,7 +105,9 @@ Changelog
 0.2
 
 - new: added the ``max_tags`` option
-- new: added the ``hint`` option
+- new: added the ``hint`` and ``hint_delay`` options
+- new: added Tagbox.version
+- new: added the ``allowed`` option
 
 0.1
 

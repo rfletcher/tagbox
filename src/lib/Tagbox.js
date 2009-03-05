@@ -11,10 +11,14 @@ var Tagbox = Class.create( {
      *
      * A Hash of options for this Tagbox instance.  Options are:
      *
+     *  allowed: (Array) = []:
+     *      The set of allowed input values.  Values can be specified in any
+     *      format acceptable to the Tagbox.Tags constructor.
      *  allow_duplicates (Boolean) = false:
      *      Allow duplicate tags?
      *  case_sensitive (Boolean) = false:
-     *      Case sensitive string comparison when checking for duplicate tags?
+     *      Use case sensitive string comparison when checking for duplicate
+     *      and/or permitted tags.
      *  delimiters (Array) = [ Event.KEY_COMMA, Event.KEY_RETURN ]:
      *      Array of keyCodes which trigger addition to the list of tags.
      *  hint (String) = null:
@@ -32,6 +36,7 @@ var Tagbox = Class.create( {
      *      should return a Boolean.
      **/
     options: {
+        allowed: [],
         allow_duplicates: false,
         case_sensitive: false,
         hint: null,
@@ -46,7 +51,7 @@ var Tagbox = Class.create( {
      * Tagbox#autocomplete -> Tagbox.Autocomplete
      * A reference to this Tagbox's Autocomplete object
      **/
-    autocomplete: null,
+    // autocomplete: null,
 
     /**
      * Tagbox#current -> ( null | Element )
@@ -89,14 +94,15 @@ var Tagbox = Class.create( {
         this.tags = [];
         this.name = $( original_input ).getAttribute( 'name' );
 
+        this.initializeAllowedTags();
         this.insert( original_input );
         this.registerEventHandlers();
 
-        if( this.options.get( 'autocomplete' ) ) {
-            this.autocomplete = new Tagbox.Autocomplete( this,
-                this.options.unset( 'autocomplete' )
-            );
-        }
+        // if( this.options.get( 'autocomplete' ) ) {
+        //     this.autocomplete = new Tagbox.Autocomplete( this,
+        //         this.options.unset( 'autocomplete' )
+        //     );
+        // }
     },
 
     /**
@@ -126,25 +132,45 @@ var Tagbox = Class.create( {
     addTag: function( value ) {
         value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
 
-        if( ! value ||
-            ( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) ||
-            ( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) ||
-            ( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) ) {
+        // no value?
+        if( ! value ) {
+            return;
+
+        // too many tags?
+        } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
+            return;
+
+        // duplicate tag when dupes are not allowed?
+        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value ) ) {
+            return;
+
+        // failed user's validation callback?
+        } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value ) ) {
             return;
         }
 
-        var tag = new Tagbox.Tag( this, { value: value } );
+        // if the list of possible values is restricted, search for the entered tag
+        if( this.options.get( 'allowed' ).length ) {
+            var tag = this.options.get( 'allowed' ).find( function( tag ) {
+                return tag.getValue().toLowerCase() == value.toLowerCase();
+            } );
+
+            if( ! tag ) {
+                return;
+            }
+        } else {
+            var tag = new Tagbox.Tag( this, value );
+        }
 
         this.tags.push( tag );
 
-        var tag_el = tag.getElement();
-
-        tag_el.observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
+        var tag_el = tag.render().observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
             e.stop();
             this.focus( tag_el );
         }.bind( this ) );
 
-        ( this.current || this.tagbox.select( 'li' ).last() ).insert( { before: tag_el } );
+        // insert the new tag into the HTML list
+        ( this.current || this.tagbox.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
     },
 
     /**
@@ -292,6 +318,23 @@ var Tagbox = Class.create( {
         clearTimeout( this.hint_timeout );
         el = this.tagbox.down( '.tagbox-hint' );
         el && el.hide();
+    },
+
+    /**
+     * Tagbox#initializeAllowedTags() -> undefined
+     *
+     * Convert members of the 'allowed' array to Tagbox.Tag objects, if they
+     * weren't provided that way.
+     **/
+    initializeAllowedTags: function() {
+        this.options.set( 'allowed',
+            this.options.get( 'allowed' ).collect( function( tag ) {
+                if( ! ( tag instanceof Tagbox.Tag ) ) {
+                   return new Tagbox.Tag( this, tag );
+                }
+                return tag;
+            }.bind( this ) )
+        );
     },
 
     /**
