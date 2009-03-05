@@ -27,13 +27,6 @@ Tagbox.Autocomplete = Class.create( {
     element: null,
 
     /**
-     * Tagbox.Autocomplete#tags -> Array
-     *
-     * An Array of Tagbox.Autocomplete.Tag objects.
-     **/
-    tags: [],
-
-    /**
      * Tagbox.Autocomplete#tagbox -> Tagbox
      *
      * The parent Tagbox.
@@ -44,8 +37,9 @@ Tagbox.Autocomplete = Class.create( {
     regexp: null,
 
     /**
-     * new Tagbox.Autocomplete( properties )
-     *   - properties (Object): Properties for this Tagbox.Autocomplete.
+     * new Tagbox.Autocomplete( tagbox, options )
+     *   - tagbox (Tagbox): The parent tagbox.
+     *   - options (Object): Options for this Tagbox.Autocomplete.
      **/
     initialize: function( tagbox, options ) {
         this.tagbox = tagbox;
@@ -53,23 +47,14 @@ Tagbox.Autocomplete = Class.create( {
         this.options = new Hash( this.options );
         this.options.update( options );
 
-        // convert the passed tags to Tagbox.Autocomplete.Tag objects
-        var tags = this.options.unset( 'tags' );
-        tags.each( this.addTag.bind( this ) );
-
         this.insert();
         this.registerEventHandlers();
     },
 
     /**
-     * 
-     **/
-    addTag: function( tag ) {
-        this.tags.push( new Tagbox.Autocomplete.Tag( this.tagbox, { value: tag } ) );
-    },
-
-    /**
+     * Tagbox.Autocomplete#hide() -> undefined
      *
+     * Hide the list.
      **/
     hide: function() {
         this.element.hide();
@@ -190,6 +175,16 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
+     * Tagbox.Autocomplete#renderTag( tag ) -> Element
+     *   - tag (Tagbox.Tag): 
+     *
+     * 
+     **/
+    renderTag: function( tag, query_regexp ) {
+        return tag.getValue().replace( query_regexp, "<em>$1</em>" );
+    },
+
+    /**
      * Tagbox.Autocomplete#show() -> undefined
      *
      * Display the autocomplete list.
@@ -210,7 +205,7 @@ Tagbox.Autocomplete = Class.create( {
         var counter = 0;
 
         // filter
-        this.tags.select( function( tag ) {
+        this.tagbox.options.get( 'allowed' ).select( function( tag ) {
             if( counter > this.options.get( 'max_displayed_tags' ) ) {
                 throw $break;
             }
@@ -218,7 +213,9 @@ Tagbox.Autocomplete = Class.create( {
             return tag.getValue().toLowerCase().match( this.regexp ) && ++counter;
         // add to result list
         }.bind( this ) ).each( function( tag ) {
-            this.element.insert( new Element( 'li', { 'class': 'tagbox-tag' } ).update( tag.render( this.regexp ) ) );
+            this.element.insert( new Element( 'li', { 'class': 'tagbox-tag' } ).update(
+                this.renderTag( tag, this.regexp )
+            ) );
         }.bind( this ) );
     }
 } );

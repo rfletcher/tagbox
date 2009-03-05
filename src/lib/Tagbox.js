@@ -16,6 +16,9 @@ var Tagbox = Class.create( {
      *      format acceptable to the Tagbox.Tags constructor.
      *  allow_duplicates (Boolean) = false:
      *      Allow duplicate tags?
+     *  autocomplete (Boolean) = true:
+     *      Display a drop-down list of allowed values, filtered as the user 
+     *      types. This option has no effect when the ``allowed`` array is empty.
      *  case_sensitive (Boolean) = false:
      *      Use case sensitive string comparison when checking for duplicate
      *      and/or permitted tags.
@@ -38,6 +41,7 @@ var Tagbox = Class.create( {
     options: {
         allowed: [],
         allow_duplicates: false,
+        autocomplete: true,
         case_sensitive: false,
         hint: null,
         hint_delay: 100,
@@ -51,7 +55,7 @@ var Tagbox = Class.create( {
      * Tagbox#autocomplete -> Tagbox.Autocomplete
      * A reference to this Tagbox's Autocomplete object
      **/
-    // autocomplete: null,
+    autocomplete: null,
 
     /**
      * Tagbox#current -> ( null | Element )
@@ -96,13 +100,12 @@ var Tagbox = Class.create( {
 
         this.initializeAllowedTags();
         this.insert( original_input );
-        this.registerEventHandlers();
 
-        // if( this.options.get( 'autocomplete' ) ) {
-        //     this.autocomplete = new Tagbox.Autocomplete( this,
-        //         this.options.unset( 'autocomplete' )
-        //     );
-        // }
+        if( this.options.get( 'autocomplete' ) && this.options.get( 'allowed' ) ) {
+            this.autocomplete = new Tagbox.Autocomplete( this );
+        }
+
+        this.registerEventHandlers();
     },
 
     /**

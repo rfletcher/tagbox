@@ -13,11 +13,10 @@
  */
 
 //= require "lib/util"
+//= require "lib/ElasticTextBox"
 //= require "lib/Tagbox"
 //= require "lib/Tagbox.Tag"
-    // = require "lib/Tagbox.Autocomplete"
-    // = require "lib/Tagbox.Autocomplete.Tag"
-//= require "lib/ElasticTextBox"
+//= require "lib/Tagbox.Autocomplete"
 
 /* Initialize the tagboxes when the DOM is ready */
 document.observe( 'dom:loaded', function() {
