@@ -544,7 +544,7 @@ var Tagbox = Class.create( {
      * Register <input/>-specific event handlers.
      **/
     registerInputEventHandlers: function( input ) {
-        if( ! this.options.get( 'autocomplete' ) ) {
+        if( ! this.autocomplete ) {
             input.observe( 'keypress', function( e ) {
                 var el = e.element();
                 var key = e.which ? e.which : e.keyCode;
