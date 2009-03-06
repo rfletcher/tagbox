@@ -208,7 +208,7 @@ Tagbox.Autocomplete = Class.create( {
      * in the results list.
      **/
     renderTag: function( tag, query_regexp ) {
-        return tag.getValue().replace( query_regexp, "<em>$1</em>" );
+        return tag.getLabel().replace( query_regexp, "<em>$1</em>" );
     },
 
     /**
@@ -257,7 +257,7 @@ Tagbox.Autocomplete = Class.create( {
                 throw $break;
             }
 
-            return tag.getValue().toLowerCase().match( this.regexp ) && ++counter;
+            return tag.getLabel().toLowerCase().match( this.regexp ) && ++counter;
         }.bind( this ) );
 
         // add to result list

@@ -125,18 +125,18 @@ var Tagbox = Class.create( {
     stopObserving: function() { return this.tagbox.stopObserving.apply( this.tagbox, arguments ); },
 
     /**
-     * Tagbox#addTag( value ) -> undefined
-     *   - value (String | Tagbox.Tag): A tag value, or a Tagbox.tag object
+     * Tagbox#addTag( label ) -> undefined
+     *   - label (String | Tagbox.Tag): A tag label, or a Tagbox.tag object
      *
-     * Add a tag to the list, and select that tag.
+     * Add a tag to the list.
      **/
-    addTag: function( value ) {
-        if( ! ( value instanceof Tagbox.Tag ) ) {
-            value = value.replace( /^\s+/, '' ).replace( /\s+$/, '' );
+    addTag: function( label ) {
+        if( ! ( label instanceof Tagbox.Tag ) ) {
+            label = label.replace( /^\s+/, '' ).replace( /\s+$/, '' );
         }
 
-        // no value?
-        if( ! value ) {
+        // no label?
+        if( ! label ) {
             return;
 
         // too many tags?
@@ -144,31 +144,31 @@ var Tagbox = Class.create( {
             return;
 
         // duplicate tag?
-        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByValue( value.getValue ? value.getValue() : value ) ) {
+        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByLabel( label instanceof Tagbox.Tag ? label.getLabel() : label ) ) {
             return;
 
         // failed user's validation callback?
-        } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( value.getValue ? value.getValue() : value ) ) {
+        } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( label.getlabel ? label.getlabel() : label ) ) {
             return;
         }
 
-        // if the list of possible values is restricted, search for the entered tag
+        // if the list of possible tags is restricted, search for the entered tag
         if( this.options.get( 'allowed' ).length ) {
             var tag = this.options.get( 'allowed' ).find( function( tag ) {
-                if( value instanceof Tagbox.Tag ) {
-                    return tag == value;
+                if( label instanceof Tagbox.Tag ) {
+                    return tag == label;
                 } else {
-                    return tag.getValue().toLowerCase() == value.toLowerCase();
+                    return tag.getLabel().toLowerCase() == label.toLowerCase();
                 }
             } );
 
             if( ! tag ) {
                 return;
             }
-        } else if( value instanceof Tagbox.Tag ) {
-            var tag = value;
+        } else if( label instanceof Tagbox.Tag ) {
+            var tag = label;
         } else {
-            var tag = new Tagbox.Tag( this, value );
+            var tag = new Tagbox.Tag( this, label );
         }
 
         this.tags.push( tag );
@@ -239,14 +239,20 @@ var Tagbox = Class.create( {
     },
 
     /**
-     * Tagbox#findTagByValue( value ) -> Tagbox.Tag
+     * Tagbox#findTagBy( property, value ) -> Tagbox.Tag
+     *      - property (String): The name of the property to compare. ("label", or "value")
      *      - value (String): A value to find.
      *
-     * Find a tag object by value.
+     * Find a tag object by label.
      **/
-    findTagByValue: function( value ) {
+    findTagBy: function( property, value ) {
+        if( [ 'label', 'value' ].include( property ) ) {
+            return;
+        }
+    
         return this.tags.find( function( tag ) {
-            var val1 = tag.getValue();
+            var val1 = tag['get' + property.substr( 0, 1 ).toUpperCase() + property.substr( 1 ).toLowerCase()]();
+            console.log( val1 );
             var val2 = value;
 
             if( ! this.options.get( 'case_sensitive' ) ) {
@@ -256,6 +262,26 @@ var Tagbox = Class.create( {
 
             return val1 == val2;
         }.bind( this ) );
+    },
+
+    /**
+     * Tagbox#findTagByLabel( label ) -> Tagbox.Tag
+     *      - label (String): A label to find.
+     *
+     * Find a tag object by label.
+     **/
+    findTagByLabel: function( label ) {
+        return this.findTagBy( 'label', label );
+    },
+
+    /**
+     * Tagbox#findTagByValue( value ) -> Tagbox.Tag
+     *      - value (String): A value to find.
+     *
+     * Find a tag object by value.
+     **/
+    findTagByValue: function( value ) {
+        return this.findTagBy( 'value', value );
     },
 
     /**

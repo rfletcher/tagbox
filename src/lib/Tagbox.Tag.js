@@ -8,9 +8,12 @@ Tagbox.Tag = Class.create( {
      * A Hash of public properties for this Tagbox.Tag instance.  Properties
      * are:
      *
-     *  value (String): the tag's displayed value
+     *  label (String): The value which will be displayed to the user.
+     *  value (String): The value with which be submitted to the server when
+     *     the parent form is submitted.
      **/
     properties: {
+        label: null,
         value: null
     },
 
@@ -33,6 +36,7 @@ Tagbox.Tag = Class.create( {
         if( typeof properties == "string" ) {
             properties = { value: properties };
         }
+
         this.properties.update( properties );
     },
 
@@ -42,18 +46,16 @@ Tagbox.Tag = Class.create( {
      * Create the tag's HTML representation.
      **/
     render: function() {
-        var value = this.getValue();
-
         var wrapper = new Element( 'li', { 'class': 'tagbox-tag' } );
 
         // the hidden input which represents this tag in the form
         var input = new Element( 'input', {
             type: 'hidden',
             name: this.tagbox.name + '[]',
-            value: value
+            value: this.getValue()
         } );
 
-        wrapper.insert( value.escapeHTML() ).insert( input );
+        wrapper.insert( this.getLabel().escapeHTML() ).insert( input );
 
         if( this.tagbox.options.get( 'show_remove_links' ) ) {
             var a = new Element( 'a', { 'class': 'tagbox-remove' } ).update( 'Remove' );
@@ -62,6 +64,16 @@ Tagbox.Tag = Class.create( {
         }
 
         return wrapper;
+    },
+
+    /**
+     * Tagbox.Tag#getLabel() -> String
+     *
+     * Get the Tag's label.
+     **/
+    getLabel: function() {
+        return this.properties.get( 'label' ) ? this.properties.get( 'label' ) :
+            this.properties.get( 'value' );
     },
 
     /**
