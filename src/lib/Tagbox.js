@@ -101,7 +101,7 @@ var Tagbox = Class.create( {
         this.initializeAllowedTags();
         this.insert( original_input );
 
-        if( this.options.get( 'autocomplete' ) && this.options.get( 'allowed' ) ) {
+        if( this.options.get( 'autocomplete' ) && this.options.get( 'allowed' ).length ) {
             this.autocomplete = new Tagbox.Autocomplete( this );
         }
 
