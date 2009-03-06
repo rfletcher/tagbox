@@ -238,7 +238,7 @@ Tagbox.Autocomplete = Class.create( {
      **/
     show: function() {
         this.update();
-        this.element.show();
+        this.results.length && this.element.show();
     },
 
     /**
