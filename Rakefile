@@ -9,6 +9,9 @@ TAGBOX_ROOT          = File.expand_path(File.dirname(__FILE__))
 TAGBOX_SRC_DIR       = File.join(TAGBOX_ROOT, 'src')
 TAGBOX_DIST_DIR      = File.join(TAGBOX_ROOT, 'dist')
 TAGBOX_PKG_DIR       = File.join(TAGBOX_ROOT, 'pkg')
+TAGBOX_TEST_DIR      = File.join(TAGBOX_ROOT, 'test')
+TAGBOX_TEST_UNIT_DIR = File.join(TAGBOX_TEST_DIR, 'unit')
+TAGBOX_TMP_DIR       = File.join(TAGBOX_TEST_UNIT_DIR, 'tmp')
 TAGBOX_VERSION       = YAML.load(IO.read(File.join(TAGBOX_SRC_DIR, 'constants.yml')))['TAGBOX_VERSION']
 
 task :default => [:dist, :package, :clean_package_source]
@@ -52,6 +55,59 @@ end
 
 task :clean_package_source do
   rm_rf File.join(TAGBOX_PKG_DIR, "tagbox-#{TAGBOX_VERSION}"), :verbose => false
+end
+
+task :test => ['test:build', 'test:run']
+namespace :test do
+  desc 'Runs all the JavaScript unit tests and collects the results'
+  task :run => [:require] do
+    testcases        = ENV['TESTCASES']
+    browsers_to_test = ENV['BROWSERS'] && ENV['BROWSERS'].split(',')
+    tests_to_run     = ENV['TESTS'] && ENV['TESTS'].split(',')
+    runner           = UnittestJS::WEBrickRunner::Runner.new(:test_dir => TAGBOX_TMP_DIR)
+
+    Dir[File.join(TAGBOX_TMP_DIR, '*_test.html')].each do |file|
+      file = File.basename(file)
+      test = file.sub('_test.html', '')
+      unless tests_to_run && !tests_to_run.include?(test)
+        runner.add_test(file, testcases)
+      end
+    end
+
+    UnittestJS::Browser::SUPPORTED.each do |browser|
+      unless browsers_to_test && !browsers_to_test.include?(browser)
+        runner.add_browser(browser.to_sym)
+      end
+    end
+
+    trap('INT') { runner.teardown; exit }
+    runner.run
+  end
+
+  task :build => [:clean, :dist] do
+    builder = UnittestJS::Builder::SuiteBuilder.new({
+      :input_dir  => TAGBOX_TEST_UNIT_DIR,
+      :assets_dir => TAGBOX_DIST_DIR
+    })
+    selected_tests = (ENV['TESTS'] || '').split(',')
+    builder.collect(*selected_tests)
+    builder.render
+  end
+
+  task :clean => [:require] do
+    UnittestJS::Builder.empty_dir!(TAGBOX_TMP_DIR)
+  end
+
+  task :require do
+    lib = 'vendor/unittest_js/lib/unittest_js'
+    unless File.exists?(lib)
+      puts "\nYou'll need UnittestJS to run the tests. Just run:\n\n"
+      puts "  $ git submodule init"
+      puts "  $ git submodule update"
+      puts "\nand you should be all set.\n\n"
+    end
+    require lib
+  end
 end
 
 desc 'Builds the distribution and opens the demo in your default browser.'
