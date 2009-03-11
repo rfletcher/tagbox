@@ -246,13 +246,12 @@ var Tagbox = Class.create( {
      * Find a tag object by label.
      **/
     findTagBy: function( property, value ) {
-        if( [ 'label', 'value' ].include( property ) ) {
+        if( ! [ 'label', 'value' ].include( property ) ) {
             return;
         }
-    
+
         return this.tags.find( function( tag ) {
             var val1 = tag['get' + property.substr( 0, 1 ).toUpperCase() + property.substr( 1 ).toLowerCase()]();
-            console.log( val1 );
             var val2 = value;
 
             if( ! this.options.get( 'case_sensitive' ) ) {
