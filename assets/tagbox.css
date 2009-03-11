@@ -89,6 +89,7 @@
 .tagbox-autocomplete .tagbox-tag {
   border: 1px solid #ddd;
   border-width: 0 1px 1px;
+  cursor: pointer;
   padding: 3px 4px;
 }
 .tagbox-autocomplete .tagbox-tag.tagbox-selected {
@@ -98,6 +99,7 @@
 }
 .tagbox-autocomplete .tagbox-tag.tagbox-disabled {
   color: #888;
+  cursor: default;
 }
 .tagbox-autocomplete .tagbox-tag em {
   background-color: #ccc;
