@@ -102,8 +102,16 @@ Tagbox.Autocomplete = Class.create( {
     previous: function() {
         var current = this.element.select( '.tagbox-selected' ).last();
 
-        if( current && current.previous() ) {
-            return this.highlight( current.previous() );
+        if( current ) {
+            var target = current;
+
+            do {
+                target = target.previous();
+            } while( target && target.hasClassName( 'tagbox-disabled' ) );
+        }
+
+        if( target ) {
+            return this.highlight( target );
         }
     },
 
@@ -113,17 +121,17 @@ Tagbox.Autocomplete = Class.create( {
      * Highlight the next tag in the list, or the first if none are selected.
      **/
     next: function() {
-        var current = this.element.down( '.tagbox-selected' );
+        var candidates = this.element.down( '.tagbox-selected' ) ?
+            this.element.select( '.tagbox-selected ~ li' ) :
+            this.element.childElements();
 
-        if( ! current ) {
-            var next = this.element.down( 'li' );
-        } else if( current.next() ) {
-            var next = current.next();
-        } else {
-            var next = current;
+        var target = candidates.find( function( el ) {
+            return ! el.hasClassName( 'tagbox-disabled' );
+        } );
+
+        if( target ) {
+            return this.highlight( target );
         }
-
-        return this.highlight( next );
     },
 
     /**
@@ -266,7 +274,12 @@ Tagbox.Autocomplete = Class.create( {
                 this.renderTag( tag, this.regexp )
             );
 
-            this.registerTagEventHandlers( li );
+            if( ! this.tagbox.options.get( 'allow_duplicates' ) && this.tagbox.tags.include( tag ) ) {
+                li.addClassName( 'tagbox-disabled' );
+            } else {
+                this.registerTagEventHandlers( li );
+            }
+
             this.element.insert( li );
         }.bind( this ) );
     }

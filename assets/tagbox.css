@@ -1,12 +1,12 @@
 /* tags */
-ul.tagbox-tags {
+.tagbox-tags {
   background-color: #fff;
   border: 1px solid #AAA;
   cursor: text;
   padding: 0 0 2px 2px;
 }
 
-ul.tagbox-tags li {
+.tagbox-tags li {
   border: 1px solid transparent;
   display: inline-block;
   list-style-type: none;
@@ -14,7 +14,7 @@ ul.tagbox-tags li {
   margin: 2px 2px 0 0;
 }
 
-ul.tagbox-tags li.tagbox-tag {
+.tagbox-tags li.tagbox-tag {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   line-height: inherit;
@@ -25,7 +25,7 @@ ul.tagbox-tags li.tagbox-tag {
   padding-right: 5px;
   white-space: pre;
 }
-ul.tagbox-tags li.tagbox-tag.tagbox-selected {
+.tagbox-tags li.tagbox-tag.tagbox-selected {
   background-color: #598bec;
   border-color: #598bec;
   color: #fff;
@@ -41,7 +41,7 @@ ul.tagbox-tags li.tagbox-tag.tagbox-selected {
 }
 
 /* remove 'x' */
-a.tagbox-remove {
+.tagbox-remove {
   background: url(remove.png) no-repeat 2px 2px;
   cursor: pointer;
   display: inline-block;
@@ -52,12 +52,12 @@ a.tagbox-remove {
   vertical-align: middle;
   width: 12px;
 }
-li.tagbox-selected a.tagbox-remove {
+.tagbox-selected .tagbox-remove {
   background-position: 2px -8px;
 }
 
 /* main text input */
-ul.tagbox-tags li input[type=text] {
+.tagbox-tags li input[type=text] {
   background-color: transparent;
   border: none;
   font: inherit;
@@ -86,22 +86,28 @@ ul.tagbox-tags li input[type=text] {
 .tagbox-autocomplete {
   z-index: 2;
 }
-.tagbox-autocomplete li.tagbox-tag {
+.tagbox-autocomplete .tagbox-tag {
   border: 1px solid #ddd;
   border-width: 0 1px 1px;
   padding: 3px 4px;
 }
-.tagbox-autocomplete li.tagbox-tag.tagbox-selected {
+.tagbox-autocomplete .tagbox-tag.tagbox-selected {
   background-color: #598bec;
   border-color: #598bec;
   color: #fff;
 }
-.tagbox-autocomplete li.tagbox-tag em {
+.tagbox-autocomplete .tagbox-tag.tagbox-disabled {
+  color: #888;
+}
+.tagbox-autocomplete .tagbox-tag em {
   background-color: #ccc;
   font-style: normal;
 }
-.tagbox-autocomplete li.tagbox-tag.tagbox-selected em {
+.tagbox-autocomplete .tagbox-tag.tagbox-selected em {
   background-color: #396bcc;
+}
+.tagbox-autocomplete .tagbox-tag.tagbox-disabled em {
+  background-color: #d0d0d0;
 }
 
 /* for IE7 */
