@@ -247,7 +247,7 @@ var Tagbox = Class.create( {
             var val1 = tag['get' + property.substr( 0, 1 ).toUpperCase() + property.substr( 1 ).toLowerCase()]();
             var val2 = value;
 
-            if( ! this.options.get( 'case_sensitive' ) ) {
+            if( typeof val1 == "string" && typeof val2 == "string" && ! this.options.get( 'case_sensitive' ) ) {
                 val1 = val1.toLowerCase();
                 val2 = val2.toLowerCase();
             }
