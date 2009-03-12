@@ -131,7 +131,7 @@ var Tagbox = Class.create( {
      * Add a tag to the list.
      **/
     addTag: function( label ) {
-        if( label instanceof String ) {
+        if( typeof label == "string" ) {
             label = label.replace( /^\s+/, '' ).replace( /\s+$/, '' );
         }
 
