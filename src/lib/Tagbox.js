@@ -19,6 +19,9 @@ var Tagbox = Class.create( {
      *      ``allowed`` array.  Useful to restrict input to a set of usernames,
      *      or email address, for example.  This value has no effect when
      *      ``allowed`` is empty.
+     *  arbitrary_value_field_name = null:
+     *      An alternate form field name to use for values not contained in
+     *      the ``allowed`` array.
      *  allow_duplicates (Boolean) = false:
      *      Allow duplicate tags?
      *  autocomplete (Boolean) = true:
@@ -47,6 +50,7 @@ var Tagbox = Class.create( {
         allowed: [],
         allow_duplicates: false,
         allow_arbitrary_values: false,
+        arbitrary_value_field_name: null,
         autocomplete: true,
         case_sensitive: false,
         hint: null,
@@ -142,6 +146,13 @@ var Tagbox = Class.create( {
         }
 
         if( tag = this.validate( tag ) ) {
+            if( this.options.get( 'allow_arbitrary_values' ) &&
+                this.options.get( 'arbitrary_value_field_name' ) && 
+                this.options.get( 'allowed' ).length && 
+                ! this.options.get( 'allowed' ).include( tag ) ) {
+                tag.properties.set( 'field_name', this.options.get( 'arbitrary_value_field_name' ) );
+            }
+
             this.tags.push( tag );
 
             var tag_el = tag.render().observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
