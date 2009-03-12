@@ -52,7 +52,7 @@
   vertical-align: middle;
   width: 12px;
 }
-.tagbox-selected .tagbox-remove {
+li.tagbox-selected .tagbox-remove {
   background-position: 2px -8px;
 }
 
