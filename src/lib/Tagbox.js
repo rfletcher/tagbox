@@ -14,6 +14,11 @@ var Tagbox = Class.create( {
      *  allowed: (Array) = []:
      *      The set of allowed input values.  Values can be specified in any
      *      format acceptable to the Tagbox.Tags constructor.
+     *  allow_arbitrary_values = false:
+     *      Allow any arbitrary value, in addition to the set of tags in the
+     *      ``allowed`` array.  Useful to restrict input to a set of usernames,
+     *      or email address, for example.  This value has no effect when
+     *      ``allowed`` is empty.
      *  allow_duplicates (Boolean) = false:
      *      Allow duplicate tags?
      *  autocomplete (Boolean) = true:
@@ -41,6 +46,7 @@ var Tagbox = Class.create( {
     options: {
         allowed: [],
         allow_duplicates: false,
+        allow_arbitrary_values: false,
         autocomplete: true,
         case_sensitive: false,
         hint: null,
@@ -125,18 +131,18 @@ var Tagbox = Class.create( {
     stopObserving: function() { return this.tagbox.stopObserving.apply( this.tagbox, arguments ); },
 
     /**
-     * Tagbox#addTag( label ) -> undefined
-     *   - label (String | Tagbox.Tag): A tag label, or a Tagbox.tag object
+     * Tagbox#addTag( tag ) -> undefined
+     *   - tag (String | Tagbox.Tag): A tag label, or a Tagbox.Tag object
      *
      * Add a tag to the list.
      **/
-    addTag: function( label ) {
-        if( typeof label == "string" ) {
-            label = label.replace( /^\s+/, '' ).replace( /\s+$/, '' );
+    addTag: function( tag ) {
+        if( typeof tag == "string" ) {
+            tag = new Tagbox.Tag( this, tag.replace( /^\s+/, '' ).replace( /\s+$/, '' ) );
         }
 
         // no label?
-        if( ! label ) {
+        if( ! tag || tag.getLabel() == '' ) {
             return;
 
         // too many tags?
@@ -144,33 +150,39 @@ var Tagbox = Class.create( {
             return;
 
         // duplicate tag?
-        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByLabel( label instanceof Tagbox.Tag ? label.getLabel() : label ) ) {
+        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByLabel( tag.getLabel() ) ) {
             return;
 
-        // failed user's validation callback?
-        } else if( typeof this.options.get( 'validation_function' ) == "function" && ! this.options.get( 'validation_function' )( label.getlabel ? label.getlabel() : label ) ) {
-            return;
-        }
-
-        // if the list of possible tags is restricted, search for the entered tag
-        if( this.options.get( 'allowed' ).length ) {
-            var tag = this.options.get( 'allowed' ).find( function( tag ) {
-                if( label instanceof Tagbox.Tag ) {
-                    return tag == label;
+        // check if the value is allowed
+        } else {
+            var passesUserValidation = function( tag ) {
+                if( typeof this.options.get( 'validation_function' ) == "function" ) {
+                    return this.options.get( 'validation_function' )( tag.getLabel() );
                 } else {
-                    return tag.getLabel().toLowerCase() == label.toLowerCase();
+                    return true;
                 }
+            }.bind( this );
+
+            var allowed_match = this.options.get( 'allowed' ).find( function( allowed ) {
+                return allowed.getLabel().toLowerCase() == tag.getLabel().toLowerCase();
             } );
 
-            if( ! tag ) {
+            // tag is in the list of allowed values?
+            if( this.options.get( 'allowed' ).length && allowed_match ) {
+                tag = allowed_match;
+            // not in the list of allowed values, and arbitrary values aren't allowed
+            } else if( this.options.get( 'allowed' ).length && ! this.options.get( 'allow_arbitrary_values' ) ) {
+                return;
+            // not in the list of allowed values, arbitrary values are allowed, but it fails user-specified validation
+            } else if( this.options.get( 'allowed' ).length && this.options.get( 'allow_arbitrary_values' ) && ! passesUserValidation( tag ) ) {
+                return;
+            // values aren't restricted, but fails user-specified validation
+            } else if( this.options.get( 'allowed' ).length == 0 && ! passesUserValidation( tag ) ) {
                 return;
             }
-        } else if( label instanceof Tagbox.Tag ) {
-            var tag = label;
-        } else {
-            var tag = new Tagbox.Tag( this, label );
         }
 
+        // done validating... add the tag!
         this.tags.push( tag );
 
         var tag_el = tag.render().observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {

@@ -50,8 +50,12 @@ Tagbox.Autocomplete = Class.create( {
 
         // Override Tagbox.getInputValue() to return a Tagbox.Tag for the 
         // currently selected tag (instead of the string value).
-        this.tagbox.getInputValue = this.tagbox.getInputValue.wrap( function() {
-            return this.getSelectedTag();
+        this.tagbox.getInputValue = this.tagbox.getInputValue.wrap( function( original ) {
+            if( ! this.results.length ) {
+                return original();
+            } else {
+                return this.getSelectedTag();
+            }
         }.bind( this ) );
 
         this.insert();
