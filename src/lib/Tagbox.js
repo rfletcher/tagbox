@@ -27,6 +27,9 @@ var Tagbox = Class.create( {
      *  autocomplete (Boolean) = true:
      *      Display a drop-down list of allowed values, filtered as the user 
      *      types. This option has no effect when the ``allowed`` array is empty.
+     *  autocomplete_tag_renderer (Function) = Tagbox.Autocomplete.renderTag:
+     *      Function which generates HTML representation of a tag when it's
+     *      displayed as part of the autocomplete results list.
      *  case_sensitive (Boolean) = false:
      *      Use case sensitive string comparison when checking for duplicate
      *      and/or permitted tags.
@@ -52,6 +55,7 @@ var Tagbox = Class.create( {
         allow_arbitrary_values: false,
         arbitrary_value_field_name: null,
         autocomplete: true,
+        autocomplete_tag_renderer: null,
         case_sensitive: false,
         hint: null,
         hint_delay: 100,
@@ -104,7 +108,10 @@ var Tagbox = Class.create( {
      *   - options (Object): Options for this Tagbox.
      **/
     initialize: function( original_input, options ) {
-        this.options = new Hash( this.options ).update( options );
+        this.options = new Hash( this.options ).update(
+            { autocomplete_tag_renderer: Tagbox.Autocomplete.renderTag }
+        ).update( options );
+
         this.tags = [];
         this.name = $( original_input ).getAttribute( 'name' );
 

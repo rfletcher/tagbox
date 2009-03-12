@@ -231,15 +231,17 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
-     * Tagbox.Autocomplete#renderTag( tag, query_regexp ) -> Element
+     * Tagbox.Autocomplete#renderTag( tag, query_regexp, disabled ) -> Element
      *   - tag (Tagbox.Tag): The Tagbox.Tag object to render as HTML.
      *   - query_regexp (RegExp ): A regular expression representation of the
      *     user's input string.
+     *   - disabled (Boolean): This entry is disabled due to a restriction on
+     *     duplicates
      *
      * Generate an HTML representation of a Tagbox.Tag object for display
      * in the results list.
      **/
-    renderTag: function( tag, query_regexp ) {
+    renderTag: function( tag, query_regexp, disabled ) {
         return tag.getLabel().replace( query_regexp, "<em>$1</em>" );
     },
 
@@ -284,11 +286,13 @@ Tagbox.Autocomplete = Class.create( {
 
         // add to result list
         this.results.each( function( tag ) {
+            var disabled = ! this.tagbox.options.get( 'allow_duplicates' ) && this.tagbox.tags.include( tag );
+
             var li = new Element( 'li', { 'class': 'tagbox-tag' } ).update(
-                this.renderTag( tag, this.regexp )
+                this.tagbox.options.get( 'autocomplete_tag_renderer' )( tag, this.regexp, disabled )
             );
 
-            if( ! this.tagbox.options.get( 'allow_duplicates' ) && this.tagbox.tags.include( tag ) ) {
+            if( disabled ) {
                 li.addClassName( 'tagbox-disabled' );
             } else {
                 this.registerTagEventHandlers( li );
