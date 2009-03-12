@@ -3,7 +3,7 @@
  *
  * An unobtrusive, multi-value text input.
  *
- * fires tagbox:blur, tagbox:focus
+ * fires tagbox:blur, tagbox:focus, tagbox:text:blur, tagbox:text:focus, tagbox:tagged
  **/
 var Tagbox = Class.create( {
     /**
@@ -180,6 +180,18 @@ var Tagbox = Class.create( {
 
         // insert the new tag into the HTML list
         ( this.current || this.tagbox.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
+
+        this.fire( 'tagbox:tagged' );
+    },
+
+    /**
+     * Tagbox#addTagFromInput() -> undefined
+     *
+     * Add a tag based on the current value of the text input.
+     **/
+    addTagFromInput: function() {
+        this.addTag( this.getInputValue() );
+        this.tagbox.select( 'ul.tagbox-tags li' ).last().down( 'input[type=text]' ).value = '';
     },
 
     /**
@@ -203,15 +215,13 @@ var Tagbox = Class.create( {
     },
 
     /**
-     * Tagbox#createInput( [ attributes ] ) -> Element
-     *   - attributes (Object): HTML attributes to pass to the `Element`
-     *     constructor.
+     * Tagbox#createInput() -> Element
      *
      * Create a new text <input/> element, complete with appropriate
      * event handlers.
      **/
-    createInput: function( attributes ) {
-        var input = new Element( 'input', $H( attributes ).update( { type: 'text' } ).toObject() );
+    createInput: function() {
+        var input = new Element( 'input', { type: 'text' } );
         this.registerInputEventHandlers( input );
 
         var li = new Element( 'li' ).insert( input );
@@ -335,6 +345,15 @@ var Tagbox = Class.create( {
     },
 
     /**
+     * Tagbox#getInputValue() -> String
+     *
+     * Get the value of the current input element.
+     **/
+    getInputValue: function() {
+        return this.current.down( 'input[type=text]' ).value;
+    },
+
+    /**
      * Tagbox#hasFocus() -> Boolean
      *
      * Test whether the tagbox has the focus.
@@ -373,7 +392,7 @@ var Tagbox = Class.create( {
 
     /**
      * Tagbox#insert( original_input ) -> undefined
-     *   - originalinput (Element | String): The original text input, or a
+     *   - original_input (Element | String): The original text input, or a
      *     string that references the input's ID.
      *
      * Replace the original <input/> element with a Tagbox.
@@ -394,6 +413,17 @@ var Tagbox = Class.create( {
 
         // replace the original input with the tagbox
         $( original_input ).replace( this.tagbox );
+    },
+
+    /**
+     * Tagbox#isDelimiterKeypress( event ) -> Boolean
+     *   - event (Event): A key event.
+     *
+     * Test whether they key event corresponds to a press of one of the tag
+     * delimiter keys.
+     **/
+    isDelimiterKeypress: function( event ) {
+        return this.options.get( 'delimiters' ).include( event.which ? event.which : event.keyCode );
     },
 
     /**
@@ -543,20 +573,12 @@ var Tagbox = Class.create( {
      * Register <input/>-specific event handlers.
      **/
     registerInputEventHandlers: function( input ) {
-        if( ! this.autocomplete ) {
-            input.observe( 'keypress', function( e ) {
-                var el = e.element();
-                var key = e.which ? e.which : e.keyCode;
-
-                if( this.options.get( 'delimiters' ).include( key ) ) {
-                    e.stop();
-                    this.addTag( el.value );
-                    el.value = '';
-                }
-            }.bind( this ) );
-        }
-
-        input.observe( 'focus', function( e ) {
+        input.observe( 'keypress', function( e ) {
+            if( this.isDelimiterKeypress( e ) ) {
+                e.stop();
+                this.addTagFromInput();
+            }
+        }.bind( this ) ).observe( 'focus', function( e ) {
             this.focus( Event.element( e ).up( 'li' ) );
         }.bind( this ) );
     },

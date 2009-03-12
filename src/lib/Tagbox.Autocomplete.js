@@ -48,8 +48,34 @@ Tagbox.Autocomplete = Class.create( {
         this.options = new Hash( this.options );
         this.options.update( options );
 
+        // Override Tagbox.getInputValue() to return a Tagbox.Tag for the 
+        // currently selected tag (instead of the string value).
+        this.tagbox.getInputValue = this.tagbox.getInputValue.wrap( function() {
+            return this.getSelectedTag();
+        }.bind( this ) );
+
         this.insert();
         this.registerEventHandlers();
+    },
+
+    /**
+     *
+     **/
+    getSelectedTag: function() {
+        if( ! this.element.visible() || ! this.element.down( 'li.tagbox-selected' ) ) {
+            return false;
+        }
+
+        // get the index of the selected <li/>
+        var index = 0;
+        this.element.select( 'li' ).each( function( li ) {
+            if( li.hasClassName( 'tagbox-selected' ) ) {
+                throw $break;
+            }
+            index++;
+        } );
+
+        return this.results[index];
     },
 
     /**
@@ -160,15 +186,8 @@ Tagbox.Autocomplete = Class.create( {
                         this.hide();
                     }
                     break;
-                case Event.KEY_RETURN:
-                    if( this.element.visible() ) {
-                        this.select();
-                    }
-                    break;
             }
-        }.bind( this ) );
-
-        document.observe( 'keyup', function( e ) {
+        }.bind( this ) ).observe( 'keyup', function( e ) {
             if( ! this.tagbox.currentIsInput() ) {
                 return;
             }
@@ -187,8 +206,9 @@ Tagbox.Autocomplete = Class.create( {
             }
         }.bind( this ) );
 
-        // hide the autocomplete list when the tagbox loses focus
+        // hide the autocomplete list when the tagbox text input loses focus
         this.tagbox.observe( 'tagbox:text:blur', this.hide.bind( this ) );
+        this.tagbox.observe( 'tagbox:tagged', this.hide.bind( this ) );
     },
 
     /**
@@ -225,17 +245,7 @@ Tagbox.Autocomplete = Class.create( {
      * Add a tag to the tagbox and hide the results list.
      **/
     select: function() {
-        var index = 0;
-        this.element.select( 'li' ).each( function( li ) {
-            if( li.hasClassName( 'tagbox-selected' ) ) {
-                throw $break;
-            }
-            index++;
-        } );
-
-        this.tagbox.current.down( 'input[type=text]' ).value = '';
-
-        this.tagbox.addTag( this.results[index] );
+        this.tagbox.addTagFromInput();
         this.hide();
     },
 
