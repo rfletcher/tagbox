@@ -141,59 +141,19 @@ var Tagbox = Class.create( {
             tag = new Tagbox.Tag( this, tag.replace( /^\s+/, '' ).replace( /\s+$/, '' ) );
         }
 
-        // no label?
-        if( ! tag || tag.getLabel() == '' ) {
-            return;
+        if( tag = this.validate( tag ) ) {
+            this.tags.push( tag );
 
-        // too many tags?
-        } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
-            return;
+            var tag_el = tag.render().observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
+                e.stop();
+                this.focus( tag_el );
+            }.bind( this ) );
 
-        // duplicate tag?
-        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByLabel( tag.getLabel() ) ) {
-            return;
+            // insert the new tag into the HTML list
+            ( this.current || this.tagbox.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
 
-        // check if the value is allowed
-        } else {
-            var passesUserValidation = function( tag ) {
-                if( typeof this.options.get( 'validation_function' ) == "function" ) {
-                    return this.options.get( 'validation_function' )( tag.getLabel() );
-                } else {
-                    return true;
-                }
-            }.bind( this );
-
-            var allowed_match = this.options.get( 'allowed' ).find( function( allowed ) {
-                return allowed.getLabel().toLowerCase() == tag.getLabel().toLowerCase();
-            } );
-
-            // tag is in the list of allowed values?
-            if( this.options.get( 'allowed' ).length && allowed_match ) {
-                tag = allowed_match;
-            // not in the list of allowed values, and arbitrary values aren't allowed
-            } else if( this.options.get( 'allowed' ).length && ! this.options.get( 'allow_arbitrary_values' ) ) {
-                return;
-            // not in the list of allowed values, arbitrary values are allowed, but it fails user-specified validation
-            } else if( this.options.get( 'allowed' ).length && this.options.get( 'allow_arbitrary_values' ) && ! passesUserValidation( tag ) ) {
-                return;
-            // values aren't restricted, but fails user-specified validation
-            } else if( this.options.get( 'allowed' ).length == 0 && ! passesUserValidation( tag ) ) {
-                return;
-            }
+            this.fire( 'tagbox:tagged' );
         }
-
-        // done validating... add the tag!
-        this.tags.push( tag );
-
-        var tag_el = tag.render().observe( Prototype.Browser.IE ? 'click' : 'mousedown', function( e ) {
-            e.stop();
-            this.focus( tag_el );
-        }.bind( this ) );
-
-        // insert the new tag into the HTML list
-        ( this.current || this.tagbox.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
-
-        this.fire( 'tagbox:tagged' );
     },
 
     /**
@@ -638,6 +598,57 @@ var Tagbox = Class.create( {
                 }
             }.bind( this ), this.options.get( 'hint_delay' ) );
         }
+    },
+
+    /**
+     * Tagbox#validate( tag ) -> (Boolean | Tagbox.Tag)
+     *   - tag (Tagbox.Tag): A tag to validate.
+     *
+     * Validate that a tag is allowed in this tagbox.
+     **/
+    validate: function( tag ) {
+        // no tag, no label?
+        if( ! ( tag instanceof Tagbox.Tag ) || tag.getLabel() == '' ) {
+            return false;
+
+        // too many tags?
+        } else if( typeof this.options.get( 'max_tags' ) == "number" && this.tags.length >= this.options.get( 'max_tags' ) ) {
+            return false;
+
+        // duplicate tag?
+        } else if( ! this.options.get( 'allow_duplicates' ) && this.findTagByLabel( tag.getLabel() ) ) {
+            return false;
+
+        // check if the value is allowed
+        } else {
+            var passesUserValidation = function( tag ) {
+                if( typeof this.options.get( 'validation_function' ) == "function" ) {
+                    return this.options.get( 'validation_function' )( tag.getLabel() );
+                } else {
+                    return true;
+                }
+            }.bind( this );
+
+            var allowed_match = this.options.get( 'allowed' ).find( function( allowed ) {
+                return allowed.getLabel().toLowerCase() == tag.getLabel().toLowerCase();
+            } );
+
+            // tag is in the list of allowed values?
+            if( this.options.get( 'allowed' ).length && allowed_match ) {
+                tag = allowed_match;
+            // not in the list of allowed values, and arbitrary values aren't allowed
+            } else if( this.options.get( 'allowed' ).length && ! this.options.get( 'allow_arbitrary_values' ) ) {
+                return false;
+            // not in the list of allowed values, arbitrary values are allowed, but it fails user-specified validation
+            } else if( this.options.get( 'allowed' ).length && this.options.get( 'allow_arbitrary_values' ) && ! passesUserValidation( tag ) ) {
+                return false;
+            // values aren't restricted, but fails user-specified validation
+            } else if( this.options.get( 'allowed' ).length == 0 && ! passesUserValidation( tag ) ) {
+                return false;
+            }
+        }
+
+        return tag;
     },
 
     /**
