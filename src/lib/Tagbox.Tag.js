@@ -9,11 +9,13 @@ Tagbox.Tag = Class.create( {
      * are:
      *
      *  label (String): The value which will be displayed to the user.
+     *  field_name (String): The name of the hidden form field for this tag.
      *  value (String): The value with which be submitted to the server when
      *     the parent form is submitted.
      **/
     properties: {
         label: null,
+        field_name: null,
         value: null
     },
 
@@ -32,6 +34,7 @@ Tagbox.Tag = Class.create( {
     initialize: function( tagbox, properties ) {
         this.tagbox = tagbox;
         this.properties = new Hash( this.properties );
+        this.properties.set( 'field_name', tagbox.name );
 
         if( typeof properties == "string" ) {
             properties = { value: properties };
@@ -51,7 +54,7 @@ Tagbox.Tag = Class.create( {
         // the hidden input which represents this tag in the form
         var input = new Element( 'input', {
             type: 'hidden',
-            name: this.tagbox.name + '[]',
+            name: this.properties.get( 'field_name' ) + '[]',
             value: this.getValue()
         } );
 
