@@ -10,12 +10,14 @@ Tagbox.Tag = Class.create( {
      *
      *  label (String): The value which will be displayed to the user.
      *  field_name (String): The name of the hidden form field for this tag.
+     *  payload (Variant): Arbitrary data to associate with this tag.
      *  value (String): The value with which be submitted to the server when
      *     the parent form is submitted.
      **/
     properties: {
         label: null,
         field_name: null,
+        payload: null,
         value: null
     },
 
@@ -77,6 +79,15 @@ Tagbox.Tag = Class.create( {
     getLabel: function() {
         return this.properties.get( 'label' ) ? this.properties.get( 'label' ) :
             this.properties.get( 'value' );
+    },
+
+    /**
+     * Tagbox.Tag#getPayload() -> Variant
+     *
+     * Get the Tag's payload.
+     **/
+    getPayload: function() {
+        return this.properties.get( 'payload' );
     },
 
     /**
