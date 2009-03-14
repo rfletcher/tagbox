@@ -231,21 +231,6 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
-     * Tagbox.Autocomplete#renderTag( tag, query_regexp, disabled ) -> Element
-     *   - tag (Tagbox.Tag): The Tagbox.Tag object to render as HTML.
-     *   - query_regexp (RegExp ): A regular expression representation of the
-     *     user's input string.
-     *   - disabled (Boolean): This entry is disabled due to a restriction on
-     *     duplicates
-     *
-     * Generate an HTML representation of a Tagbox.Tag object for display
-     * in the results list.
-     **/
-    renderTag: function( tag, query_regexp, disabled ) {
-        return tag.getLabel().replace( query_regexp, "<em>$1</em>" );
-    },
-
-    /**
      * Tagbox.Autocomplet#select() -> undefined
      *
      * Add a tag to the tagbox and hide the results list.
@@ -302,3 +287,18 @@ Tagbox.Autocomplete = Class.create( {
         }.bind( this ) );
     }
 } );
+
+/**
+ * Tagbox.Autocomplete.renderTag( tag, query_regexp, disabled ) -> Element
+ *   - tag (Tagbox.Tag): The Tagbox.Tag object to render as HTML.
+ *   - query_regexp (RegExp ): A regular expression representation of the
+ *     user's input string.
+ *   - disabled (Boolean): This entry is disabled due to a restriction on
+ *     duplicates
+ *
+ * Generate an HTML representation of a Tagbox.Tag object for display
+ * in the results list.
+ **/
+Tagbox.Autocomplete.renderTag = function( tag, query_regexp, disabled ) {
+    return tag.getLabel().replace( query_regexp, "<em>$1</em>" );
+}
