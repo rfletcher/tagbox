@@ -175,13 +175,23 @@ var Tagbox = Class.create( {
     },
 
     /**
+     * Tagbox#addTagAndReset( tag ) -> undefined
+     *   - tag (Tagbox.tag)
+     *
+     * Attempt to add a new tag to the list, and clear the text input.
+     **/
+    addTagAndReset: function( tag ) {
+        this.addTag( tag );
+        this.tagbox.select( 'ul.tagbox-tags li' ).last().down( 'input[type=text]' ).value = '';
+    },
+
+    /**
      * Tagbox#addTagFromInput() -> undefined
      *
      * Add a tag based on the current value of the text input.
      **/
     addTagFromInput: function() {
-        this.addTag( this.getInputValue() );
-        this.tagbox.select( 'ul.tagbox-tags li' ).last().down( 'input[type=text]' ).value = '';
+        this.addTagAndReset( this.getInputValue() );
     },
 
     /**
@@ -297,6 +307,7 @@ var Tagbox = Class.create( {
         }
 
         var had_focus = this.hasFocus();
+        var new_tag = this.getInputValue();
 
         // remove focus from any selected, individual tag or input
         this.blur( update_input_focus );
@@ -316,6 +327,7 @@ var Tagbox = Class.create( {
 
         // fire events if the tagbox focus has changed
         if( had_focus && ! this.hasFocus() ) {
+            this.addTagAndReset( new_tag );
             this.fire( 'tagbox:blur' );
         } else if( ! had_focus && this.hasFocus() ) {
             this.fire( 'tagbox:focus' );
@@ -340,7 +352,11 @@ var Tagbox = Class.create( {
      * Get the value of the current input element.
      **/
     getInputValue: function() {
-        return this.current.down( 'input[type=text]' ).value;
+        if( this.hasFocus() ) {
+            return this.current.down( 'input[type=text]' ).value;
+        } else {
+            return this.tagbox.select( '.tagbox-tags li' ).last().down( 'input[type=text]' ).value;
+        }
     },
 
     /**
