@@ -307,7 +307,7 @@ var Tagbox = Class.create( {
         }
 
         var had_focus = this.hasFocus();
-        var new_tag = this.getInputValue();
+        var new_tag = this.currentIsInput() ? this.getInputValue() : null;
 
         // remove focus from any selected, individual tag or input
         this.blur( update_input_focus );
@@ -327,7 +327,9 @@ var Tagbox = Class.create( {
 
         // fire events if the tagbox focus has changed
         if( had_focus && ! this.hasFocus() ) {
-            this.addTagAndReset( new_tag );
+            if( new_tag ) {
+                this.addTagAndReset( new_tag );
+            }
             this.fire( 'tagbox:blur' );
         } else if( ! had_focus && this.hasFocus() ) {
             this.fire( 'tagbox:focus' );
