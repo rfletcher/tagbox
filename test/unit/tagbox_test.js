@@ -112,13 +112,39 @@ new Test.Unit.Runner({
     },
 
     testDisablingRemoveLinksOptionHidesLinks: function() {
-        var tb = createTagboxWithTags( 3, { show_remove_links: false } );
+        var tb = createTagboxWithTags( 1, { show_remove_links: false } );
         this.assert( ! tb.element.down( '.tagbox-remove' ) );
     },
 
     testEnablingRemoveLinksOptionAddsLinks: function() {
-        var tb = createTagboxWithTags( 3, { show_remove_links: true } );
+        var tb = createTagboxWithTags( 1, { show_remove_links: true } );
         this.assert( tb.element.down( '.tagbox-remove' ) );
+    },
+
+    /* option: allow_duplicates */
+
+    testDisablingAllowDuplicatesAllowsDuplicates: function() {
+        var tb = createTagbox( { allow_duplicates: false } );
+
+        var value = getUniqueString();
+        var old_tag_count = tb.values().length;
+
+        tb.addTag( value );
+        tb.addTag( value );
+
+        this.assert( tb.values().length == old_tag_count + 1 );
+    },
+
+    testEnablingAllowDuplicatesAllowsDuplicates: function() {
+        var tb = createTagbox( { allow_duplicates: true } );
+
+        var value = getUniqueString();
+        var old_tag_count = tb.values().length;
+
+        tb.addTag( value );
+        tb.addTag( value );
+
+        this.assert( tb.values().length == old_tag_count + 2 );
     }
 });
 
