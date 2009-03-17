@@ -90,10 +90,10 @@ var Tagbox = Class.create( {
     name: null,
 
     /**
-     * Tagbox#tagbox -> Element
+     * Tagbox#element -> Element
      * The tagbox (<div/>) element.
      **/
-    tagbox: null,
+    element: null,
 
     /**
      * Tagbox#tags -> [ Tagbox.Tag... ]
@@ -129,17 +129,17 @@ var Tagbox = Class.create( {
      * Tagbox#fire() -> undefined
      * See: Prototype.js Element#fire()
      **/
-    fire: function() { return this.tagbox.fire.apply( this.tagbox, arguments ); },
+    fire: function() { return this.element.fire.apply( this.element, arguments ); },
     /**
      * Tagbox#observe() -> undefined
      * See: Prototype.js Element#observe()
      **/
-    observe: function() { return this.tagbox.observe.apply( this.tagbox, arguments ); },
+    observe: function() { return this.element.observe.apply( this.element, arguments ); },
     /**
      * Tagbox#stopObserving() -> undefined
      * See: Prototype.js Element#stopObserving()
      **/
-    stopObserving: function() { return this.tagbox.stopObserving.apply( this.tagbox, arguments ); },
+    stopObserving: function() { return this.element.stopObserving.apply( this.element, arguments ); },
 
     /**
      * Tagbox#addTag( tag ) -> undefined
@@ -168,7 +168,7 @@ var Tagbox = Class.create( {
             }.bind( this ) );
 
             // insert the new tag into the HTML list
-            ( this.current || this.tagbox.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
+            ( this.current || this.element.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
 
             this.fire( 'tagbox:tagged' );
         }
@@ -182,7 +182,7 @@ var Tagbox = Class.create( {
      **/
     addTagAndReset: function( tag ) {
         this.addTag( tag );
-        this.tagbox.select( 'ul.tagbox-tags li' ).last().down( 'input[type=text]' ).value = '';
+        this.element.select( 'ul.tagbox-tags li' ).last().down( 'input[type=text]' ).value = '';
     },
 
     /**
@@ -314,9 +314,9 @@ var Tagbox = Class.create( {
 
         // set focus on the specified element
         if( ! element ) {
-            this.tagbox.removeClassName( 'tagbox-selected' );
-        } else if( element.parentNode == this.tagbox.down( 'ul.tagbox-tags' ) ) {
-            [ this.tagbox, element ].invoke( 'addClassName', 'tagbox-selected' );
+            this.element.removeClassName( 'tagbox-selected' );
+        } else if( element.parentNode == this.element.down( 'ul.tagbox-tags' ) ) {
+            [ this.element, element ].invoke( 'addClassName', 'tagbox-selected' );
 
             this.current = element;
 
@@ -343,7 +343,7 @@ var Tagbox = Class.create( {
      **/
     focusInput: function() {
         ( function() {
-            this.tagbox.select( '.tagbox-tags li' ).last().down( 'input[type=text]' ).focus();
+            this.element.select( '.tagbox-tags li' ).last().down( 'input[type=text]' ).focus();
             this.fire( 'tagbox:text:focus' );
         }.bind( this ) ).defer();
     },
@@ -357,7 +357,7 @@ var Tagbox = Class.create( {
         if( this.hasFocus() ) {
             return this.current.down( 'input[type=text]' ).value;
         } else {
-            return this.tagbox.select( '.tagbox-tags li' ).last().down( 'input[type=text]' ).value;
+            return this.element.select( '.tagbox-tags li' ).last().down( 'input[type=text]' ).value;
         }
     },
 
@@ -367,7 +367,7 @@ var Tagbox = Class.create( {
      * Test whether the tagbox has the focus.
      **/
     hasFocus: function() {
-        return this.tagbox.hasClassName( 'tagbox-selected' );
+        return this.element.hasClassName( 'tagbox-selected' );
     },
 
     /**
@@ -377,7 +377,7 @@ var Tagbox = Class.create( {
      **/
     hideHint: function() {
         clearTimeout( this.hint_timeout );
-        el = this.tagbox.down( '.tagbox-hint' );
+        el = this.element.down( '.tagbox-hint' );
         el && el.hide();
     },
 
@@ -407,7 +407,7 @@ var Tagbox = Class.create( {
      **/
     insert: function( original_input ) {
         // create the tagbox
-        this.tagbox = new Element( 'div', { 'class': 'tagbox' } ).update(
+        this.element = new Element( 'div', { 'class': 'tagbox' } ).update(
             new Element( 'ul', { 'class': 'tagbox-tags' } ).update( this.createInput() )
         );
 
@@ -420,7 +420,7 @@ var Tagbox = Class.create( {
         $( original_input ).value.split( new RegExp( '[' + delimiters + ']' ) ).each( this.addTag.bind( this ) );
 
         // replace the original input with the tagbox
-        $( original_input ).replace( this.tagbox );
+        $( original_input ).replace( this.element );
     },
 
     /**
@@ -445,7 +445,7 @@ var Tagbox = Class.create( {
         switch( target ) {
             case 'first':
             case 'last':
-                var new_el = this.tagbox.select( 'ul.tagbox-tags li' )[target]();
+                var new_el = this.element.select( 'ul.tagbox-tags li' )[target]();
                 break;
             case 'previous':
             case 'next':
@@ -504,7 +504,7 @@ var Tagbox = Class.create( {
                 // let the user tab out of the tagbox to next input
                 case Event.KEY_TAB:
                     if( this.currentIsTag() ) {
-                        this.tagbox.select( 'li' ).last().down( 'input' ).focus();
+                        this.element.select( 'li' ).last().down( 'input' ).focus();
                     }
                     this.focus( false, false );
                     break;
@@ -564,7 +564,7 @@ var Tagbox = Class.create( {
             var el = Event.element( e );
 
             // set the focus when the tagbox is clicked
-            if( el == this.tagbox || el.descendantOf( this.tagbox ) ) {
+            if( el == this.element || el.descendantOf( this.element ) ) {
                 this.focusInput();
 
             // remove focus from the tagbox when another part of the document is clicked
@@ -619,11 +619,11 @@ var Tagbox = Class.create( {
         var hint = this.options.get( 'hint' );
 
         if( hint && this.currentIsInput() ) {
-            var hint_el = this.tagbox.down( '.tagbox-hint' );
+            var hint_el = this.element.down( '.tagbox-hint' );
 
             if( ! hint_el ) {
                 hint_el = new Element( 'div', { 'class': 'tagbox-hint' } ).update( hint );
-                this.tagbox.insert( hint_el );
+                this.element.insert( hint_el );
                 Tagbox.makeFullWidth( hint_el );
                 hint_el.setStyle( { display: 'none' } );
             }
@@ -693,7 +693,7 @@ var Tagbox = Class.create( {
      * Get an `Array` of tag values.
      **/
     values: function() {
-        return Tagbox.values( this.tagbox );
+        return Tagbox.values( this.element );
     }
 } );
 

@@ -119,7 +119,7 @@ Tagbox.Autocomplete = Class.create( {
      **/
     insert: function() {
         this.element = new Element( 'ul', { 'class': 'tagbox-autocomplete' } );
-        this.tagbox.tagbox.insert( this.element );
+        this.tagbox.element.insert( this.element );
         Tagbox.makeFullWidth( this.element );
         this.element.setStyle( { display: 'none' } );
     },
