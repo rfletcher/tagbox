@@ -46,18 +46,21 @@ new Test.Unit.Runner({
         // add a few values to the text input
         $('wrapper').down('input').value = values.join( ',' );
 
-        // compare serialied list of 
+        // compare serialized list of object's values to original list
         this.assertEqual( values.inspect(), createTagbox().values().inspect() );
     },
 
     testTagboxTagInputNamesDerivedFromTextInput: function() {
+        // set the original input's name
         var name = 'el_' + ( new Date ).getTime();
-
         createInput( { name: name } );
 
+        // convert it to a tagbox
         var tb = createTagbox();
+
         tb.addTag( 'foo' );
 
+        // compare the tag's input name with that of the original input
         this.assertEqual( tb.element.down( '.tagbox-tags input[type=hidden]' ).name, name + '[]' );
     },
 
