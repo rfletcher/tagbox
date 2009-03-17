@@ -102,7 +102,7 @@ From the root Tagbox directory, run:
 Changelog
 =========
 
-0.2
+0.1+
 
 - new: added the ``max_tags`` option
 - new: added the ``hint`` and ``hint_delay`` options
