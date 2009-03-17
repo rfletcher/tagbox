@@ -2,6 +2,12 @@
  * test helper methods
  **/
 var helpers = {
+    addTags: function( tagbox, values ) {
+        var original_tag_count = tagbox.values().length;
+        values.each( tagbox.addTag.bind( tagbox ) );
+        return original_tag_count;
+    },
+
     createInput: function( attributes ) {
         var el = new Element( 'input', $H( { type: 'text', id: 'tagbox' } ).merge( attributes ).toObject() );
 
@@ -26,7 +32,7 @@ var helpers = {
     },
 
     getUniqueString: function() {
-        return ( Math.random() * Math.pow( 10, 8 ) ).floor().toString();
+        return 'string-' + ( Math.random() * Math.pow( 10, 8 ) ).floor().toString();
     },
 
     resetTagbox: function() {
@@ -127,24 +133,38 @@ new Test.Unit.Runner({
         var tb = createTagbox( { allow_duplicates: false } );
 
         var value = getUniqueString();
-        var old_tag_count = tb.values().length;
+        var original_tag_count = addTags( tb, [ value, value ] );
 
-        tb.addTag( value );
-        tb.addTag( value );
-
-        this.assert( tb.values().length == old_tag_count + 1 );
+        this.assert( tb.values().length == original_tag_count + 1 );
     },
 
-    testEnablingAllowDuplicatesAllowsDuplicates: function() {
+    testEnablingAllowDuplicatesDisallowsDuplicates: function() {
         var tb = createTagbox( { allow_duplicates: true } );
 
         var value = getUniqueString();
-        var old_tag_count = tb.values().length;
+        var original_tag_count = addTags( tb, [ value, value ] );
 
-        tb.addTag( value );
-        tb.addTag( value );
+        this.assert( tb.values().length == original_tag_count + 2 );
+    },
 
-        this.assert( tb.values().length == old_tag_count + 2 );
+    /* option: case_sensitive */
+
+    testEnablingCaseSensitiveAllowsDuplicatesWithDifferentCase: function() {
+        var tb = createTagbox( { allow_duplicates: false, case_sensitive: true } );
+
+        var value = getUniqueString();
+        var original_tag_count = addTags( tb, [ value.toLowerCase(), value.toUpperCase() ] );
+
+        this.assert( tb.values().length == original_tag_count + 2 );
+    },
+
+    testDisablingCaseSensitiveDisallowsDuplicatesWithDifferentCase: function() {
+        var tb = createTagbox( { allow_duplicates: false, case_sensitive: false } );
+
+        var value = getUniqueString();
+        var original_tag_count = addTags( tb, [ value.toLowerCase(), value.toUpperCase() ] );
+
+        this.assert( tb.values().length == original_tag_count + 1 );
     }
 });
 
