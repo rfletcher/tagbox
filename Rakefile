@@ -40,7 +40,7 @@ task :dist do
   sprocketize('src', 'tagbox.js')
 end
 
-CLOBBER.include( TAGBOX_DIST_DIR )
+CLOBBER.include( TAGBOX_DIST_DIR, TAGBOX_TMP_DIR )
 
 Rake::PackageTask.new('tagbox', TAGBOX_VERSION) do |package|
   package.need_tar_gz = true
