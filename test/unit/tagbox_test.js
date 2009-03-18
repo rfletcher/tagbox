@@ -1,7 +1,7 @@
 /**
  * test runner
  **/
-new Test.Unit.Runner({
+new Test.Unit.Runner( {
     setup: function() {
         resetWrapper();
     },
@@ -142,13 +142,36 @@ new Test.Unit.Runner({
             return arr;
         } );
 
-        var tb = createTagbox( { allowed: allowed_values } );
+        var tb = createTagbox( { allowed: allowed_values, allow_arbitrary_values: false } );
         var original_tag_count = tb.values().length;
 
         tb.addTag( getUniqueString() );
         this.assert( tb.values().length == original_tag_count );
 
         tb.addTag( allowed_values[1] );
+        this.assert( tb.values().length == original_tag_count + 1 );
+    },
+
+    /* option: allow_arbitrary_values */
+
+    "test that values are not restricted to 'allowed' when 'allow_arbitrary_values' is true": function() {
+        var allowed_values = $R(1, 3).inject( [], function( arr ) {
+            arr.push( getUniqueString() );
+            return arr;
+        } );
+
+        var tb = createTagbox( { allowed: allowed_values, allow_arbitrary_values: true } );
+        var original_tag_count = tb.values().length;
+
+        tb.addTag( getUniqueString() );
+        this.assert( tb.values().length == original_tag_count + 1 );
+    },
+
+    "test that values are not restricted by 'allow_arbitrary_values' when 'allowed' is not used": function() {
+        var tb = createTagbox( { allowed: null, allow_arbitrary_values: false } );
+        var original_tag_count = tb.values().length;
+
+        tb.addTag( getUniqueString() );
         this.assert( tb.values().length == original_tag_count + 1 );
     },
 
@@ -184,7 +207,7 @@ new Test.Unit.Runner({
             this.assertVisible( tb.element.down( '.tagbox-hint' ) );
         } );
     }
-});
+} );
 
 /**
  * test helper methods
@@ -222,7 +245,7 @@ var helpers = {
     },
 
     getUniqueString: function() {
-        return 'string-' + ( Math.random() * Math.pow( 10, 8 ) ).floor().toString();
+        return 's-' + ( Math.random() * Math.pow( 10, 8 ) ).floor().toString();
     },
 
     resetTagbox: function() {
