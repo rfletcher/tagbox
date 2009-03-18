@@ -389,12 +389,14 @@ var Tagbox = Class.create( {
      **/
     initializeAllowedTags: function() {
         this.options.set( 'allowed',
+            this.options.get( 'allowed' ) ?
             this.options.get( 'allowed' ).collect( function( tag ) {
                 if( ! ( tag instanceof Tagbox.Tag ) ) {
                    return new Tagbox.Tag( this, tag );
                 }
                 return tag;
-            }.bind( this ) )
+            }.bind( this ) ) :
+            []
         );
     },
 
