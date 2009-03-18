@@ -8,7 +8,7 @@ new Test.Unit.Runner({
 
     /* tagbox init */
 
-    testTagboxPopulatedByInputValue: function() {
+    "test that the original input's value is converted into tags": function() {
         // build a set of values
         var values = $R( 1, 5 ).inject( [], function( arr, value, index ) {
             arr.push( index + '-' + getUniqueString() );
@@ -22,7 +22,7 @@ new Test.Unit.Runner({
         this.assertEqual( values.inspect(), createTagbox().values().inspect() );
     },
 
-    testTagboxTagInputNamesDerivedFromTextInput: function() {
+    "test that tag input names are derived from the original input's name": function() {
         // set the original input's name
         var name = 'el_' + getUniqueString();
         createInput( { name: name } );
@@ -34,7 +34,7 @@ new Test.Unit.Runner({
         this.assertEqual( tb.element.down( '.tagbox-tags input[type=hidden]' ).name, name + '[]' );
     },
 
-    testTagboxReplacesInput: function() {
+    "test that the tagbox element replaces the original input element": function() {
         // exactly 1 child, an input
         this.assertEqual( 1, $('wrapper').childElements().length );
         this.assertEqual( 1, $$('#wrapper > input').length );
@@ -65,7 +65,17 @@ new Test.Unit.Runner({
 
     /* option: show_remove_links */
 
-    testClickingOnRemoveLinkRemovesTag: function() {
+    "test that remove links aren't shown when the option is set to false": function() {
+        var tb = createTagboxWithTags( 1, { show_remove_links: false } );
+        this.assert( ! tb.element.down( '.tagbox-remove' ) );
+    },
+
+    "test that remove links are shown when the option is set to true": function() {
+        var tb = createTagboxWithTags( 1, { show_remove_links: true } );
+        this.assert( tb.element.down( '.tagbox-remove' ) );
+    },
+
+    "test that clicking on the 'remove' link removes the tag": function() {
         var tb = createTagboxWithTags( 3, { show_remove_links: true } );
         var tag_value = tb.tags[1].getValue();
         var tag_el = tb.element.select( '.tagbox-tags .tagbox-tag' )[1];
@@ -84,19 +94,9 @@ new Test.Unit.Runner({
         this.assert( tb.element.select( '.tagbox-tag' ).length == 2 );
     },
 
-    testDisablingRemoveLinksOptionHidesLinks: function() {
-        var tb = createTagboxWithTags( 1, { show_remove_links: false } );
-        this.assert( ! tb.element.down( '.tagbox-remove' ) );
-    },
-
-    testEnablingRemoveLinksOptionAddsLinks: function() {
-        var tb = createTagboxWithTags( 1, { show_remove_links: true } );
-        this.assert( tb.element.down( '.tagbox-remove' ) );
-    },
-
     /* option: allow_duplicates */
 
-    testDisablingAllowDuplicatesAllowsDuplicates: function() {
+    "test that duplicates are not allowed when 'allow_duplicates' is set to false": function() {
         var tb = createTagbox( { allow_duplicates: false } );
 
         var value = getUniqueString();
@@ -105,7 +105,7 @@ new Test.Unit.Runner({
         this.assert( tb.values().length == original_tag_count + 1 );
     },
 
-    testEnablingAllowDuplicatesDisallowsDuplicates: function() {
+    "test that duplicates are allowed when 'allow_duplicates' is set to true": function() {
         var tb = createTagbox( { allow_duplicates: true } );
 
         var value = getUniqueString();
@@ -116,7 +116,7 @@ new Test.Unit.Runner({
 
     /* option: case_sensitive */
 
-    testEnablingCaseSensitiveAllowsDuplicatesWithDifferentCase: function() {
+    "test that duplicates with different case are allowed when 'case_sensitive' is set to true": function() {
         var tb = createTagbox( { allow_duplicates: false, case_sensitive: true } );
 
         var value = getUniqueString();
@@ -125,7 +125,7 @@ new Test.Unit.Runner({
         this.assert( tb.values().length == original_tag_count + 2 );
     },
 
-    testDisablingCaseSensitiveDisallowsDuplicatesWithDifferentCase: function() {
+    "test that duplicates with different case are not allowed when 'case_sensitive' is set to false": function() {
         var tb = createTagbox( { allow_duplicates: false, case_sensitive: false } );
 
         var value = getUniqueString();
@@ -136,7 +136,7 @@ new Test.Unit.Runner({
 
     /* option: allowed */
 
-    testAllowedLimitsAllowedInput: function() {
+    "test that setting the 'allowed' option restricts new tags to those values": function() {
         var allowed_values = $R(1, 3).inject( [], function( arr ) {
             arr.push( getUniqueString() );
             return arr;
@@ -154,12 +154,12 @@ new Test.Unit.Runner({
 
     /* option: hint */
 
-    testHintInitiallyHidden: function() {
+    "test that the 'hint' is initially hidden": function() {
         var tb = createTagbox( { hint: 'type something' } );
         this.assertUndefined( tb.element.down( '.tagbox-hint' ) );
     },
 
-    testHintVisibleOnInputFocus: function() {
+    "test that the 'hint' becomes visible when the text input gains focus": function() {
         var delay = 0;
         var tb = createTagbox( { hint: 'type something', hint_delay: delay } );
 
@@ -170,7 +170,7 @@ new Test.Unit.Runner({
         } );
     },
 
-    testHintWaitsForDelay: function() {
+    "test that the 'hint' is not displayed until after the `hint_delay` has passed": function() {
         var delay = STD_DELAY;
         var tb = createTagbox( { hint: 'type something', hint_delay: delay } );
 
@@ -183,19 +183,6 @@ new Test.Unit.Runner({
         this.wait( delay + STD_DELAY, function() {
             this.assertVisible( tb.element.down( '.tagbox-hint' ) );
         } );
-    },
-
-    testHintAppearsOnInputFocus: function() {
-        var delay = 0;
-        var tb = createTagbox( { hint: 'type something', hint_delay: delay } );
-
-        this.assertUndefined( tb.element.down( '.tagbox-hint' ) );
-
-        tb.focus( tb.element.select( '.tagbox-tags li' ).last() );
-
-        this.wait( delay + STD_DELAY, function() {
-            this.assertVisible( tb.element.down( '.tagbox-hint' ) );
-        }.bind( this ) );
     }
 });
 
