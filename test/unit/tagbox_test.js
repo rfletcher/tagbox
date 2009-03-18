@@ -150,6 +150,52 @@ new Test.Unit.Runner({
 
         tb.addTag( allowed_values[1] );
         this.assert( tb.values().length == original_tag_count + 1 );
+    },
+
+    /* option: hint */
+
+    testHintInitiallyHidden: function() {
+        var tb = createTagbox( { hint: 'type something' } );
+        this.assertUndefined( tb.element.down( '.tagbox-hint' ) );
+    },
+
+    testHintVisibleOnInputFocus: function() {
+        var delay = 0;
+        var tb = createTagbox( { hint: 'type something', hint_delay: delay } );
+
+        tb.focus( tb.element.select( '.tagbox-tags li' ).last() );
+
+        this.wait( delay + STD_DELAY, function() {
+            this.assertVisible( tb.element.down( '.tagbox-hint' ) );
+        } );
+    },
+
+    testHintWaitsForDelay: function() {
+        var delay = STD_DELAY;
+        var tb = createTagbox( { hint: 'type something', hint_delay: delay } );
+
+        tb.focus( tb.element.select( '.tagbox-tags li' ).last() );
+
+        this.wait( STD_DELAY / 2, function() {
+            this.assertUndefined( tb.element.down( '.tagbox-hint' ) );
+        } );
+
+        this.wait( delay + STD_DELAY, function() {
+            this.assertVisible( tb.element.down( '.tagbox-hint' ) );
+        } );
+    },
+
+    testHintAppearsOnInputFocus: function() {
+        var delay = 0;
+        var tb = createTagbox( { hint: 'type something', hint_delay: delay } );
+
+        this.assertUndefined( tb.element.down( '.tagbox-hint' ) );
+
+        tb.focus( tb.element.select( '.tagbox-tags li' ).last() );
+
+        this.wait( delay + STD_DELAY, function() {
+            this.assertVisible( tb.element.down( '.tagbox-hint' ) );
+        }.bind( this ) );
     }
 });
 
@@ -157,6 +203,8 @@ new Test.Unit.Runner({
  * test helper methods
  **/
 var helpers = {
+    STD_DELAY: 200,
+
     addTags: function( tagbox, values ) {
         var original_tag_count = tagbox.values().length;
         values.each( tagbox.addTag.bind( tagbox ) );
@@ -182,8 +230,6 @@ var helpers = {
         ( how_many ).times( function() {
             tb.addTag( 'tag-' + getUniqueString() );
         } );
-
-        tb.focus( tb.element.select( '.tagbox-tags li' ).last() );
 
         return tb;
     },
