@@ -197,16 +197,20 @@ Tagbox.Autocomplete = Class.create( {
             }
 
             var query = this.tagbox.current.down( 'input[type=text]' ).value .replace( /(^\s+|\s+$)/g, '' ).toLowerCase();
-            if( query.length > 0 && query != this.query ) {
-                this.query = query;
+            if( query.length && query.length >= this.tagbox.options.get( 'minimum_chars_for_autocomplete' ) ) {
+                if( query != this.query ) {
+                    this.query = query;
 
-                this.regexp = new RegExp( '(' + this.query.split( '' ).collect( function( c ) {
-                    var hex = c.charCodeAt( 0 ).toString( 16 );
-                    return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
-                } ).join( '' ) + ')', 'gi' );
+                    this.regexp = new RegExp( '(' + this.query.split( '' ).collect( function( c ) {
+                        var hex = c.charCodeAt( 0 ).toString( 16 );
+                        return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
+                    } ).join( '' ) + ')', 'gi' );
 
-                this.show();
-                this.next();
+                    this.show();
+                    this.next();
+                }
+            } else if( this.element.visible() ) {
+                this.hide();
             }
         }.bind( this ) );
 

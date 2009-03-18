@@ -42,6 +42,9 @@ var Tagbox = Class.create( {
      *      showing the hint.
      *  max_tags (Number) = null:
      *      The maximum number of tags that can be entered.
+     *  minimum_chars_for_autocomplete (Number) = 0:
+     *      The number of characters a user must enter before they're shown
+     *      autocomplete results.
      *  show_remove_links (Boolean) = false:
      *      Add an 'x' link to each tag.
      *  validation_function (Function | null) = null:
@@ -61,6 +64,7 @@ var Tagbox = Class.create( {
         hint_delay: 100,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         max_tags: null,
+        minimum_chars_for_autocomplete: 0,
         show_remove_links: true,
         validation_function: null
     },
