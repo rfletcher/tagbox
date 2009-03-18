@@ -420,7 +420,7 @@ var Tagbox = Class.create( {
         $( original_input ).value.split( new RegExp( '[' + delimiters + ']' ) ).each( this.addTag.bind( this ) );
 
         // replace the original input with the tagbox
-        $( original_input ).replace( this.element );
+        Element.replace( original_input, this.element );
     },
 
     /**
