@@ -1,54 +1,4 @@
 /**
- * test helper methods
- **/
-var helpers = {
-    addTags: function( tagbox, values ) {
-        var original_tag_count = tagbox.values().length;
-        values.each( tagbox.addTag.bind( tagbox ) );
-        return original_tag_count;
-    },
-
-    createInput: function( attributes ) {
-        var el = new Element( 'input', $H( { type: 'text', id: 'tagbox' } ).merge( attributes ).toObject() );
-
-        // insert a text input
-        $('wrapper').update( el );
-
-        return el;
-    },
-
-    createTagbox: function( tagbox_opts ) {
-        return new Tagbox( 'tagbox', tagbox_opts );
-    },
-
-    createTagboxWithTags: function( how_many, tagbox_opts ) {
-        var tb = createTagbox( tagbox_opts );
-
-        ( how_many ).times( function() {
-            tb.addTag( 'tag-' + getUniqueString() );
-        } );
-
-        return tb;
-    },
-
-    getUniqueString: function() {
-        return 'string-' + ( Math.random() * Math.pow( 10, 8 ) ).floor().toString();
-    },
-
-    resetTagbox: function() {
-        resetWrapper();
-        insertTagbox();
-    },
-
-    resetWrapper: function() {
-        // remove any old tagbox
-        $('wrapper').update();
-
-        createInput();
-    }
-};
-
-/**
  * test runner
  **/
 new Test.Unit.Runner({
@@ -95,6 +45,23 @@ new Test.Unit.Runner({
         this.assertEqual( 1, $('wrapper').childElements().length );
         this.assertEqual( 0, $$('#wrapper > input').length );
     },
+
+    /* keyboard handlers */
+
+    // testTypingDelimitersAddNewTag: function() {
+    //     var delimiters = [ Event.KEY_RETURN, Event.KEY_COMMA ];
+    //     var tb = createTagboxWithTags( 3, { delimiters: delimiters } );
+    //     var input = tb.element.select( '.tagbox-tags li input[type=text]' ).last();
+    // 
+    //     delimiters.each( function( delimiter ) {
+    //         var tag_count = tb.values().length;
+    // 
+    //         input.value = getUniqueString();
+    //         Event.simulateKey( input, 'keypress', { charCode: delimiter } );
+    // 
+    //         this.assert( tb.values().length == tag_count + 1 );
+    //     }.bind( this ) );
+    // },
 
     /* option: show_remove_links */
 
@@ -165,8 +132,78 @@ new Test.Unit.Runner({
         var original_tag_count = addTags( tb, [ value.toLowerCase(), value.toUpperCase() ] );
 
         this.assert( tb.values().length == original_tag_count + 1 );
+    },
+
+    /* option: allowed */
+
+    testAllowedLimitsAllowedInput: function() {
+        var allowed_values = $R(1, 3).inject( [], function( arr ) {
+            arr.push( getUniqueString() );
+            return arr;
+        } );
+
+        var tb = createTagbox( { allowed: allowed_values } );
+        var original_tag_count = tb.values().length;
+
+        tb.addTag( getUniqueString() );
+        this.assert( tb.values().length == original_tag_count );
+
+        tb.addTag( allowed_values[1] );
+        this.assert( tb.values().length == original_tag_count + 1 );
     }
 });
+
+/**
+ * test helper methods
+ **/
+var helpers = {
+    addTags: function( tagbox, values ) {
+        var original_tag_count = tagbox.values().length;
+        values.each( tagbox.addTag.bind( tagbox ) );
+        return original_tag_count;
+    },
+
+    createInput: function( attributes ) {
+        var el = new Element( 'input', $H( { type: 'text', id: 'tagbox' } ).merge( attributes ).toObject() );
+
+        // insert a text input
+        $('wrapper').update( el );
+
+        return el;
+    },
+
+    createTagbox: function( tagbox_opts ) {
+        return new Tagbox( 'tagbox', tagbox_opts );
+    },
+
+    createTagboxWithTags: function( how_many, tagbox_opts ) {
+        var tb = createTagbox( tagbox_opts );
+
+        ( how_many ).times( function() {
+            tb.addTag( 'tag-' + getUniqueString() );
+        } );
+
+        tb.focus( tb.element.select( '.tagbox-tags li' ).last() );
+
+        return tb;
+    },
+
+    getUniqueString: function() {
+        return 'string-' + ( Math.random() * Math.pow( 10, 8 ) ).floor().toString();
+    },
+
+    resetTagbox: function() {
+        resetWrapper();
+        insertTagbox();
+    },
+
+    resetWrapper: function() {
+        // remove any old tagbox
+        $('wrapper').update();
+
+        createInput();
+    }
+};
 
 // inject helper methods into current scope
 Object.extend( this, helpers );
