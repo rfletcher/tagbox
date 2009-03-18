@@ -630,11 +630,17 @@ var Tagbox = Class.create( {
                 hint_el.setStyle( { display: 'none' } );
             }
 
-            this.hint_timer = setTimeout( function() {
+            var showHint = function() {
                 if( this.currentIsInput() ) {
                     hint_el.show();
                 }
-            }.bind( this ), this.options.get( 'hint_delay' ) );
+            }.bind( this );
+
+            if( this.options.get( 'hint_delay' ) ) {
+                this.hint_timer = setTimeout( showHint, this.options.get( 'hint_delay' ) );
+            } else {
+                showHint();
+            }
         }
     },
 
