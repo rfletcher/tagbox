@@ -11,12 +11,12 @@ Tagbox.Autocomplete = Class.create( {
      * display_on_down_arrow (Boolean) = true:
      *     Display the unfiltered list of tags when the user presses the down
      *     arrow and the text input is empty.
-     * max_displayed_tags (Boolean) = 10:
-     *     
+     * max_results (Boolean) = 10:
+     *      Maximum number of results to show in the autocomplete list.
      **/
     options: {
         display_on_down_arrow: true,
-        max_displayed_tags: 6
+        max_results: 6
     },
 
     /**
@@ -63,7 +63,9 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
-     * 
+     * Tagbox.Autocomplete#getSelectedTag() -> Tagbox.Tag
+     *
+     * Get the Tagbox.Tag object corresponding to the highlighted result.
      **/
     getSelectedTag: function() {
         if( ! this.element.visible() || ! this.element.down( 'li.tagbox-selected' ) ) {
@@ -287,7 +289,7 @@ Tagbox.Autocomplete = Class.create( {
 
         var last_item_to_display = Math.min(
             this.results.length,
-            this.options.get( 'max_displayed_tags' ) ? this.options.get( 'max_displayed_tags' ) : this.results.length
+            this.options.get( 'max_results' ) ? this.options.get( 'max_results' ) : this.results.length
         );
 
         // add to result list
