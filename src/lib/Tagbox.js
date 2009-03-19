@@ -31,9 +31,10 @@ var Tagbox = Class.create( {
      *  autocomplete (Boolean) = true:
      *      Display a drop-down list of allowed values, filtered as the user 
      *      types. This option has no effect when the ``allowed`` array is empty.
-     *  autocomplete_delay (Number) = 0:
+     *  autocomplete_delay (Number) = 200:
      *      Number of milliseconds to wait after the user stops typing before
-     *      fetching autocomplete results.
+     *      fetching autocomplete results.  This option has no effect when
+     *      allowed_url is null.
      *  autocomplete_tag_renderer (Function) = Tagbox.Autocomplete.renderTag:
      *      Function which generates HTML representation of a tag when it's
      *      displayed as part of the autocomplete results list.
@@ -66,7 +67,7 @@ var Tagbox = Class.create( {
         allowed_url: null,
         arbitrary_value_field_name: null,
         autocomplete: true,
-        autocomplete_delay: 100,
+        autocomplete_delay: 200,
         autocomplete_tag_renderer: null,
         case_sensitive: false,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
