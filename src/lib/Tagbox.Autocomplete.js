@@ -36,6 +36,7 @@ Tagbox.Autocomplete = Class.create( {
     query: null,
     regexp: null,
     results: [],
+    timer: null,
 
     /**
      * new Tagbox.Autocomplete( tagbox, options )
@@ -198,19 +199,19 @@ Tagbox.Autocomplete = Class.create( {
                 return;
             }
 
-            var query = this.tagbox.current.down( 'input[type=text]' ).value .replace( /(^\s+|\s+$)/g, '' ).toLowerCase();
+            var query = this.tagbox.current.down( 'input[type=text]' ).value.replace( /(^\s+|\s+$)/g, '' ).toLowerCase();
 
             if( query.length && query.length >= this.tagbox.options.get( 'minimum_chars_for_autocomplete' ) ) {
                 if( query != this.query ) {
                     this.query = query;
 
+                    // build the match regexp
                     this.regexp = new RegExp( '(' + this.query.split( '' ).collect( function( c ) {
                         var hex = c.charCodeAt( 0 ).toString( 16 );
                         return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
                     } ).join( '' ) + ')', 'gi' );
 
-                    this.show();
-                    this.next();
+                    this.showAfterDelay();
                 }
             } else if( this.element.visible() ) {
                 this.hide();
@@ -256,6 +257,7 @@ Tagbox.Autocomplete = Class.create( {
         var updateAndShow = function() {
             this.update();
             this.results.length && this.element.show();
+            this.next();
         }.bind( this );
 
         // let the server do the filtering
@@ -310,6 +312,22 @@ Tagbox.Autocomplete = Class.create( {
 
             this.element.insert( li );
         }.bind( this ) );
+    },
+
+    /**
+     * Tagbox.Autcomplete#showAfterDelay() -> undefined
+     *
+     * Wait for any user-defined autocomplete delay to pass, then show the results.
+     **/
+    showAfterDelay: function() {
+        var delay = parseInt( this.tagbox.options.get( 'autocomplete_delay' ) );
+        clearTimeout( this.timer );
+
+        if( delay ) {
+            this.timer = setTimeout( this.show.bind( this ), delay );
+        } else {
+            this.show();
+        }
     }
 } );
 

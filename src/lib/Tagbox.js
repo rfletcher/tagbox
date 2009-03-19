@@ -23,7 +23,7 @@ var Tagbox = Class.create( {
      *      format acceptable to the Tagbox.Tags constructor.
      *  allowed_url (String) = null:
      *      A URL to which will be passed user input via a `query` param, and
-     *      which should return a JSON array of autocomplete results.  This is
+     *      which should return a JSON array of autocompaadlete results.  This is
      *      the ajax version of the ``allowed`` option.
      *  arbitrary_value_field_name = null:
      *      An alternate form field name to use for values not contained in
@@ -31,6 +31,9 @@ var Tagbox = Class.create( {
      *  autocomplete (Boolean) = true:
      *      Display a drop-down list of allowed values, filtered as the user 
      *      types. This option has no effect when the ``allowed`` array is empty.
+     *  autocomplete_delay (Number) = 0:
+     *      Number of milliseconds to wait after the user stops typing before
+     *      fetching autocomplete results.
      *  autocomplete_tag_renderer (Function) = Tagbox.Autocomplete.renderTag:
      *      Function which generates HTML representation of a tag when it's
      *      displayed as part of the autocomplete results list.
@@ -63,6 +66,7 @@ var Tagbox = Class.create( {
         allowed_url: null,
         arbitrary_value_field_name: null,
         autocomplete: true,
+        autocomplete_delay: 100,
         autocomplete_tag_renderer: null,
         case_sensitive: false,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
@@ -399,7 +403,7 @@ var Tagbox = Class.create( {
      **/
     initializeAllowedTags: function() {
         this.options.set( 'allowed',
-            ( this.options.get( 'allowed' ) ? this.options.get( 'allowed' ) : [] ) .collect( this.objectToTag.bind( this ) )
+            ( this.options.get( 'allowed' ) ? this.options.get( 'allowed' ) : [] ).collect( this.objectToTag.bind( this ) )
         );
     },
 
