@@ -8,14 +8,10 @@ Tagbox.Autocomplete = Class.create( {
      * A Hash of options for this Tagbox.Autocomplete instance. Properties
      * are:
      *
-     * display_on_down_arrow (Boolean) = true:
-     *     Display the unfiltered list of tags when the user presses the down
-     *     arrow and the text input is empty.
      * max_results (Boolean) = 10:
      *      Maximum number of results to show in the autocomplete list.
      **/
     options: {
-        display_on_down_arrow: true,
         max_results: 6
     },
 
@@ -179,12 +175,6 @@ Tagbox.Autocomplete = Class.create( {
             }
 
             switch( e.which ? e.which : e.keyCode ) {
-                case Event.KEY_DOWN:
-                    if( ! this.element.visible() && this.options.get( 'display_on_down_arrow' ) ) {
-                        this.show();
-                    }
-                    this.next();
-                    break;
                 case Event.KEY_UP:
                     this.previous();
                     break;
