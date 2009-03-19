@@ -11,19 +11,23 @@ var Tagbox = Class.create( {
      *
      * A Hash of options for this Tagbox instance.  Options are:
      *
-     *  allowed: (Array) = []:
-     *      The set of allowed input values.  Values can be specified in any
-     *      format acceptable to the Tagbox.Tags constructor.
      *  allow_arbitrary_values = false:
      *      Allow any arbitrary value, in addition to the set of tags in the
      *      ``allowed`` array.  Useful to restrict input to a set of usernames,
      *      or email address, for example.  This value has no effect when
      *      ``allowed`` is empty.
+     *  allow_duplicates (Boolean) = false:
+     *      Allow duplicate tags?
+     *  allowed: (Array) = []:
+     *      The set of allowed input values.  Values can be specified in any
+     *      format acceptable to the Tagbox.Tags constructor.
+     *  allowed_url (String) = null:
+     *      A URL to which will be passed user input via a `query` param, and
+     *      which should return a JSON array of autocomplete results.  This is
+     *      the ajax version of the ``allowed`` option.
      *  arbitrary_value_field_name = null:
      *      An alternate form field name to use for values not contained in
      *      the ``allowed`` array.
-     *  allow_duplicates (Boolean) = false:
-     *      Allow duplicate tags?
      *  autocomplete (Boolean) = true:
      *      Display a drop-down list of allowed values, filtered as the user 
      *      types. This option has no effect when the ``allowed`` array is empty.
@@ -53,16 +57,17 @@ var Tagbox = Class.create( {
      *      should return a Boolean.
      **/
     options: {
-        allowed: [],
-        allow_duplicates: false,
         allow_arbitrary_values: false,
+        allow_duplicates: false,
+        allowed: [],
+        allowed_url: null,
         arbitrary_value_field_name: null,
         autocomplete: true,
         autocomplete_tag_renderer: null,
         case_sensitive: false,
+        delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         hint: null,
         hint_delay: 100,
-        delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         max_tags: null,
         minimum_chars_for_autocomplete: 0,
         show_remove_links: true,
@@ -693,7 +698,7 @@ var Tagbox = Class.create( {
                 return tag;
             // tag is in the list of allowed values?
             } else if( this.options.get( 'allowed' ).length && allowed_match ) {
-                tag = allowed_match;
+                return allowed_match;
             // not in the list of allowed values, and arbitrary values aren't allowed
             } else if( this.options.get( 'allowed' ).length && ! this.options.get( 'allow_arbitrary_values' ) ) {
                 return false;
