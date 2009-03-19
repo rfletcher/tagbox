@@ -204,12 +204,7 @@ Tagbox.Autocomplete = Class.create( {
             if( query.length && query.length >= this.tagbox.options.get( 'minimum_chars_for_autocomplete' ) ) {
                 if( query != this.query ) {
                     this.query = query;
-
-                    // build the match regexp
-                    this.regexp = new RegExp( '(' + this.query.split( '' ).collect( function( c ) {
-                        var hex = c.charCodeAt( 0 ).toString( 16 );
-                        return "\\x" + ( hex.length == 1 ? "0" : "" ) + hex;
-                    } ).join( '' ) + ')', 'gi' );
+                    this.regexp = new RegExp( '(' + RegExp.escape( this.query ) + ')', 'gi' );
 
                     this.showAfterDelay();
                 }
