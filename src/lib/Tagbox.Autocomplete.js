@@ -63,7 +63,7 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
-     *
+     * 
      **/
     getSelectedTag: function() {
         if( ! this.element.visible() || ! this.element.down( 'li.tagbox-selected' ) ) {
@@ -197,6 +197,7 @@ Tagbox.Autocomplete = Class.create( {
             }
 
             var query = this.tagbox.current.down( 'input[type=text]' ).value .replace( /(^\s+|\s+$)/g, '' ).toLowerCase();
+
             if( query.length && query.length >= this.tagbox.options.get( 'minimum_chars_for_autocomplete' ) ) {
                 if( query != this.query ) {
                     this.query = query;
@@ -250,32 +251,50 @@ Tagbox.Autocomplete = Class.create( {
      * Display the autocomplete list.
      **/
     show: function() {
-        this.update();
-        this.results.length && this.element.show();
+        var updateAndShow = function() {
+            this.update();
+            this.results.length && this.element.show();
+        }.bind( this );
+
+        // let the server do the filtering
+        if( this.tagbox.options.get( 'allowed_url' ) ) {
+            new Ajax.Request( this.tagbox.options.get( 'allowed_url' ), {
+                method: 'get',
+                parameters: { query: this.query },
+                onSuccess: function( transport ) {
+                    this.results = transport.responseText.evalJSON().collect( this.tagbox.objectToTag.bind( this.tagbox ) );
+                    updateAndShow();
+                }.bind( this )
+            } );
+
+        // filter here & now
+        } else {
+            this.results = this.tagbox.options.get( 'allowed' ).select( function( tag ) {
+                return tag.getLabel().toLowerCase().match( this.regexp );
+            }.bind( this ) );
+
+            updateAndShow();
+        }
     },
 
     /**
      * Tagbox.Autocomplete#update() -> undefined
      *
-     * Update the list of tags.
+     * Update the list of tags with the set of results.
      **/
     update: function() {
         this.element.update();
 
-        var counter = 0;
-
-        // filter
-        this.results = this.tagbox.options.get( 'allowed' ).select( function( tag ) {
-            if( counter > this.options.get( 'max_displayed_tags' ) ) {
-                throw $break;
-            }
-
-            return tag.getLabel().toLowerCase().match( this.regexp ) && ++counter;
-        }.bind( this ) );
+        var last_item_to_display = Math.min(
+            this.results.length,
+            this.options.get( 'max_displayed_tags' ) ? this.options.get( 'max_displayed_tags' ) : this.results.length
+        );
 
         // add to result list
-        this.results.each( function( tag ) {
-            var disabled = ! this.tagbox.options.get( 'allow_duplicates' ) && this.tagbox.tags.include( tag );
+        this.results.slice( 0, last_item_to_display ).each( function( tag ) {
+            var disabled = ! this.tagbox.options.get( 'allow_duplicates' ) && this.tagbox.tags.find( function( existing_tag ) {
+                return tag.getValue() == existing_tag.getValue();
+            } );
 
             var li = new Element( 'li', { 'class': 'tagbox-tag' } ).update(
                 this.tagbox.options.get( 'autocomplete_tag_renderer' )( tag, this.regexp, disabled )

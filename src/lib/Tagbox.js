@@ -122,7 +122,8 @@ var Tagbox = Class.create( {
         this.initializeAllowedTags();
         this.insert( original_input );
 
-        if( this.options.get( 'autocomplete' ) && this.options.get( 'allowed' ).length ) {
+        if( this.options.get( 'autocomplete' ) &&
+            ( this.options.get( 'allowed' ).length || this.options.get( 'allowed_url' ) ) ) {
             this.autocomplete = new Tagbox.Autocomplete( this );
         }
 
@@ -158,8 +159,8 @@ var Tagbox = Class.create( {
 
         if( tag = this.validate( tag ) ) {
             if( this.options.get( 'allow_arbitrary_values' ) &&
-                this.options.get( 'arbitrary_value_field_name' ) && 
-                this.options.get( 'allowed' ).length && 
+                this.options.get( 'arbitrary_value_field_name' ) &&
+                this.options.get( 'allowed' ).length &&
                 ! this.options.get( 'allowed' ).include( tag ) ) {
                 tag.properties.set( 'field_name', this.options.get( 'arbitrary_value_field_name' ) );
             }
@@ -393,14 +394,7 @@ var Tagbox = Class.create( {
      **/
     initializeAllowedTags: function() {
         this.options.set( 'allowed',
-            this.options.get( 'allowed' ) ?
-            this.options.get( 'allowed' ).collect( function( tag ) {
-                if( ! ( tag instanceof Tagbox.Tag ) ) {
-                   return new Tagbox.Tag( this, tag );
-                }
-                return tag;
-            }.bind( this ) ) :
-            []
+            ( this.options.get( 'allowed' ) ? this.options.get( 'allowed' ) : [] ) .collect( this.objectToTag.bind( this ) )
         );
     },
 
@@ -468,6 +462,19 @@ var Tagbox = Class.create( {
                 i.value = v;
             }
         }
+    },
+
+    /**
+     * Tagbox#objectToTag( object ) -> Tagbox.Tag
+     *   - object (Object): A Tagbox.Tag object
+     *
+     * Convert a Tagbox.Tag properties object to a Tagbox.Tag object.
+     **/
+    objectToTag: function( object ) {
+        if( ! ( object instanceof Tagbox.Tag ) ) {
+           return new Tagbox.Tag( this, object );
+        }
+        return object;
     },
 
     /**
@@ -681,8 +688,11 @@ var Tagbox = Class.create( {
                 return allowed.getLabel().toLowerCase() == tag.getLabel().toLowerCase();
             } );
 
+            // tag is in the list of autocomplete results?
+            if( this.autocomplete && this.autocomplete.results.include( tag ) ) {
+                return tag;
             // tag is in the list of allowed values?
-            if( this.options.get( 'allowed' ).length && allowed_match ) {
+            } else if( this.options.get( 'allowed' ).length && allowed_match ) {
                 tag = allowed_match;
             // not in the list of allowed values, and arbitrary values aren't allowed
             } else if( this.options.get( 'allowed' ).length && ! this.options.get( 'allow_arbitrary_values' ) ) {
@@ -720,7 +730,7 @@ Tagbox.values = function( el ) {
     return $( el ).select( 'li.tagbox-tag input[type=hidden]' ).collect( function( el ) {
         return el.value;
     } );
-}
+};
 
 /**
  * Tagbox.makeFullWidth( element ) -> undefined
@@ -737,7 +747,7 @@ Tagbox.makeFullWidth = function( element ) {
     } );
 
     element.setStyle( { width: width + 'px' } );
-}
+};
 
 /**
  * Tagbox#version -> String
