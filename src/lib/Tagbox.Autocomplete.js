@@ -29,9 +29,35 @@ Tagbox.Autocomplete = Class.create( {
      **/
     tagbox: null,
 
+    /**
+     * Tagbox.Autocomplete#query -> String
+     *
+     * The most recent query entered by the user.
+     **/
     query: null,
+
+    /**
+     * Tagbox.Autocomplete#regexp -> RegExp
+     *
+     * A regular expression representation of this.query.  This is passed as
+     * a parameter to the renderTag callback so that the matching portion can
+     * be highlighted.
+     **/
     regexp: null,
+
+    /**
+     * Tagbox.Autocomplete#results -> [ Tagbox.Tag, ... ]
+     *
+     * Set of results for the most recent query.
+     **/
     results: [],
+
+    /**
+     * Tagbox.Autocomplete#timer -> Number
+     *
+     * Timer ID, returned by window.setTimeout(), for the autocomplete_delay
+     * timer.
+     **/
     timer: null,
 
     /**
@@ -42,10 +68,11 @@ Tagbox.Autocomplete = Class.create( {
     initialize: function( tagbox, options ) {
         this.tagbox = tagbox;
 
+        // override default option values with any user-specified values.
         this.options = new Hash( this.options );
         this.options.update( options );
 
-        // Override Tagbox.getInputValue() to return a Tagbox.Tag for the 
+        // override Tagbox.getInputValue() to return a Tagbox.Tag for the 
         // currently selected tag (instead of the string value).
         this.tagbox.getInputValue = this.tagbox.getInputValue.wrap( function( original ) {
             if( ! this.results.length ) {
