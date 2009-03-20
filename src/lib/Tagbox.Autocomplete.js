@@ -202,6 +202,9 @@ Tagbox.Autocomplete = Class.create( {
             }
 
             switch( e.which ? e.which : e.keyCode ) {
+                case Event.KEY_DOWN:
+                    this.next();
+                    break;
                 case Event.KEY_UP:
                     this.previous();
                     break;
