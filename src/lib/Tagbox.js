@@ -53,6 +53,9 @@ var Tagbox = Class.create( {
      *  minimum_chars_for_autocomplete (Number) = 0:
      *      The number of characters a user must enter before they're shown
      *      autocomplete results.
+     *  result_converter (Function) = null:
+     *      A function which converts a matching result into a format acceptable
+     *      to the Tagbox.Tag constructor.
      *  show_remove_links (Boolean) = false:
      *      Add an 'x' link to each tag.
      *  validation_function (Function | null) = null:
@@ -75,6 +78,7 @@ var Tagbox = Class.create( {
         hint_delay: 100,
         max_tags: null,
         minimum_chars_for_autocomplete: 0,
+        result_converter: null,
         show_remove_links: true,
         validation_function: null
     },
@@ -482,6 +486,9 @@ var Tagbox = Class.create( {
      **/
     objectToTag: function( object ) {
         if( ! ( object instanceof Tagbox.Tag ) ) {
+            if( typeof this.options.get( 'result_converter' ) == "function" ) {
+                object = this.options.get( 'result_converter' )( object );
+            }
            return new Tagbox.Tag( this, object );
         }
         return object;
