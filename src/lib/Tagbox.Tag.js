@@ -56,7 +56,7 @@ Tagbox.Tag = Class.create( {
         // the hidden input which represents this tag in the form
         var input = new Element( 'input', {
             type: 'hidden',
-            name: this.properties.get( 'field_name' ) + '[]',
+            name: this.properties.get( 'field_name' ) + ( this.tagbox.options.get( 'max_tags' ) == 1 ? '' : '[]' ),
             value: this.getValue()
         } );
 
