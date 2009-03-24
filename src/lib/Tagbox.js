@@ -3,7 +3,7 @@
  *
  * An unobtrusive, multi-value text input.
  *
- * fires tagbox:blur, tagbox:focus, tagbox:text:blur, tagbox:text:focus, tagbox:tagged
+ * fires tagbox:blur, tagbox:focus, tagbox:text:blur, tagbox:text:focus, tagbox:tag:added, tagbox:tag:removed
  **/
 var Tagbox = Class.create( {
     /**
@@ -189,7 +189,7 @@ var Tagbox = Class.create( {
             // insert the new tag into the HTML list
             ( this.current || this.element.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
 
-            this.fire( 'tagbox:tagged' );
+            this.fire( 'tagbox:tag:added' );
         }
     },
 
@@ -638,6 +638,8 @@ var Tagbox = Class.create( {
         var tag_el = this.current;
         this.focus( this.current.next() );
         tag_el.remove();
+
+        this.fire( 'tagbox:tag:removed' );
     },
 
     /**
