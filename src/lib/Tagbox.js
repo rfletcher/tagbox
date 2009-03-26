@@ -11,7 +11,7 @@ var Tagbox = Class.create( {
      *
      * A Hash of options for this Tagbox instance.  Options are:
      *
-     *  allow_arbitrary_values = false:
+     *  allow_arbitrary_values (Boolean) = false:
      *      Allow any arbitrary value, in addition to the set of tags in the
      *      ``allowed`` array.  Useful to restrict input to a set of usernames,
      *      or email address, for example.  This value has no effect when
@@ -25,7 +25,7 @@ var Tagbox = Class.create( {
      *      A URL to which will be passed user input via a `query` param, and
      *      which should return a JSON array of autocompaadlete results.  This is
      *      the ajax version of the ``allowed`` option.
-     *  arbitrary_value_field_name = null:
+     *  arbitrary_value_field_name (String) = null:
      *      An alternate form field name to use for values not contained in
      *      the ``allowed`` array.
      *  autocomplete (Boolean) = true:
@@ -174,6 +174,10 @@ var Tagbox = Class.create( {
             // insert the new tag into the HTML list
             ( this.current || this.element.select( 'ul.tagbox-tags li' ).last() ).insert( { before: tag_el } );
 
+            if( this.options.get( 'max_tags' ) && this.values().length >= this.options.get( 'max_tags' ) ) {
+                this.hideInput();
+            }
+
             this.fire( 'tagbox:tag:added' );
         }
     },
@@ -186,6 +190,7 @@ var Tagbox = Class.create( {
      **/
     addTagAndReset: function( tag ) {
         this.addTag( tag );
+        this.focusLast();
         this.element.select( 'ul.tagbox-tags li' ).last().down( 'input[type=text]' ).value = '';
     },
 
@@ -353,6 +358,19 @@ var Tagbox = Class.create( {
     },
 
     /**
+     * Tagbox#focusLast() -> undefined
+     *
+     * Set the focus on the last visible element, be it a tag or the text input.
+     **/
+    focusLast: function() {
+        if( this.inputIsVisible() ) {
+            this.focusInput();
+        } else {
+            this.focus( this.element.select( '.tagbox-tags .tagbox-tag' ).last() )
+        }
+    },
+
+    /**
      * Tagbox#getInputValue() -> String
      *
      * Get the value of the current input element.
@@ -377,12 +395,30 @@ var Tagbox = Class.create( {
     /**
      * Tagbox#hideHint() -> undefined
      *
-     * Hide the tagbox hint
+     * Hide the tagbox hint.
      **/
     hideHint: function() {
         clearTimeout( this.hint_timeout );
         el = this.element.down( '.tagbox-hint' );
         el && el.hide();
+    },
+
+    /**
+     * Tagbox#hideInput() -> undefined
+     *
+     * Hide the main input.
+     **/
+    hideInput: function() {
+        this.element.select( 'ul.tagbox-tags li' ).last().hide();
+    },
+
+    /**
+     * Tagbox#inputIsVisible() -> Boolean
+     *
+     * Test whether the input is hidden.  For example, because max_tags has been reached.
+     **/
+    inputIsVisible: function() {
+        return this.element.select( 'ul.tagbox-tags li' ).last().visible();
     },
 
     /**
@@ -448,7 +484,9 @@ var Tagbox = Class.create( {
                 break;
             case 'previous':
             case 'next':
-                var new_el = this.current[target](); break;
+                if( this.current[target]() && this.current[target]().visible() ) {
+                    var new_el = this.current[target](); break;
+                }
         }
 
         if( new_el ) {
@@ -580,7 +618,7 @@ var Tagbox = Class.create( {
 
             // set the focus when the tagbox is clicked
             if( el == this.element || el.descendantOf( this.element ) ) {
-                this.focusInput();
+                this.focusLast();
 
             // remove focus from the tagbox when another part of the document is clicked
             } else {
@@ -625,6 +663,11 @@ var Tagbox = Class.create( {
         tag_el.remove();
 
         this.fire( 'tagbox:tag:removed' );
+
+        // hide 
+        if( this.options.get( 'max_tags' ) && this.values().length < this.options.get( 'max_tags' ) ) {
+            this.showInput();
+        }
     },
 
     /**
@@ -657,6 +700,15 @@ var Tagbox = Class.create( {
                 showHint();
             }
         }
+    },
+
+    /**
+     * Tagbox#showInput() -> undefined
+     *
+     * Show the text input.
+     **/
+    showInput: function() {
+        this.element.select( 'ul.tagbox-tags li' ).last().show();
     },
 
     /**
