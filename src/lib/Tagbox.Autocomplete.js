@@ -5,14 +5,23 @@ Tagbox.Autocomplete = Class.create( {
     /**
      * Tagbox.Autocomplete#options -> Hash
      *
-     * A Hash of options for this Tagbox.Autocomplete instance. Properties
-     * are:
+     * A Hash of options for this Tagbox.Autocomplete instance. Options are:
      *
-     * max_results (Boolean) = 10:
-     *      Maximum number of results to show in the autocomplete list.
+     *  delay (Number) = 200:
+     *      Number of milliseconds to wait after the user stops typing before
+     *      fetching autocomplete results.  This option has no effect when
+     *      allowed_url is null.
+     *  tag_renderer (Function) = Tagbox.Autocomplete.renderTag:
+     *      Function which generates HTML representation of a tag when it's
+     *      displayed as part of the results list.
+     *  max_results (Boolean) = 10:
+     *      Maximum number of results to show in the result list.
      **/
     options: {
-        max_results: 6
+        delay: 200,
+        max_results: 6,
+        min_chars: 3,
+        tag_renderer: null
     },
 
     /**
@@ -55,7 +64,7 @@ Tagbox.Autocomplete = Class.create( {
     /**
      * Tagbox.Autocomplete#timer -> Number
      *
-     * Timer ID, returned by window.setTimeout(), for the autocomplete_delay
+     * Timer ID, returned by window.setTimeout(), for the delay
      * timer.
      **/
     timer: null,
@@ -69,8 +78,9 @@ Tagbox.Autocomplete = Class.create( {
         this.tagbox = tagbox;
 
         // override default option values with any user-specified values.
-        this.options = new Hash( this.options );
-        this.options.update( options );
+        this.options = new Hash( this.options ).update(
+            { tag_renderer: Tagbox.Autocomplete.renderTag }
+        ).update( options );
 
         // override Tagbox.getInputValue() to return a Tagbox.Tag for the 
         // currently selected tag (instead of the string value).
@@ -221,7 +231,7 @@ Tagbox.Autocomplete = Class.create( {
 
             var query = this.tagbox.current.down( 'input[type=text]' ).value.replace( /(^\s+|\s+$)/g, '' ).toLowerCase();
 
-            if( query.length && query.length >= this.tagbox.options.get( 'minimum_chars_for_autocomplete' ) ) {
+            if( query.length && query.length >= this.options.get( 'min_chars' ) ) {
                 if( query != this.query ) {
                     this.query = query;
                     this.regexp = new RegExp( '(' + RegExp.escape( this.query ) + ')', 'gi' );
@@ -316,7 +326,7 @@ Tagbox.Autocomplete = Class.create( {
             } );
 
             var li = new Element( 'li', { 'class': 'tagbox-tag' } ).update(
-                this.tagbox.options.get( 'autocomplete_tag_renderer' )( tag, this.regexp, disabled )
+                this.options.get( 'tag_renderer' )( tag, this.regexp, disabled )
             );
 
             if( disabled ) {
@@ -335,7 +345,7 @@ Tagbox.Autocomplete = Class.create( {
      * Wait for any user-defined autocomplete delay to pass, then show the results.
      **/
     showAfterDelay: function() {
-        var delay = parseInt( this.tagbox.options.get( 'autocomplete_delay' ) );
+        var delay = parseInt( this.options.get( 'delay' ) );
         clearTimeout( this.timer );
 
         if( delay ) {

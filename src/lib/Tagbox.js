@@ -31,13 +31,6 @@ var Tagbox = Class.create( {
      *  autocomplete (Boolean) = true:
      *      Display a drop-down list of allowed values, filtered as the user 
      *      types. This option has no effect when the ``allowed`` array is empty.
-     *  autocomplete_delay (Number) = 200:
-     *      Number of milliseconds to wait after the user stops typing before
-     *      fetching autocomplete results.  This option has no effect when
-     *      allowed_url is null.
-     *  autocomplete_tag_renderer (Function) = Tagbox.Autocomplete.renderTag:
-     *      Function which generates HTML representation of a tag when it's
-     *      displayed as part of the autocomplete results list.
      *  case_sensitive (Boolean) = false:
      *      Use case sensitive string comparison when checking for duplicate
      *      and/or permitted tags.
@@ -50,9 +43,6 @@ var Tagbox = Class.create( {
      *      showing the hint.
      *  max_tags (Number) = null:
      *      The maximum number of tags that can be entered.
-     *  minimum_chars_for_autocomplete (Number) = 0:
-     *      The number of characters a user must enter before they're shown
-     *      autocomplete results.
      *  result_converter (Function) = null:
      *      A function which converts a matching result into a format acceptable
      *      to the Tagbox.Tag constructor.
@@ -70,14 +60,11 @@ var Tagbox = Class.create( {
         allowed_url: null,
         arbitrary_value_field_name: null,
         autocomplete: true,
-        autocomplete_delay: 200,
-        autocomplete_tag_renderer: null,
         case_sensitive: false,
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         hint: null,
         hint_delay: 100,
         max_tags: null,
-        minimum_chars_for_autocomplete: 0,
         result_converter: null,
         show_remove_links: true,
         validation_function: null
@@ -126,9 +113,7 @@ var Tagbox = Class.create( {
      *   - options (Object): Options for this Tagbox.
      **/
     initialize: function( original_input, options ) {
-        this.options = new Hash( this.options ).update(
-            { autocomplete_tag_renderer: Tagbox.Autocomplete.renderTag }
-        ).update( options );
+        this.options = new Hash( this.options ).update( options );
 
         this.tags = [];
         this.name = $( original_input ).getAttribute( 'name' );
@@ -138,7 +123,7 @@ var Tagbox = Class.create( {
 
         if( this.options.get( 'autocomplete' ) &&
             ( this.options.get( 'allowed' ).length || this.options.get( 'allowed_url' ) ) ) {
-            this.autocomplete = new Tagbox.Autocomplete( this );
+            this.autocomplete = new Tagbox.Autocomplete( this, this.options.get( 'autocomplete' ) );
         }
 
         this.registerEventHandlers();
