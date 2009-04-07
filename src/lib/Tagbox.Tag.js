@@ -36,7 +36,7 @@ Tagbox.Tag = Class.create( {
     initialize: function( tagbox, properties ) {
         this.tagbox = tagbox;
         this.properties = new Hash( this.properties );
-        this.properties.set( 'field_name', tagbox.name );
+        this.properties.set( 'field_name', tagbox.options.get( 'field_name' ) );
 
         if( typeof properties == "string" ) {
             properties = { value: properties };

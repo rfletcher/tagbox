@@ -36,6 +36,8 @@ var Tagbox = Class.create( {
      *      and/or permitted tags.
      *  delimiters (Array) = [ Event.KEY_COMMA, Event.KEY_RETURN ]:
      *      Array of keyCodes which trigger addition to the list of tags.
+     *  field_name (String) = name of the original text input
+     *      The form field name, taken from the original input element.
      *  hint (String) = null:
      *      A brief instruction to the user.
      *  hint_delay (Number) = 100:
@@ -64,6 +66,7 @@ var Tagbox = Class.create( {
         delimiters: [ Event.KEY_COMMA, Event.KEY_RETURN ],
         hint: null,
         hint_delay: 100,
+        field_name: null,
         max_tags: null,
         result_converter: null,
         show_remove_links: true,
@@ -89,12 +92,6 @@ var Tagbox = Class.create( {
     hint_timeout: null,
 
     /**
-     * Tagbox#name -> String
-     * The form field name, taken from the original input element.
-     **/
-    name: null,
-
-    /**
      * Tagbox#element -> Element
      * The tagbox (<div/>) element.
      **/
@@ -116,7 +113,9 @@ var Tagbox = Class.create( {
         this.options = new Hash( this.options ).update( options );
 
         this.tags = [];
-        this.name = $( original_input ).getAttribute( 'name' );
+        if( ! this.options.get( 'field_name' ) ) {
+            this.options.set( 'field_name', $( original_input ).getAttribute( 'name' ) );
+        }
 
         this.initializeAllowedTags();
         this.insert( original_input );
