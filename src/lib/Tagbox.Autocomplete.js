@@ -85,10 +85,11 @@ Tagbox.Autocomplete = Class.create( {
         // override Tagbox.getInputValue() to return a Tagbox.Tag for the 
         // currently selected tag (instead of the string value).
         this.tagbox.getInputValue = this.tagbox.getInputValue.wrap( function( original ) {
-            if( ! this.results.length ) {
+            var selected_tag = this.getSelectedTag();
+            if( ! this.results.length || ( this.tagbox.options.get( 'allow_arbitrary_values' ) && ! selected_tag ) ) {
                 return original();
             } else {
-                return this.getSelectedTag();
+                return selected_tag;
             }
         }.bind( this ) );
 
@@ -282,7 +283,9 @@ Tagbox.Autocomplete = Class.create( {
         var updateAndShow = function() {
             this.update();
             this.results.length && this.element.show();
-            this.next();
+            if( ! this.tagbox.options.get( 'allow_arbitrary_values' ) ) {
+                this.next();
+            }
         }.bind( this );
 
         // let the server do the filtering
