@@ -550,9 +550,7 @@ var Tagbox = Class.create( {
             }
 
             // a little cross-browser compatibility
-            var key = e.which ? e.which : e.keyCode;
-
-            switch( key ) {
+            switch( e.which ? e.which : e.keyCode ) {
                 // let the user tab out of the tagbox to next input
                 case Event.KEY_TAB:
                     if( this.currentIsTag() ) {
@@ -634,7 +632,8 @@ var Tagbox = Class.create( {
      **/
     registerInputEventHandlers: function( input ) {
         input.observe( 'keypress', function( e ) {
-            if( this.isDelimiterKeypress( e ) ) {
+            if( ! ( this.autocomplete && this.autocomplete.handleKey( e ) ) &&
+                this.isDelimiterKeypress( e ) ) {
                 e.stop();
                 this.addTagFromInput();
             }

@@ -120,6 +120,34 @@ Tagbox.Autocomplete = Class.create( {
     },
 
     /**
+     * Tagbox.Autocomplete#handleKey() -> Boolean
+     *
+     * Autocomplete keyboard event handler.  Handles navigation of the results list
+     * via arrow keys, for example.
+     **/
+    handleKey: function( e ) {
+        if( ! this.tagbox.currentIsInput() ) {
+            return;
+        }
+
+        switch( e.which ? e.which : e.keyCode ) {
+            case Event.KEY_DOWN:
+                this.next();
+                e.stop();
+                return true;
+            case Event.KEY_UP:
+                this.previous();
+                e.stop();
+                return true;
+            case Event.KEY_ESC:
+                if( this.element.visible() ) {
+                    this.hide();
+                    return true;
+                }
+        }
+    },
+
+    /**
      * Tagbox.Autocomplete#hide() -> undefined
      *
      * Hide the list.
@@ -177,9 +205,7 @@ Tagbox.Autocomplete = Class.create( {
             } while( target && target.hasClassName( 'tagbox-disabled' ) );
         }
 
-        if( target ) {
-            return this.highlight( target );
-        }
+        return this.highlight( target );
     },
 
     /**
@@ -207,25 +233,10 @@ Tagbox.Autocomplete = Class.create( {
      * Add event handlers to the Tagbox to show/hide the autocomplete list.
      **/
     registerEventHandlers: function() {
-        document.observe( Prototype.Browser.Gecko ? 'keypress' : 'keydown', function( e ) {
-            if( ! this.tagbox.currentIsInput() ) {
-                return;
-            }
-
-            switch( e.which ? e.which : e.keyCode ) {
-                case Event.KEY_DOWN:
-                    this.next();
-                    break;
-                case Event.KEY_UP:
-                    this.previous();
-                    break;
-                case Event.KEY_ESC:
-                    if( this.element.visible() ) {
-                        this.hide();
-                    }
-                    break;
-            }
-        }.bind( this ) ).observe( 'keyup', function( e ) {
+        document.observe(
+            Prototype.Browser.Gecko ? 'keypress' : 'keydown',
+            this.handleKey.bindAsEventListener( this )
+        ).observe( 'keyup', function( e ) {
             if( ! this.tagbox.currentIsInput() ) {
                 return;
             }
